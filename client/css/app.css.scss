@@ -1,0 +1,9 @@
+@import "vendor/test-vendored.css.scss";
+@import "vendor/other-vendor.css";
+
+// testing
+.foo {
+  .bar {
+    display: block;
+  }
+}
