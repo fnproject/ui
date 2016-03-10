@@ -39,10 +39,16 @@ module.exports = [
                 test: /\.css$/,
                 loader: extractTextPlugin.extract("style-loader", "css-loader")
             },
-            // {
-            //   test: /\.jsx$/,
-            //   loader: 'babel'
-            // },
+
+            // ES2015
+            {
+              test: /\.jsx$/,
+              loader: 'babel',
+              exclude: /node_modules/,
+              query: {
+                presets: ['es2015']
+              }
+            },
 
             // SASS
             {
