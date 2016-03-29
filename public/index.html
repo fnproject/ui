@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="Titan">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,7 +7,7 @@
 </head>
 <body>
 
-<div class="container">
+<div class="container" ng-controller="IndexController">
   <br />
   <br />
   <br />
@@ -22,9 +22,9 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
+          <tr ng-repeat="image in images">
             <td>
-              <a href="#">Foo Bar</a>
+              <a href="#">{{image.name}}</a>
             </td>
           </tr>
         </tbody>

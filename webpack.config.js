@@ -27,6 +27,7 @@ module.exports = [
         name: 'client',
         entry: [
           'jquery/',
+          'angular/',
           //'bootstrap-loader/extractStyles',
           './client/client.js',
         ],
