@@ -9,7 +9,7 @@ require("./css/app.css.scss");
 
 require("./css/app.css.scss");
 
-window.titan = angular.module('Titan', []);
+var titan = angular.module('Titan', []);
 
 require('./controllers/IndexController');
 

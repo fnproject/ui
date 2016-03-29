@@ -1,6 +1,4 @@
-console.log("IndexController.js");
-
-window.titan.controller('IndexController', ['$scope', function($scope) {
+angular.module('Titan').controller('IndexController', ['$scope', function($scope) {
   $scope.init = function() {
 
     $scope.images = [

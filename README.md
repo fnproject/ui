@@ -11,6 +11,8 @@
 Start web server:
 ```
 npm start
+# or
+PORT=4000 npm start
 ```
 
 Complile assets:
