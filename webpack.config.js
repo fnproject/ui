@@ -25,15 +25,29 @@ module.exports = [
     },
     {
         name: 'client',
-        entry: './client/client.js',
+        entry: [
+          'jquery/',
+          //'bootstrap-loader/extractStyles',
+          './client/client.js',
+        ],
         // target: 'web', // by default
         output: {
           path: path.join(__dirname, 'public', 'build'),
           filename: 'app.js',
         },
+        // resolve: {
+        //     alias: {
+        //         jquery: "jquery/src/jquery"
+        //     }
+        // },
         externals: nodeModules,
         module: {
           loaders: [
+            // {
+            //   test:/bootstrap-sass[\/\\]assets[\/\\]javascripts[\/\\]/,
+            //   loader: 'imports?jQuery=jquery'
+            // },
+
             // Extract css files
             {
                 test: /\.css$/,
@@ -42,7 +56,7 @@ module.exports = [
 
             // ES2015
             {
-              test: /\.jsx$/,
+              test: /\.js$/,
               loader: 'babel',
               exclude: /node_modules/,
               query: {
@@ -54,13 +68,28 @@ module.exports = [
             {
               test: /\.scss$/,
               loader: extractTextPlugin.extract("style-loader", "css-loader!sass-loader")
+            },
+
+            {
+              test: /\.woff2?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+              loader: "url?limit=10000"
+            },
+
+            {
+              test: /\.(ttf|eot|svg)(\?[\s\S]+)?$/,
+              loader: 'file'
             }
 
           ]
         },
         plugins: [
-          new extractTextPlugin("[name].css", {
-            allChunks: false
+          // new webpack.ProvidePlugin({
+          //     $: "jquery",
+          //     jQuery: "jquery",
+          //     "window.jQuery": "jquery"
+          // }),
+          new extractTextPlugin("app.css", {
+            allChunks: true
           })
         ]
     }
