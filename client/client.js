@@ -11,6 +11,7 @@ require("./css/app.css.scss");
 var titan = angular.module('Titan', ['ngResource']);
 
 require('./services/group');
+require('./services/job');
 
 require('./controllers/ParentCtrl');
 require('./controllers/IndexController');

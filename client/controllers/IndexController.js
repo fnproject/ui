@@ -1,4 +1,4 @@
-angular.module('Titan').controller('IndexController', ['$scope', '$controller', '$timeout', 'Group', function($scope, $controller, $timeout, Group) {
+angular.module('Titan').controller('IndexController', ['$scope', '$controller', '$timeout', 'Group', 'Job', function($scope, $controller, $timeout, Group, Job) {
   $controller('ParentCtrl', {$scope: $scope})
 
   $scope.selectedJob = {id: 'foo'};
@@ -8,24 +8,22 @@ angular.module('Titan').controller('IndexController', ['$scope', '$controller', 
 
     $scope.groupService.all({}, function(groups){
       $scope.groups = groups;
-      console.log("loaded!", $scope.groups);
     });
 
   }
 
   $scope.selectGroup = function(group){
     $scope.selectedGroup = group;
-    $scope.loadGroupJobs();
+    $scope.loadGroupJobs(group);
   }
 
-  $scope.loadGroupJobs = function(group){
+  $scope.loadGroupJobs = function(){
     $scope.groupJobs = null;
-    $scope.groupService.jobs($scope.selectedGroup.name, function(jobs){
+    var jobService = new Job($scope.selectedGroup, $scope.serverErrorHandler)
+    jobService.all({}, function(jobs){
       $scope.groupJobs = jobs;
-      console.log("loaded!", $scope.groupJobs);
     })
   }
-
 
   $scope.showPayload = function(job) {
     $scope.selectedJob = job;
