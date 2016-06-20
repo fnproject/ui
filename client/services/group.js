@@ -63,16 +63,17 @@ angular.module('Titan').factory('Group', ['$resource', '$http', function($resour
       }), this.errorHandler);
     };
 
-    // Group.prototype.find = function(id, cb) {
-    //   return this.service.get({
-    //     id: id
-    //   }, (function(group) {
-    //     if (typeof cb === "function") {
-    //       cb(group);
-    //     }
-    //     return group;
-    //   }), this.errorHandler);
-    // };
+    Group.prototype.jobs = function(id, cb) {
+      return this.service.query({
+        id: id,
+        action: 'jobs'
+      }, (function(group) {
+        if (typeof cb === "function") {
+          cb(group);
+        }
+        return group;
+      }), this.errorHandler);
+    };
 
     return Group;
 
