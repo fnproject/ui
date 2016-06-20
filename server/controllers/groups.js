@@ -16,7 +16,7 @@ router.get('/', function(req, res) {
     ]
   }
   */
-  var images = [
+  var groups = [
     {
       "name": "string",
       "created_at": "2016-03-29T16:28:40.356Z"
@@ -27,7 +27,7 @@ router.get('/', function(req, res) {
     }
   ];
 
-  res.json(images);
+  res.json(groups);
 });
 
 

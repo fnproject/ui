@@ -1,12 +1,14 @@
-angular.module('Titan').controller('IndexController', ['$scope', function($scope) {
+angular.module('Titan').controller('IndexController', ['$scope', '$controller', 'Group', function($scope, $controller, Group) {
+  $controller('ParentCtrl', {$scope: $scope})
+
   $scope.init = function() {
+    $scope.groupService = new Group($scope.serverErrorHandler)
 
-    $scope.images = [
-      {id: 1, name: "foo"},
-      {id: 2, name: "bar"}
-    ];
-    console.log("IndexController.js - init");
+    $scope.groupService.all({}, function(groups){
+      $scope.groups = groups;
+    });
+
   }
-
   $scope.init();
+
 }]);

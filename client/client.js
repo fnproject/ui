@@ -4,13 +4,15 @@ require('expose?$!expose?jQuery!jquery');
 require('bootstrap-loader/extractStyles');
 
 require('expose?angular!angular');
+require('expose?angular-resource!angular-resource');
 
 require("./css/app.css.scss");
 
-require("./css/app.css.scss");
+var titan = angular.module('Titan', ['ngResource']);
 
-var titan = angular.module('Titan', []);
+require('./services/group');
 
+require('./controllers/ParentCtrl');
 require('./controllers/IndexController');
 
 

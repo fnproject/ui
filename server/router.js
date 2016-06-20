@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
 
-router.use('/images', require('./controllers/images.js'))
+router.use('/api/groups', require('./controllers/groups.js'))
 
 module.exports = router;

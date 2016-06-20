@@ -18,13 +18,15 @@
       <table class="table">
         <thead>
           <tr>
-            <th>Code name</th>
+            <th>Group name</th>
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="image in images">
+          <tr ng-repeat="group in groups">
             <td>
-              <a href="#">{{image.name}}</a>
+              <a href="#">{{group.name}}</a>
+              <br>
+              <i>Created {{group.created_at| date: 'HH:mm MM/dd/yyyy' }}</i>
             </td>
           </tr>
         </tbody>
