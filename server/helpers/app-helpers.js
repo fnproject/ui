@@ -1,5 +1,6 @@
- var http = require('http');
- var url = require('url');
+var http = require('http');
+var url = require('url');
+var request = require('request');
 
 exports.extend = function(target) {
     var sources = [].slice.call(arguments, 1);
@@ -11,40 +12,48 @@ exports.extend = function(target) {
     return target;
 }
 
-
- // exports.respondJson = function(res, data) {
- //  res.setHeader('Content-Type', 'application/json');
- //  res.end(JSON.stringify(data));
- // }
+exports.apiFullUrl = function(req, path) {
+  var apiUrl = req.app.get('api-url');
+  var httpurl = url.format(apiUrl) + path.replace(/^\//, "");
+  console.log(">>>>", httpurl);
+  return httpurl;
+}
 
 exports.getApiEndpoint = function(req, path, successcb, errorcb) {
-  var apiUrl = req.app.get('api-url');
-  var httpurl = exports.extend({}, apiUrl, {path: path});
+  var url = exports.apiFullUrl(req, path);
 
-  http.get(httpurl, function(response) {
-    if (response.statusCode != 200) {
-      console.warn("Request returned " + response.statusCode);
-      return errorcb(response);
-    }
+  request(url, exports.requrestCb);
+}
 
-    var body = '';
-    response.on('data', function(d) {
-      body += d;
-    });
-    response.on('end', function() {
-      var parsed
-      try {
+exports.postApiEndpoint = function(req, path, postfields, successcb, errorcb) {
+  var options = {
+    uri: exports.apiFullUrl(req, path),
+    method: 'POST',
+    json: postfields
+  };
+
+  request(options, exports.requrestCb);
+}
+
+
+exports.requrestCb = function (error, response, body) {
+  if (!error && response.statusCode == 200) {
+    var parsed
+    try {
+      if (typeof body == "string"){
         parsed = JSON.parse(body);
-        successcb(parsed);
-      } catch (e) {
-        console.warn("Can not parse json:", e);
-        errorcb(e);
+      } else {
+        parsed = body;
       }
-    });
-  }).on('error', function(err) {
-    console.error('Error with the request:', err, err.message);
-    errorcb(err);
-  });
+      successcb(parsed);
+    } catch (e) {
+      console.warn("Can not parse json:", body, e);
+      errorcb(response.statusCode, e);
+    }
+  } else {
+    console.warn("Request returned " + response.statusCode);
+    return errorcb(response.statusCode, body);
+  }
 }
 
 

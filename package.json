@@ -16,6 +16,7 @@
     "file-loader": "^0.8.5",
     "imports-loader": "^0.6.5",
     "jquery": "^2.2.2",
+    "request": "^2.72.0",
     "resolve-url-loader": "^1.4.3",
     "url-loader": "^0.5.7"
   },

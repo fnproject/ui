@@ -14,7 +14,7 @@ angular.module('Titan').controller('IndexController', ['$scope', '$controller', 
 
   $scope.selectGroup = function(group){
     $scope.selectedGroup = group;
-    $scope.loadGroupJobs(group);
+    $scope.loadGroupJobs();
   }
 
   $scope.loadGroupJobs = function(){
@@ -38,6 +38,18 @@ angular.module('Titan').controller('IndexController', ['$scope', '$controller', 
     } catch (undefined) {}
 
     return payload;
+  }
+
+  $scope.cancelJob = function(job) {
+    var jobService = new Job($scope.selectedGroup, $scope.serverErrorHandler)
+
+    if (confirm("Do you really want to cancel job #" + job.id + " ?")){
+      jobService.cancel(job, function(updatedjob){
+        console.log("jobService.cancel!!", updatedjob);
+        // TODO: update properly
+        job.status = updatedjob.status;
+      });
+    }
   }
 
 

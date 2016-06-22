@@ -4,6 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel=stylesheet href="/build/app.css">
+  <style type="text/css">
+    [ng-cloak], .ng-cloak {
+      display: none !important;
+    }
+  </style>
 </head>
 <body>
 
@@ -12,10 +17,10 @@
   <br />
   <br />
   <br />
-  <div class="row">
+  <div class="row ng-cloak">
     <div class="col-md-2" ng-if="!selectedGroup">&nbsp;</div>
     <div class="" ng-class="{'col-md-8': !selectedGroup, 'col-md-3': selectedGroup}">
-      <table class="table" ng-cloak>
+      <table class="table">
         <thead>
           <tr>
             <th>Group name</th>
@@ -24,7 +29,7 @@
         <tbody>
           <tr ng-repeat="group in groups">
             <td>
-              <a href="#" ng-click="selectGroup(group)">{{group.name}}</a>
+              <a ng-click="selectGroup(group)">{{group.name}}</a>
               <br>
               <i>Created {{group.created_at| date: 'HH:mm MM/dd/yyyy' }}</i>
             </td>
@@ -59,11 +64,14 @@
             <td>{{job.image}}</td>
             <td>{{job.priority}}</td>
             <td>
-              <a href="#" ng-click="showPayload(job)">payload</a>
+              <a ng-click="showPayload(job)">payload</a>
             </td>
             <td>{{job.created_at| date: 'HH:mm MM/dd/yyyy'}}</td>
             <td>{{job.started_at| date: 'HH:mm MM/dd/yyyy'}}</td>
             <td>{{job.completed_at| date: 'HH:mm MM/dd/yyyy'}}</td>
+            <td>
+              <a class="btn btn-danger" ng-click="cancelJob(job)" ng-if="job.status == 'queued' || job.status == 'running' || job.status == 'delayed'">cancel</a>
+            </td>
           </tr>
 
           <tr ng-if="groupJobs.length == 0">
