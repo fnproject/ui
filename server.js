@@ -14,7 +14,7 @@ if (!apiUrl || !apiUrl.hostname) {
 }
 
 app.set('api-url', apiUrl);
-var port = isProduction ? process.env.PORT : 4000;
+var port = process.env.PORT || 4000;
 var publicPath = path.resolve(__dirname, 'public');
 
 app.use(express.static(publicPath));
