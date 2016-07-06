@@ -62,7 +62,7 @@ module.exports = [
         // Extract css files
         {
             test: /\.css$/,
-            loader: extractTextPlugin.extract("style-loader", "css-loader?minimize!postcss-loader")
+            loader: extractTextPlugin.extract("style-loader", "css-loader!postcss-loader")
         },
 
         // ES2015
@@ -108,7 +108,6 @@ module.exports = [
     postcss: [
       // inline @import need to merge vars
       postcssImport(),
-      require('postcss-font-magician')({ /* options */ }),
       postcssURL(),
       cssnext()
     ]

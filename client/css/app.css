@@ -4,15 +4,16 @@
 //@import "bootstrap-loader";
 //@import "bootstrap-sass";
 @import "vendor/other-vendor.css"; */
-/*@import "~normalize.css/normalize.css";*/
+@import "~normalize.css/normalize.css";
 @import "variables.css";
 @import "vendor/test-vendor.css";
 
 body {
   background: var(--mainColor);
+  font-family: 'Roboto', sans-serif;
 
   & .modal {
-    background: hotPink;
+    background: tomato;
   }
 
 }
