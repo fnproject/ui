@@ -4,8 +4,7 @@
 @import "vendor/test-vendor.css";
 
 body {
-  background: var(--mainColor);
-  color: white;
+  color: var(--mainColor);
   font-family: 'Roboto', sans-serif;
 
   & .modal {
