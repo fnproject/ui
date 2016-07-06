@@ -1,19 +1,15 @@
 @charset "utf-8";
-
-/* //@import "bootstrap";
-//@import "bootstrap-loader";
-//@import "bootstrap-sass";
-@import "vendor/other-vendor.css"; */
-@import "~normalize.css/normalize.css";
+@import "bootstrap";
 @import "variables.css";
 @import "vendor/test-vendor.css";
 
 body {
   background: var(--mainColor);
+  color: white;
   font-family: 'Roboto', sans-serif;
 
   & .modal {
-    background: tomato;
+    color: #777;
   }
 
 }
