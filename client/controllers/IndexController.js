@@ -52,6 +52,18 @@ angular.module('Titan').controller('IndexController', ['$scope', '$controller', 
     }
   }
 
+  $scope.retryJob = function(job) {
+    var jobService = new Job($scope.selectedGroup, $scope.serverErrorHandler)
+
+    if (confirm("Do you really want to retry job #" + job.id + " ?")){
+      jobService.retry(job, function(updatedjob){
+        console.log("jobService.retry!!", updatedjob);
+        // TODO: update properly
+        job.status = updatedjob.status;
+      });
+    }
+  }
+
 
 
 

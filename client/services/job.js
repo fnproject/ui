@@ -63,6 +63,17 @@ angular.module('Titan').factory('Job', ['$resource', '$http', function($resource
       }), this.errorHandler);
     };
 
+    Job.prototype.retry = function(job, cb) {
+      return new this.service({}).$save({
+        id: job.id,
+        action: 'retry'
+      }, (function(job) {
+        if (typeof cb === "function") {
+          cb(job);
+        }
+      }), this.errorHandler);
+    };
+
     Job.prototype.all = function(params, cb) {
       return this.service.query(params, (function(jobs) {
         if (typeof cb === "function") {

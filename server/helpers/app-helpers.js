@@ -19,13 +19,13 @@ exports.apiFullUrl = function(req, path) {
   return httpurl;
 }
 
-exports.getApiEndpoint = function(req, path, successcb, errorcb) {
+exports.getApiEndpoint = function(req, path, params, successcb, errorcb) {
   var url = exports.apiFullUrl(req, path);
 
-  request(url, exports.requrestCb);
+  request({url: url, qs: params}, exports.requrestCb);
 }
 
-exports.postApiEndpoint = function(req, path, postfields, successcb, errorcb) {
+exports.postApiEndpoint = function(req, path, params, postfields, successcb, errorcb) {
   var options = {
     uri: exports.apiFullUrl(req, path),
     method: 'POST',
@@ -37,8 +37,8 @@ exports.postApiEndpoint = function(req, path, postfields, successcb, errorcb) {
 
 
 exports.requrestCb = function (error, response, body) {
+  var parsed;
   if (!error && response.statusCode == 200) {
-    var parsed
     try {
       if (typeof body == "string"){
         parsed = JSON.parse(body);
@@ -48,11 +48,26 @@ exports.requrestCb = function (error, response, body) {
       successcb(parsed);
     } catch (e) {
       console.warn("Can not parse json:", body, e);
-      errorcb(response.statusCode, e);
+      errorcb(response.statusCode, "Can not parse api response");
     }
   } else {
-    console.warn("Request returned " + response.statusCode);
-    return errorcb(response.statusCode, body);
+    var message;
+    try {
+      if (typeof body == "string"){
+        parsed = JSON.parse(body);
+      } else {
+        parsed = body;
+      }
+      if (parsed && parsed.error && parsed.error.message){
+        message = parsed.error.message;
+      }
+    } catch (e) {
+      message = "Can not parse api response";
+    }
+    message = message || "An error ocurred."
+
+    console.warn("[ERR] " + response.statusCode + " | "  + message);
+    return errorcb(response.statusCode, message);
   }
 }
 

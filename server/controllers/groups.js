@@ -13,7 +13,7 @@ router.get('/', function(req, res) {
     res.status(400).json({msg: "Error occured. Api responded with " + status});
   }
 
-  helpers.getApiEndpoint(req, "/v1/groups", successcb, errorcb)
+  helpers.getApiEndpoint(req, "/v1/groups", {}, successcb, errorcb)
 });
 
 
