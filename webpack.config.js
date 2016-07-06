@@ -1,7 +1,14 @@
-var webpack = require('webpack');
-var path = require('path');
-var fs = require('fs');
-var extractTextPlugin = require("extract-text-webpack-plugin");
+const webpack = require('webpack');
+const path = require('path');
+const fs = require('fs');
+const extractTextPlugin = require("extract-text-webpack-plugin");
+
+// style
+const postcssImport         = require('postcss-import');
+const postcssURL            = require('postcss-url');
+const cssnext               = require('postcss-cssnext');
+const cssnano               = require('cssnano');
+
 
 var nodeModules = {};
 fs.readdirSync('node_modules')
@@ -13,86 +20,97 @@ fs.readdirSync('node_modules')
   });
 
 module.exports = [
-    {
-        name: 'server',
-        entry: './server/server.js',
-        target: 'node',
-        output: {
-          path: path.join(__dirname, 'build'),
-          filename: 'backend.js'
-        },
-        externals: nodeModules
+  {
+    name: 'server',
+    entry: './server/server.js',
+    target: 'node',
+    output: {
+      path: path.join(__dirname, 'build'),
+      filename: 'backend.js'
     },
-    {
-        name: 'client',
-        entry: [
-          'jquery/',
-          'angular/',
-          //'bootstrap-loader/extractStyles',
-          './client/client.js',
-        ],
-        // target: 'web', // by default
-        output: {
-          path: path.join(__dirname, 'public', 'build'),
-          filename: 'app.js',
-        },
-        // resolve: {
-        //     alias: {
-        //         jquery: "jquery/src/jquery"
-        //     }
+    externals: nodeModules
+  },
+  {
+    name: 'client',
+    entry: [
+      'jquery/',
+      'angular/',
+      //'bootstrap-loader/extractStyles',
+      './client/client.js',
+    ],
+    // target: 'web', // by default
+    output: {
+      path: path.join(__dirname, 'public', 'build'),
+      filename: 'app.js',
+    },
+    // resolve: {
+    //     alias: {
+    //         jquery: "jquery/src/jquery"
+    //     }
+    // },
+    externals: nodeModules,
+    module: {
+      preLoaders: [
+        { test: /\.(css)$/, loader: 'stylelint' }
+      ],
+      loaders: [
+        // {
+        //   test:/bootstrap-sass[\/\\]assets[\/\\]javascripts[\/\\]/,
+        //   loader: 'imports?jQuery=jquery'
         // },
-        externals: nodeModules,
-        module: {
-          loaders: [
-            // {
-            //   test:/bootstrap-sass[\/\\]assets[\/\\]javascripts[\/\\]/,
-            //   loader: 'imports?jQuery=jquery'
-            // },
 
-            // Extract css files
-            {
-                test: /\.css$/,
-                loader: extractTextPlugin.extract("style-loader", "css-loader")
-            },
-
-            // ES2015
-            {
-              test: /\.js$/,
-              loader: 'babel',
-              exclude: /node_modules/,
-              query: {
-                presets: ['es2015']
-              }
-            },
-
-            // SASS
-            {
-              test: /\.scss$/,
-              loader: extractTextPlugin.extract("style-loader", "css-loader!sass-loader")
-            },
-
-            {
-              test: /\.woff2?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-              loader: "url?limit=10000"
-            },
-
-            {
-              test: /\.(ttf|eot|svg)(\?[\s\S]+)?$/,
-              loader: 'file'
-            }
-
-          ]
+        // Extract css files
+        {
+            test: /\.css$/,
+            loader: extractTextPlugin.extract("style-loader", "css-loader?minimize!postcss-loader")
         },
-        plugins: [
-          // new webpack.ProvidePlugin({
-          //     $: "jquery",
-          //     jQuery: "jquery",
-          //     "window.jQuery": "jquery"
-          // }),
-          new extractTextPlugin("app.css", {
-            allChunks: true
-          })
-        ]
-    }
-];
 
+        // ES2015
+        {
+          test: /\.js$/,
+          loader: 'babel',
+          exclude: /node_modules/,
+          query: {
+            presets: ['es2015']
+          }
+        },
+
+        {
+          test: /\.woff2?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+          loader: "url?limit=10000"
+        },
+
+        {
+          test: /\.(ttf|eot|svg)(\?[\s\S]+)?$/,
+          loader: 'file'
+        }
+
+      ]
+    },
+    plugins: [
+      // new webpack.ProvidePlugin({
+      //     $: "jquery",
+      //     jQuery: "jquery",
+      //     "window.jQuery": "jquery"
+      // }),
+      new extractTextPlugin("app.css", {
+        allChunks: true
+      })
+    ],
+    stylelint: {
+      configFile: path.join(__dirname, './stylelint.config.js'),
+      configOverrides: {
+        rules: {
+            // Your rule overrides here
+        }
+      }
+    },
+    postcss: [
+      // inline @import need to merge vars
+      postcssImport(),
+      require('postcss-font-magician')({ /* options */ }),
+      postcssURL(),
+      cssnext()
+    ]
+  }
+];

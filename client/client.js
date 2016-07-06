@@ -1,12 +1,12 @@
 console.log("loading .... ");
 
 require('expose?$!expose?jQuery!jquery');
-require('bootstrap-loader/extractStyles');
+// require('bootstrap-loader/extractStyles');
 
 require('expose?angular!angular');
 require('expose?angular-resource!angular-resource');
 
-require("./css/app.css.scss");
+require("./css/app.css");
 
 var titan = angular.module('Titan', ['ngResource']);
 
