@@ -24,16 +24,14 @@ router.get('/:group/jobs', function(req, res) {
   var path = "/v1/groups/" + encodeURIComponent(req.params.group) + "/jobs";
 
   successcb = function(data){
-    //console.log("success!", data);
-    var jobs = data.jobs;
-    res.json(jobs);
+    res.json(data);
   }
   errorcb = function(status, err){
     console.log("error!", status, err);
     res.status(400).json({msg: "Error: Api responded with " + status + ". " + err});
   }
 
-  helpers.getApiEndpoint(req, path, {n: per_page}, successcb, errorcb)
+  helpers.getApiEndpoint(req, path, {n: req.query.per_page || per_page, cursor: req.query.cursor || null}, successcb, errorcb);
 });
 
 router.post('/:group/jobs/:id/cancel', function(req, res) {

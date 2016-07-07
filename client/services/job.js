@@ -75,9 +75,9 @@ angular.module('Titan').factory('Job', ['$resource', '$http', function($resource
     };
 
     Job.prototype.all = function(params, cb) {
-      return this.service.query(params, (function(jobs) {
+      return this.service.get(params, (function(data) {
         if (typeof cb === "function") {
-          cb(jobs);
+          cb(data);
         }
       }), this.errorHandler);
     };

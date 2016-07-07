@@ -1,9 +1,12 @@
 angular.module('Titan').controller('IndexController', ['$scope', '$controller', '$timeout', 'Group', 'Job', function($scope, $controller, $timeout, Group, Job) {
   $controller('ParentCtrl', {$scope: $scope})
 
-  $scope.selectedJob = {id: 'foo'};
+  $scope.perPage = 10;
+
 
   $scope.init = function() {
+    $scope.resetGroupValues();
+
     $scope.groupService = new Group($scope.serverErrorHandler)
 
     $scope.groupService.all({}, function(groups){
@@ -12,17 +15,47 @@ angular.module('Titan').controller('IndexController', ['$scope', '$controller', 
 
   }
 
+  $scope.resetGroupValues = function() {
+    $scope.selectedJob = null;
+    // zero-based
+    $scope.currentPage = 0;
+    // cursor[pageN] is required to load page `pageN`
+    $scope.cursors = [];
+    $scope.isLoading = false;
+  }
+
   $scope.selectGroup = function(group){
+    $scope.resetGroupValues();
     $scope.selectedGroup = group;
+
     $scope.loadGroupJobs();
   }
 
   $scope.loadGroupJobs = function(){
-    $scope.groupJobs = null;
-    var jobService = new Job($scope.selectedGroup, $scope.serverErrorHandler)
-    jobService.all({}, function(jobs){
-      $scope.groupJobs = jobs;
+    $scope.isLoading = true;
+    var page = $scope.currentPage;
+    var cursor = $scope.cursors[page];
+    var jobService = new Job($scope.selectedGroup, $scope.serverErrorHandler);
+    jobService.all({per_page: $scope.perPage, cursor: cursor}, function(data){
+      $scope.groupJobs = data.jobs;
+      $scope.cursors[page + 1] = data.cursor;
+      $scope.isLoading = false;
     })
+  }
+
+  $scope.previousPage = function(){
+    if ($scope.currentPage > 0 && !$scope.isLoading) {
+      $scope.currentPage = $scope.currentPage - 1;
+      $scope.loadGroupJobs();
+    }
+  }
+
+  $scope.nextPage = function(){
+    // TODO: remove +1 after fix
+    if (($scope.groupJobs.length + 1) >= $scope.perPage && !$scope.isLoading) {
+      $scope.currentPage = $scope.currentPage + 1;
+      $scope.loadGroupJobs();
+    }
   }
 
   $scope.showPayload = function(job) {
@@ -32,6 +65,9 @@ angular.module('Titan').controller('IndexController', ['$scope', '$controller', 
   }
 
   $scope.formattedPayload = function(job) {
+    if (!job) {
+      return
+    };
     var payload = job.payload;
     try {
       payload = JSON.stringify(JSON.parse(payload), null, 4);

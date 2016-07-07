@@ -47,7 +47,27 @@
     <div class="col-md-9" ng-if="selectedGroup">
       <h2>{{selectedGroup.name}}</h2>
 
-      {{groupJobs.length}}
+      <div class="btn-group" ng-if="groupJobs != null">
+
+        <span>Jobs <b>{{currentPage * perPage + (groupJobs.length ? 1 : 0)}}-{{currentPage * perPage + groupJobs.length}}</b></span>
+
+        <div class="btn-group pull-right">
+
+          <button type="button" class="btn btn-default" ng-click="previousPage()" ng-class="{disabled: currentPage == 0 || isLoading}">
+            < <i class="fa fa-chevron-left"></i>&nbsp;Prev
+          </button>
+
+          <button type="button" class="btn btn-default disabled">{{currentPage + 1}}</button>
+
+          <!-- BUG - remove +1 then fixed -->
+          <button type="button" class="btn btn-default" ng-click="nextPage()" ng-class="{disabled: (groupJobs.length + 1) < perPage || isLoading}">
+            Next&nbsp;&nbsp;&nbsp;
+            <i class="fa fa-chevron-right"></i> >
+          </button>
+        </div>
+      </div>
+
+
       <div ng-if="groupJobs == null">loading ....</div>
 
       <table class="table" ng-if="groupJobs != null">
