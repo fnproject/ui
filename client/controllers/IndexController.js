@@ -1,8 +1,10 @@
-angular.module('Titan').controller('IndexController', ['$scope', '$controller', '$timeout', 'Group', 'Job', function($scope, $controller, $timeout, Group, Job) {
+angular.module('Titan').controller('IndexController', ['$mdSidenav', '$mdBottomSheet', '$scope', '$controller', '$timeout', 'Group', 'Job', function($mdSidenav, $mdBottomSheet, $scope, $controller, $timeout, Group, Job) {
   $controller('ParentCtrl', {$scope: $scope})
 
   $scope.perPage = 10;
 
+  var self = this;
+  self.toggleList  = $scope.toggleUsersList;
 
   $scope.init = function() {
     $scope.resetGroupValues();
@@ -22,6 +24,13 @@ angular.module('Titan').controller('IndexController', ['$scope', '$controller', 
     // cursor[pageN] is required to load page `pageN`
     $scope.cursors = [];
     $scope.isLoading = false;
+  }
+
+  /**
+   * Hide or Show the 'left' sideNav area
+   */
+  $scope.toggleUsersList = function() {
+    $mdSidenav('left').toggle();
   }
 
   $scope.selectGroup = function(group){

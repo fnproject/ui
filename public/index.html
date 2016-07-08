@@ -16,100 +16,124 @@
   </style>
 
 </head>
-<body>
+<body layout="column" ng-controller="IndexController">
+    <!-- Container #1 (see wireframe) -->
+    <md-toolbar layout="row" hide-gt-sm class="ng-cloak">
+      <md-button class="menu" ng-click="toggleUsersList()" >
+          Menu
+      </md-button>
+      <h1>
+        Titan
+      </h1>
+    </md-toolbar>
 
-<div class="container" ng-controller="IndexController">
-  <br />
-  <br />
-  <br />
-  <br />
-  <div class="row ng-cloak">
-    <div class="col-md-2" ng-if="!selectedGroup">&nbsp;</div>
-    <div class="" ng-class="{'col-md-8': !selectedGroup, 'col-md-3': selectedGroup}">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Group name</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr ng-repeat="group in groups">
-            <td>
-              <a ng-click="selectGroup(group)">{{group.name}}</a>
-              <br>
-              <i>Created {{group.created_at| date: 'HH:mm MM/dd/yyyy' }}</i>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <!-- Container #2 -->
+    <div flex layout="row">
+
+        <!-- Container #3 -->
+        <md-sidenav md-is-locked-open="$mdMedia('gt-sm')"
+                    md-component-id="left"
+                    ng-click="ul.toggleList()" class="ng-cloak">
+          <div>
+            <md-icon md-svg-src="./images/titan-logo.svg" class="logo"></md-icon>
+
+          </div>
+          <h2>Groups</h2>
+          <md-list>
+            <md-list-item ng-repeat="group in groups">
+              <md-button ng-click="selectGroup(group)">
+                {{group.name}} <br>
+                <i>Created {{group.created_at| date: 'HH:mm MM/dd/yyyy' }}</i>
+              </md-button>
+            </md-list-item>
+
+            <tr >
+              <td>
+                <a ng-click="selectGroup(group)"></a>
+                <br>
+
+              </td>
+            </tr>
+          </md-list>
+
+
+          <div class="col-md-2" ng-if="!selectedGroup">&nbsp;</div>
+
+
+        </md-sidenav>
+
+        <!-- Container #4 -->
+        <md-content flex id="content" class="ng-cloak">
+          <div class="col-md-9" ng-if="selectedGroup">
+            <h2>{{selectedGroup.name}}</h2>
+
+            <div class="btn-group" ng-if="groupJobs != null">
+
+              <span>Jobs <b>{{currentPage * perPage + (groupJobs.length ? 1 : 0)}}-{{currentPage * perPage + groupJobs.length}}</b></span>
+
+              <div class="btn-group pull-right">
+
+                <button type="button" class="btn btn-default" ng-click="previousPage()" ng-class="{disabled: currentPage == 0 || isLoading}">
+                  < <i class="fa fa-chevron-left"></i>&nbsp;Prev
+                </button>
+
+                <button type="button" class="btn btn-default disabled">{{currentPage + 1}}</button>
+
+                <!-- BUG - remove +1 then fixed -->
+                <button type="button" class="btn btn-default" ng-click="nextPage()" ng-class="{disabled: (groupJobs.length + 1) < perPage || isLoading}">
+                  Next&nbsp;&nbsp;&nbsp;
+                  <i class="fa fa-chevron-right"></i> >
+                </button>
+              </div>
+            </div>
+
+
+            <div ng-if="groupJobs == null">loading ....</div>
+
+            <table class="table" ng-if="groupJobs != null">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Status</th>
+                  <th>Image</th>
+                  <th title="Priority">Pr</th>
+                  <th>payload</th>
+                  <th>Created</th>
+                  <th>Started</th>
+                  <th>Completed</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="job in groupJobs">
+                  <td>{{job.id}}</td>
+                  <td>{{job.status}}</td>
+                  <td>{{job.image}}</td>
+                  <td>{{job.priority}}</td>
+                  <td>
+                    <a ng-click="showPayload(job)">payload</a>
+                  </td>
+                  <td>{{job.created_at| date: 'HH:mm MM/dd/yyyy'}}</td>
+                  <td>{{job.started_at| date: 'HH:mm MM/dd/yyyy'}}</td>
+                  <td>{{job.completed_at| date: 'HH:mm MM/dd/yyyy'}}</td>
+                  <td>
+                    <a class="btn btn-danger" ng-click="cancelJob(job)" ng-if="job.status == 'queued' || job.status == 'running' || job.status == 'delayed'">cancel</a>
+                    <a class="btn btn-danger" ng-click="retryJob(job)" ng-if="job.status == 'cancelled' || job.status == '?' || job.status == '??'">retry</a>
+                  </td>
+                </tr>
+
+                <tr ng-if="groupJobs.length == 0">
+                  <td colspan="99">
+                    No Jobs
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </md-content>
+
     </div>
 
-    <div class="col-md-9" ng-if="selectedGroup">
-      <h2>{{selectedGroup.name}}</h2>
-
-      <div class="btn-group" ng-if="groupJobs != null">
-
-        <span>Jobs <b>{{currentPage * perPage + (groupJobs.length ? 1 : 0)}}-{{currentPage * perPage + groupJobs.length}}</b></span>
-
-        <div class="btn-group pull-right">
-
-          <button type="button" class="btn btn-default" ng-click="previousPage()" ng-class="{disabled: currentPage == 0 || isLoading}">
-            < <i class="fa fa-chevron-left"></i>&nbsp;Prev
-          </button>
-
-          <button type="button" class="btn btn-default disabled">{{currentPage + 1}}</button>
-
-          <!-- BUG - remove +1 then fixed -->
-          <button type="button" class="btn btn-default" ng-click="nextPage()" ng-class="{disabled: (groupJobs.length + 1) < perPage || isLoading}">
-            Next&nbsp;&nbsp;&nbsp;
-            <i class="fa fa-chevron-right"></i> >
-          </button>
-        </div>
-      </div>
-
-
-      <div ng-if="groupJobs == null">loading ....</div>
-
-      <table class="table" ng-if="groupJobs != null">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Status</th>
-            <th>Image</th>
-            <th title="Priority">Pr</th>
-            <th>payload</th>
-            <th>Created</th>
-            <th>Started</th>
-            <th>Completed</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr ng-repeat="job in groupJobs">
-            <td>{{job.id}}</td>
-            <td>{{job.status}}</td>
-            <td>{{job.image}}</td>
-            <td>{{job.priority}}</td>
-            <td>
-              <a ng-click="showPayload(job)">payload</a>
-            </td>
-            <td>{{job.created_at| date: 'HH:mm MM/dd/yyyy'}}</td>
-            <td>{{job.started_at| date: 'HH:mm MM/dd/yyyy'}}</td>
-            <td>{{job.completed_at| date: 'HH:mm MM/dd/yyyy'}}</td>
-            <td>
-              <a class="btn btn-danger" ng-click="cancelJob(job)" ng-if="job.status == 'queued' || job.status == 'running' || job.status == 'delayed'">cancel</a>
-              <a class="btn btn-danger" ng-click="retryJob(job)" ng-if="job.status == 'cancelled' || job.status == '?' || job.status == '??'">retry</a>
-            </td>
-          </tr>
-
-          <tr ng-if="groupJobs.length == 0">
-            <td colspan="99">
-              No Jobs
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
 
   <div class="modal fade" tabindex="-1" role="dialog" id="jobPayloadModal">
     <div class="modal-dialog">
@@ -130,13 +154,7 @@
   </div><!-- /.modal -->
 
 
-
-
-</div>
-
-<!-- <script src="//ajax.googleapis.com/ajax/libs/angular_material/1.1.0-rc2/angular-material.min.js"></script> -->
-
-<script src="/build/app.js"></script>
-<script src="//ajax.googleapis.com/ajax/libs/angular_material/1.1.0-rc4/angular-material.min.js"></script>
+  <script src="/build/app.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/angular_material/1.1.0-rc4/angular-material.min.js"></script>
 </body>
 </html>

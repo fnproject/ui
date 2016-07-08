@@ -12,7 +12,13 @@ require('expose?angular-animate!angular-animate');
 
 require("./css/app.css");
 
-var titan = angular.module('Titan', ['ngResource', 'ngMaterial']);
+var titan = angular
+            .module('Titan', ['ngResource', 'ngMaterial'])
+            .config(function($mdThemingProvider, $mdIconProvider){
+              $mdThemingProvider.theme('default')
+                    .primaryPalette('blue-grey')
+                    .accentPalette('red');
+            });;
 
 require('./services/group');
 require('./services/job');
