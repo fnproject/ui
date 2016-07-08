@@ -6,6 +6,10 @@ require('bootstrap-loader/extractStyles');
 require('expose?angular!angular');
 require('expose?angular-resource!angular-resource');
 
+require('expose?angular-aria!angular-aria');
+require('expose?angular-animate!angular-animate');
+require('expose?angular-material!angular-material');
+
 require("./css/app.css");
 
 var titan = angular.module('Titan', ['ngResource']);

@@ -21,6 +21,9 @@
     "url-loader": "^0.5.7"
   },
   "devDependencies": {
+    "angular-animate": "^1.5.7",
+    "angular-aria": "^1.5.7",
+    "angular-material": "^1.1.0-rc.5",
     "autoprefixer": "^6.3.7",
     "babel-core": "^6.7.0",
     "babel-loader": "^6.2.4",
