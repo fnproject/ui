@@ -8,11 +8,11 @@ require('expose?angular-resource!angular-resource');
 
 require('expose?angular-aria!angular-aria');
 require('expose?angular-animate!angular-animate');
-require('expose?angular-material!angular-material');
+//require('expose?angular-material!angular-material');
 
 require("./css/app.css");
 
-var titan = angular.module('Titan', ['ngResource']);
+var titan = angular.module('Titan', ['ngResource', 'ngMaterial']);
 
 require('./services/group');
 require('./services/job');
