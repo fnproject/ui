@@ -4,7 +4,7 @@ angular.module('Titan').controller('IndexController', ['$mdSidenav', '$mdBottomS
   $scope.perPage = 10;
 
   var self = this;
-  self.toggleList  = $scope.toggleUsersList;
+  self.toggleList  = $scope.toggleSidebar;
 
   $scope.init = function() {
     $scope.resetGroupValues();
@@ -29,7 +29,7 @@ angular.module('Titan').controller('IndexController', ['$mdSidenav', '$mdBottomS
   /**
    * Hide or Show the 'left' sideNav area
    */
-  $scope.toggleUsersList = function() {
+  $scope.toggleSidebar = function() {
     $mdSidenav('left').toggle();
   }
 

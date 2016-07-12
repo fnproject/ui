@@ -8,6 +8,7 @@ const postcssImport         = require('postcss-import');
 const postcssURL            = require('postcss-url');
 const cssnext               = require('postcss-cssnext');
 const cssnano               = require('cssnano');
+const fontMagician          = require('postcss-font-magician');
 
 
 var nodeModules = {};
@@ -108,6 +109,10 @@ module.exports = [
     postcss: [
       // inline @import need to merge vars
       postcssImport(),
+      fontMagician({
+        hosted: path.join(__dirname, './public/fonts/Roboto')
+        // hosted: './public/fonts/Roboto'
+      }),
       postcssURL(),
       cssnext()
     ]
