@@ -119,8 +119,9 @@
                   <td>{{job.started_at| date: 'HH:mm MM/dd/yyyy'}}</td>
                   <td>{{job.completed_at| date: 'HH:mm MM/dd/yyyy'}}</td>
                   <td>
-                    <a class="btn btn-danger" ng-click="cancelJob(job)" ng-if="job.status == 'queued' || job.status == 'running' || job.status == 'delayed'">cancel</a>
-                    <a class="btn btn-danger" ng-click="retryJob(job)" ng-if="job.status == 'cancelled' || job.status == 'error' || job.status == '??'">retry</a>
+                    <md-button ng-click="cancelJob(job)" ng-if="job.status == 'queued' || job.status == 'running' || job.status == 'delayed'">cancel</md-button>
+                    <md-button ng-click="retryJob(job)" ng-if="job.status == 'cancelled' || job.status == 'error' || job.status == '??'">retry</md-button>
+                    <md-button ng-click="showLog($event, job)" ng-if="job.status == 'success'">log</md-button>
                   </td>
                 </tr>
 

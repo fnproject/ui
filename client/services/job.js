@@ -82,6 +82,17 @@ angular.module('Titan').factory('Job', ['$resource', '$http', function($resource
       }), this.errorHandler);
     };
 
+    Job.prototype.log = function(id, cb) {
+      return this.service.get({
+        id: id,
+        action: 'log'
+      }, (function(log) {
+        if (typeof cb === "function") {
+          cb(log);
+        }
+      }), this.errorHandler);
+    };
+
     return Job;
   })();
 

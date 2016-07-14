@@ -95,6 +95,25 @@ angular.module('Titan').controller('IndexController', ['$mdSidenav', '$mdBottomS
     );
   }
 
+  $scope.showLog = function(ev, job) {
+    $scope.selectedJob = job;
+    var parentEl = angular.element(document.body);
+    var jobService = new Job($scope.selectedGroup, $scope.serverErrorHandler);
+
+    jobService.log($scope.selectedJob.id, function(data){
+      console.log(data);
+      $mdDialog.show(
+        $mdDialog.alert()
+          .parent(parentEl)
+          .clickOutsideToClose(true)
+          .title("Log for job #" + $scope.selectedJob.id)
+          .htmlContent("<hr /><pre>" + data.log + "</pre>")
+          .ok('Close')
+          .targetEvent(ev)
+      );
+    })
+  }
+
   $scope.formattedPayload = function(job) {
     if (!job) {
       return
