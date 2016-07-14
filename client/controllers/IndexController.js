@@ -1,4 +1,4 @@
-angular.module('Titan').controller('IndexController', ['$mdSidenav', '$mdBottomSheet', '$scope', '$controller', '$timeout', 'Group', 'Job', function($mdSidenav, $mdBottomSheet, $scope, $controller, $timeout, Group, Job) {
+angular.module('Titan').controller('IndexController', ['$mdSidenav', '$mdBottomSheet', '$mdDialog', '$scope', '$controller', '$timeout', 'Group', 'Job', function($mdSidenav, $mdBottomSheet, $mdDialog, $scope, $controller, $timeout, Group, Job) {
   $controller('ParentCtrl', {$scope: $scope})
 
   $scope.perPage = 10;
@@ -67,10 +67,32 @@ angular.module('Titan').controller('IndexController', ['$mdSidenav', '$mdBottomS
     }
   }
 
-  $scope.showPayload = function(job) {
+  $scope.showPayload = function(ev, job) {
     $scope.selectedJob = job;
-    console.log("$scope.selectedJob  1:",$scope.selectedJob);
-    $timeout(function(){$('#jobPayloadModal').modal()}, 50);
+    var parentEl = angular.element(document.body);
+    $mdDialog.show(
+      $mdDialog.alert()
+        .parent(parentEl)
+        .clickOutsideToClose(true)
+        .title("Payload for job #" + $scope.selectedJob.id)
+        .htmlContent("<hr /><pre>" + $scope.formattedPayload($scope.selectedJob) + "</pre>")
+        .ok('Close')
+        .targetEvent(ev)
+    );
+  }
+
+  $scope.showError = function(ev, job) {
+    $scope.selectedJob = job;
+    var parentEl = angular.element(document.body);
+    $mdDialog.show(
+      $mdDialog.alert()
+        .parent(parentEl)
+        .clickOutsideToClose(true)
+        .title("Error for job #" + $scope.selectedJob.id)
+        .htmlContent("<hr />Reason: <pre>" + $scope.selectedJob.reason + "</pre><br />Error: <pre>" + $scope.selectedJob.error + "</pre>")
+        .ok('Close')
+        .targetEvent(ev)
+    );
   }
 
   $scope.formattedPayload = function(job) {

@@ -3,3 +3,4 @@
 /public/build
 /data
 npm-debug.log
+.DS_Store

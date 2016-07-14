@@ -17,3 +17,10 @@ body {
   }
 
 }
+a[ng-click] {
+  cursor: pointer;
+  &:hover, &:focus {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+}
