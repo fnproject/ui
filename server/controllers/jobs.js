@@ -43,6 +43,22 @@ router.post('/:group/jobs/:id/retry', function(req, res) {
   processJobAction(req, res, "retry");
 });
 
+// Post New Job
+router.post('/:group/jobs', function(req, res) {
+  var path = "/v1/groups/" + encodeURIComponent(req.params.group) + "/jobs";
+  var attrs = {jobs: [req.body.job]};
+
+  successcb = function(data){
+    //console.log(action + " success!", data);
+    res.json(data.jobs[0]);
+  }
+  errorcb = function(status, err){
+    console.log("error!", err);
+    res.status(400).json({msg: "Error: Api responded with " + status + ". " + err});
+  }
+  helpers.postApiEndpoint(req, path, {}, attrs, successcb, errorcb);
+});
+
 router.get('/:group/jobs/:id/log', function(req, res) {
   var path = "/v1/groups/" + encodeURIComponent(req.params.group) + "/jobs/" + encodeURIComponent(req.params.id) + "/log";
   var requrestCb = function(error, response, body){

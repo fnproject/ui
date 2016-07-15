@@ -17,16 +17,16 @@ angular.module('Titan').factory('Job', ['$resource', '$http', function($resource
       defaults.patch['Content-Type'] = 'application/json';
     }
 
-    // Job.prototype.create = function(attrs, cb) {
-    //   if (cb == null) {
-    //     cb = null;
-    //   }
-    //   return new this.service({
-    //     group: attrs
-    //   }).$save((function(group) {
-    //     return typeof cb === "function" ? cb(group) : void 0;
-    //   }), this.errorHandler);
-    // };
+    Job.prototype.create = function(attrs, cb) {
+      if (cb == null) {
+        cb = null;
+      }
+      return new this.service({
+        job: attrs
+      }).$save((function(group) {
+        return typeof cb === "function" ? cb(group) : void 0;
+      }), this.errorHandler);
+    };
 
     // Job.prototype["delete"] = function(group, cb) {
     //   if (cb == null) {

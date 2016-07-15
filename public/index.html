@@ -39,7 +39,6 @@
 
           </div>
           <md-button ng-click="showNewGroupDialog($event)">New Group</md-button>
-          <md-button ng-click="showNewJobDialog($event)">New Job</md-button>
           <h2>Groups</h2>
           <md-list>
             <md-list-item ng-repeat="group in groups">
@@ -86,6 +85,8 @@
                   Next&nbsp;&nbsp;&nbsp;
                   <i class="fa fa-chevron-right"></i> >
                 </button>
+
+                <md-button ng-click="showNewJobDialog($event)">New Job</md-button>
               </div>
             </div>
 

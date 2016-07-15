@@ -124,7 +124,7 @@ angular.module('Titan').controller('IndexController', ['$mdSidenav', '$mdBottomS
       templateUrl: '/templates/new_group.tmpl.html',
       parent: angular.element(document.body),
       targetEvent: ev,
-      clickOutsideToClose:true,
+      clickOutsideToClose: true,
       fullscreen: false
     }).then(function() {
       // ok
@@ -140,9 +140,20 @@ angular.module('Titan').controller('IndexController', ['$mdSidenav', '$mdBottomS
       templateUrl: '/templates/new_job.tmpl.html',
       parent: angular.element(document.body),
       targetEvent: ev,
-      clickOutsideToClose:true,
-      fullscreen: false
-    })
+      clickOutsideToClose: true,
+      fullscreen: false,
+      locals: {
+        group: $scope.selectedGroup,
+        job: {image: $scope.selectedGroup.image}
+      }
+    }).then(function(job) {
+      // ok
+      if ($scope.currentPage == 0) {
+        $scope.groupJobs.unshift(job);
+      }
+    }, function() {
+      // cancel
+    });
   }
 
   $scope.formattedPayload = function(job) {
