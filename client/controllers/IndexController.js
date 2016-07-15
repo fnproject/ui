@@ -156,6 +156,29 @@ angular.module('Titan').controller('IndexController', ['$mdSidenav', '$mdBottomS
     });
   }
 
+  $scope.showEditGroupDialog = function(ev) {
+    $mdDialog.show({
+      controller: 'EditGroupDialogController',
+      templateUrl: '/templates/edit_group.tmpl.html',
+      parent: angular.element(document.body),
+      targetEvent: ev,
+      clickOutsideToClose: true,
+      fullscreen: false,
+      locals: {
+        group: angular.copy($scope.selectedGroup)
+      }
+    }).then(function(group) {
+      // ok
+      var pos =  $scope.groups.indexOf($scope.selectedGroup)
+      $scope.selectedGroup = group;
+      if (pos != -1) {
+        $scope.groups[pos] = group;
+      }
+    }, function() {
+      // cancel
+    });
+  }
+
   $scope.formattedPayload = function(job) {
     if (!job) {
       return
@@ -192,6 +215,13 @@ angular.module('Titan').controller('IndexController', ['$mdSidenav', '$mdBottomS
     }
   }
 
+  $scope.deleteGroup = function() {
+    if ($scope.selectedGroup && confirm("Do you really want to delete group '" + $scope.selectedGroup.name + "' ?")){
+      $scope.groupService.delete($scope.selectedGroup, function(res){
+        $scope.loadGroups();
+      });
+    }
+  }
 
 
 

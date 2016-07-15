@@ -87,6 +87,16 @@
                 </button>
 
                 <md-button ng-click="showNewJobDialog($event)">New Job</md-button>
+                <md-button ng-click="deleteGroup()">Delete Group</md-button>
+                <md-button ng-click="showEditGroupDialog($event)">Edit Group</md-button>
+
+                <div>
+                  Max Concurrency:
+                  <span ng-if="selectedGroup.max_concurrency">{{selectedGroup.max_concurrency | number}}</span>
+                  <span ng-if="!selectedGroup.max_concurrency">-</span>
+
+                </div>
+
               </div>
             </div>
 

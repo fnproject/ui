@@ -1,6 +1,5 @@
-angular.module('Titan').controller('NewGroupDialogController', ['$mdSidenav', '$mdBottomSheet', '$mdDialog', '$scope', '$controller', '$timeout', 'Group', 'Job', function($mdSidenav, $mdBottomSheet, $mdDialog, $scope, $controller, $timeout, Group, Job) {
+angular.module('Titan').controller('NewGroupDialogController', ['$mdDialog', '$scope', '$controller', '$timeout', 'Group', function($mdDialog, $scope, $controller, $timeout, Group) {
   $controller('ParentDialogCtrl', {$scope: $scope});
-
 
   $scope.init = function() {
     $scope.group = {}

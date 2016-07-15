@@ -27,9 +27,13 @@ exports.getApiEndpoint = function(req, path, params, successcb, errorcb) {
 }
 
 exports.postApiEndpoint = function(req, path, params, postfields, successcb, errorcb) {
+  exports.execApiEndpoint('POST', req, path, params, postfields, successcb, errorcb);
+}
+
+exports.execApiEndpoint = function(method, req, path, params, postfields, successcb, errorcb) {
   var options = {
     uri: exports.apiFullUrl(req, path),
-    method: 'POST',
+    method: method,
     json: postfields
   };
 
@@ -37,6 +41,7 @@ exports.postApiEndpoint = function(req, path, params, postfields, successcb, err
 
   request(options, exports.requrestCb);
 }
+
 
 
 exports.requrestCb = function (error, response, body) {

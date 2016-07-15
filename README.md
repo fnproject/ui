@@ -31,10 +31,13 @@ webpack --watch
 Example:
 ```
 # Launch Titan API
-docker run --rm -it -p 8080:8080 iron/titan-api`
+docker run --rm -it -p 8080:8080 -e DB="bolt:///titan/data/bolt.db" -v $PWD/data:/titan/data --name titan-api iron/titan-api
 
-# Launch TitanUI (`docker-machine ip` part for mac only, for other cases use `localhost` instead)
-API_URL=http://`docker-machine ip`:8080 npm start
+# Launch Runner
+docker run --rm -it --link titan-api:api -e "API_URL=http://api:8080" -v /var/run/docker.sock:/var/run/docker.sock iron/titan-runner
+
+# Launch TitanUI (use `docker-machine ip` instead of localhost if needed - for mac only)
+API_URL=http://localhost:8080 npm start
 
 # Launch launch automatic asset recompilation:
 webpack --watch
