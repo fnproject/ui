@@ -1,5 +1,6 @@
 angular.module('Titan').controller('ParentCtrl', ['$scope', function($scope) {
 
+  $scope.possiblePriorities = [0, 1, 2];
 
   $scope.serverErrorHandler = function(error) {
     var message = null;

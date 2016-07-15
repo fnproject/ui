@@ -4,7 +4,6 @@ angular.module('Titan').controller('EditGroupDialogController', ['$mdDialog', '$
   $scope.group = group;
 
   $scope.init = function() {
-    console.log("inited", group);
     $scope.groupService = new Group($scope.serverErrorHandler)
 
     $scope.envVarsArray = $scope.envVarsToArray($scope.group.env_vars || {});

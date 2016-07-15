@@ -22,6 +22,15 @@
             <div ng-message="required">is required</div>
           </div>
         </md-input-container>
+        <md-radio-group ng-model="job.priority" class="md-primary">
+          <md-radio-button ng-repeat="p in possiblePriorities"
+                          ng-value="p">
+              Priority {{p}}
+              <span ng-if="p == possiblePriorities[0]">(min)</span>
+              <span ng-if="p == possiblePriorities[possiblePriorities.length - 1]">(max)</span>
+              <br/>
+          </md-radio-button>
+        </md-radio-group>
         <md-input-container class="md-block">
           <label>Payload</label>
           <textarea ng-model="job.payload" name="payload" required rows="5" style="width: 400px;"></textarea>

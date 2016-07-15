@@ -144,7 +144,7 @@ angular.module('Titan').controller('IndexController', ['$mdSidenav', '$mdBottomS
       fullscreen: false,
       locals: {
         group: $scope.selectedGroup,
-        job: {image: $scope.selectedGroup.image}
+        job: {image: $scope.selectedGroup.image, priority: 0}
       }
     }).then(function(job) {
       // ok
