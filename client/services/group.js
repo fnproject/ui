@@ -16,16 +16,16 @@ angular.module('Titan').factory('Group', ['$resource', '$http', function($resour
       defaults.patch['Content-Type'] = 'application/json';
     }
 
-    // Group.prototype.create = function(attrs, cb) {
-    //   if (cb == null) {
-    //     cb = null;
-    //   }
-    //   return new this.service({
-    //     group: attrs
-    //   }).$save((function(group) {
-    //     return typeof cb === "function" ? cb(group) : void 0;
-    //   }), this.errorHandler);
-    // };
+    Group.prototype.create = function(attrs, cb) {
+      if (cb == null) {
+        cb = null;
+      }
+      return new this.service({
+        group: attrs
+      }).$save((function(group) {
+        return typeof cb === "function" ? cb(group) : void 0;
+      }), this.errorHandler);
+    };
 
     // Group.prototype["delete"] = function(group, cb) {
     //   if (cb == null) {

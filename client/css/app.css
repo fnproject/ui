@@ -17,6 +17,7 @@ body {
   }
 
 }
+
 a[ng-click] {
   cursor: pointer;
   &:hover, &:focus {

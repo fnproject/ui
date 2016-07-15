@@ -85,7 +85,6 @@ module.exports = [
           test: /\.(ttf|eot|svg)(\?[\s\S]+)?$/,
           loader: 'file'
         }
-
       ]
     },
     plugins: [

@@ -25,6 +25,9 @@ require('./services/group');
 require('./services/job');
 
 require('./controllers/ParentCtrl');
+require('./controllers/ParentDialogCtrl');
+require('./controllers/NewGroupDialogController');
+require('./controllers/NewJobDialogController');
 require('./controllers/IndexController');
 
 

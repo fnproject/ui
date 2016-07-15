@@ -15,12 +15,13 @@ exports.extend = function(target) {
 exports.apiFullUrl = function(req, path) {
   var apiUrl = req.app.get('api-url');
   var httpurl = url.format(apiUrl) + path.replace(/^\//, "");
-  console.log(">>>>", httpurl);
   return httpurl;
 }
 
 exports.getApiEndpoint = function(req, path, params, successcb, errorcb) {
   var url = exports.apiFullUrl(req, path);
+
+  console.log("GET " + url + ", params: ", params);
 
   request({url: url, qs: params}, exports.requrestCb);
 }
@@ -32,13 +33,15 @@ exports.postApiEndpoint = function(req, path, params, postfields, successcb, err
     json: postfields
   };
 
+  console.log(options.method + " " + options.uri + ", params: ", options.json);
+
   request(options, exports.requrestCb);
 }
 
 
 exports.requrestCb = function (error, response, body) {
   var parsed;
-  if (!error && response.statusCode == 200) {
+  if (!error && response.statusCode >= 200 && response.statusCode < 300) {
     try {
       if (typeof body == "string"){
         parsed = JSON.parse(body);

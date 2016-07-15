@@ -4,7 +4,7 @@ var helpers = require('../helpers/app-helpers.js');
 
 router.get('/', function(req, res) {
   successcb = function(data){
-    console.log("success!", data);
+    //console.log("success!", data);
     var groups = data.groups;
     res.json(groups);
   }
@@ -14,6 +14,20 @@ router.get('/', function(req, res) {
   }
 
   helpers.getApiEndpoint(req, "/v1/groups", {}, successcb, errorcb)
+});
+
+// Create New Group
+router.post('/', function(req, res) {
+  successcb = function(data){
+    //console.log("success!", data);
+    res.json(data);
+  }
+  errorcb = function(status, err){
+    console.log("error!", status, err);
+    res.status(400).json({msg: "Error occured. Api responded with " + status});
+  }
+
+  helpers.postApiEndpoint(req, "/v1/groups", {}, {group: req.body.group}, successcb, errorcb);
 });
 
 

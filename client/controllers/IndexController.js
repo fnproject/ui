@@ -11,10 +11,14 @@ angular.module('Titan').controller('IndexController', ['$mdSidenav', '$mdBottomS
 
     $scope.groupService = new Group($scope.serverErrorHandler)
 
+
+    $scope.loadGroups();
+  }
+
+  $scope.loadGroups = function() {
     $scope.groupService.all({}, function(groups){
       $scope.groups = groups;
     });
-
   }
 
   $scope.resetGroupValues = function() {
@@ -46,7 +50,7 @@ angular.module('Titan').controller('IndexController', ['$mdSidenav', '$mdBottomS
     var cursor = $scope.cursors[page];
     var jobService = new Job($scope.selectedGroup, $scope.serverErrorHandler);
     jobService.all({per_page: $scope.perPage, cursor: cursor}, function(data){
-      $scope.groupJobs = data.jobs;
+      $scope.groupJobs = data.jobs || [];
       $scope.cursors[page + 1] = data.cursor;
       $scope.isLoading = false;
     })
@@ -111,6 +115,33 @@ angular.module('Titan').controller('IndexController', ['$mdSidenav', '$mdBottomS
           .ok('Close')
           .targetEvent(ev)
       );
+    })
+  }
+
+  $scope.showNewGroupDialog = function(ev) {
+    $mdDialog.show({
+      controller: 'NewGroupDialogController',
+      templateUrl: '/templates/new_group.tmpl.html',
+      parent: angular.element(document.body),
+      targetEvent: ev,
+      clickOutsideToClose:true,
+      fullscreen: false
+    }).then(function() {
+      // ok
+      $scope.loadGroups();
+    }, function() {
+      // cancel
+    });
+  }
+
+  $scope.showNewJobDialog = function(ev) {
+    $mdDialog.show({
+      controller: 'NewJobDialogController',
+      templateUrl: '/templates/new_job.tmpl.html',
+      parent: angular.element(document.body),
+      targetEvent: ev,
+      clickOutsideToClose:true,
+      fullscreen: false
     })
   }
 
