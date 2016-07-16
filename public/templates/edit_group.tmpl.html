@@ -1,0 +1,55 @@
+<md-dialog aria-label="Edit Group" ng-cloak>
+  <form ng-submit="updateGroup()" name="groupForm">
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2>Edit Group</h2>
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="cancel()">
+          <md-icon md-svg-src="/images/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+    <md-dialog-content>
+      <div class="md-dialog-content" style="width: 450px;">
+        <md-input-container class="md-block">
+          <label>Name</label>
+          <input ng-model="group.name" name="name" readonly>
+        </md-input-container>
+
+        <md-input-container class="md-block">
+          <label>Image</label>
+          <input ng-model="group.image">
+        </md-input-container>
+
+        <md-input-container class="md-block">
+          <label>Max Concurrency</label>
+          <input ng-model="group.max_concurrency" type="number">
+        </md-input-container>
+
+        <h4>Environment Variables</h4>
+        <div ng-repeat="env_var in envVarsArray" style="margin: 0 0 -40px 0;">
+          <md-input-container>
+            <label>Key</label>
+            <input ng-model="env_var.key" required>
+          </md-input-container>
+          <md-input-container>
+            <label>Value</label>
+            <input ng-model="env_var.value">
+          </md-input-container>
+          <md-button ng-click="removeEnvVar(env_var)" style="float: right;margin: 0 0px 0 -40px;">X</md-button>
+        </div>
+        <md-button ng-click="addEnvVar()">add variable</md-button>
+
+      </div>
+
+
+
+
+
+
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+      <md-button type="submit">Update</md-button>
+    </md-dialog-actions>
+  </form>
+</md-dialog>

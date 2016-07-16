@@ -15,30 +15,38 @@ exports.extend = function(target) {
 exports.apiFullUrl = function(req, path) {
   var apiUrl = req.app.get('api-url');
   var httpurl = url.format(apiUrl) + path.replace(/^\//, "");
-  console.log(">>>>", httpurl);
   return httpurl;
 }
 
-exports.getApiEndpoint = function(req, path, successcb, errorcb) {
+exports.getApiEndpoint = function(req, path, params, successcb, errorcb) {
   var url = exports.apiFullUrl(req, path);
 
-  request(url, exports.requrestCb);
+  console.log("GET " + url + ", params: ", params);
+
+  request({url: url, qs: params}, exports.requrestCb);
 }
 
-exports.postApiEndpoint = function(req, path, postfields, successcb, errorcb) {
+exports.postApiEndpoint = function(req, path, params, postfields, successcb, errorcb) {
+  exports.execApiEndpoint('POST', req, path, params, postfields, successcb, errorcb);
+}
+
+exports.execApiEndpoint = function(method, req, path, params, postfields, successcb, errorcb) {
   var options = {
     uri: exports.apiFullUrl(req, path),
-    method: 'POST',
+    method: method,
     json: postfields
   };
+
+  console.log(options.method + " " + options.uri + ", params: ", options.json);
 
   request(options, exports.requrestCb);
 }
 
 
+
 exports.requrestCb = function (error, response, body) {
-  if (!error && response.statusCode == 200) {
-    var parsed
+  var parsed;
+  if (!error && response.statusCode >= 200 && response.statusCode < 300) {
     try {
       if (typeof body == "string"){
         parsed = JSON.parse(body);
@@ -48,11 +56,26 @@ exports.requrestCb = function (error, response, body) {
       successcb(parsed);
     } catch (e) {
       console.warn("Can not parse json:", body, e);
-      errorcb(response.statusCode, e);
+      errorcb(response.statusCode, "Can not parse api response");
     }
   } else {
-    console.warn("Request returned " + response.statusCode);
-    return errorcb(response.statusCode, body);
+    var message;
+    try {
+      if (typeof body == "string"){
+        parsed = JSON.parse(body);
+      } else {
+        parsed = body;
+      }
+      if (parsed && parsed.error && parsed.error.message){
+        message = parsed.error.message;
+      }
+    } catch (e) {
+      message = "Can not parse api response";
+    }
+    message = message || "An error ocurred."
+
+    console.warn("[ERR] " + response.statusCode + " | "  + message);
+    return errorcb(response.statusCode, message);
   }
 }
 

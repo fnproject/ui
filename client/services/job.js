@@ -17,16 +17,16 @@ angular.module('Titan').factory('Job', ['$resource', '$http', function($resource
       defaults.patch['Content-Type'] = 'application/json';
     }
 
-    // Job.prototype.create = function(attrs, cb) {
-    //   if (cb == null) {
-    //     cb = null;
-    //   }
-    //   return new this.service({
-    //     group: attrs
-    //   }).$save((function(group) {
-    //     return typeof cb === "function" ? cb(group) : void 0;
-    //   }), this.errorHandler);
-    // };
+    Job.prototype.create = function(attrs, cb) {
+      if (cb == null) {
+        cb = null;
+      }
+      return new this.service({
+        job: attrs
+      }).$save((function(group) {
+        return typeof cb === "function" ? cb(group) : void 0;
+      }), this.errorHandler);
+    };
 
     // Job.prototype["delete"] = function(group, cb) {
     //   if (cb == null) {
@@ -63,10 +63,32 @@ angular.module('Titan').factory('Job', ['$resource', '$http', function($resource
       }), this.errorHandler);
     };
 
-    Job.prototype.all = function(params, cb) {
-      return this.service.query(params, (function(jobs) {
+    Job.prototype.retry = function(job, cb) {
+      return new this.service({}).$save({
+        id: job.id,
+        action: 'retry'
+      }, (function(job) {
         if (typeof cb === "function") {
-          cb(jobs);
+          cb(job);
+        }
+      }), this.errorHandler);
+    };
+
+    Job.prototype.all = function(params, cb) {
+      return this.service.get(params, (function(data) {
+        if (typeof cb === "function") {
+          cb(data);
+        }
+      }), this.errorHandler);
+    };
+
+    Job.prototype.log = function(id, cb) {
+      return this.service.get({
+        id: id,
+        action: 'log'
+      }, (function(log) {
+        if (typeof cb === "function") {
+          cb(log);
         }
       }), this.errorHandler);
     };

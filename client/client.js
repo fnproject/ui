@@ -1,19 +1,37 @@
 console.log("loading .... ");
 
 require('expose?$!expose?jQuery!jquery');
-require('bootstrap-loader/extractStyles');
+// require('bootstrap-loader/extractStyles');
 
 require('expose?angular!angular');
 require('expose?angular-resource!angular-resource');
 
-require("./css/app.css.scss");
+require('expose?angular-aria!angular-aria');
+require('expose?angular-sanitize!angular-sanitize');
+require('expose?angular-animate!angular-animate');
+require('expose?angular-messages!angular-messages');
+//require('expose?angular-material!angular-material');
 
-var titan = angular.module('Titan', ['ngResource']);
+require("./css/app.css");
+
+var titan = angular
+            .module('Titan', ['ngResource', 'ngMaterial', 'ngSanitize', 'ngMessages'])
+            .config(function($mdThemingProvider, $mdIconProvider){
+              $mdThemingProvider.theme('default')
+                    .primaryPalette('blue-grey')
+                    .accentPalette('red');
+            });;
 
 require('./services/group');
 require('./services/job');
 
 require('./controllers/ParentCtrl');
+require('./controllers/ParentDialogCtrl');
+
+require('./controllers/NewGroupDialogController');
+require('./controllers/NewJobDialogController');
+require('./controllers/EditGroupDialogController');
+
 require('./controllers/IndexController');
 
 

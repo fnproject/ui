@@ -1,6 +1,7 @@
 var express = require('express');
 var path = require('path');
 var url = require('url');
+var bodyParser = require('body-parser');
 
 var helpers = require('./server/helpers/app-helpers.js');
 
@@ -18,6 +19,7 @@ var port = process.env.PORT || 4000;
 var publicPath = path.resolve(__dirname, 'public');
 
 app.use(express.static(publicPath));
+app.use(bodyParser.json());
 
 app.use(require('./server/router.js'));
 

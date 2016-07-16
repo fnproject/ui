@@ -1,111 +1,157 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="Titan">
+<html lang="en" ng-app="Titan" class="no-js">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8">
+  <title>Titan</title>
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
   <link rel=stylesheet href="/build/app.css">
   <style type="text/css">
     [ng-cloak], .ng-cloak {
       display: none !important;
     }
   </style>
+
 </head>
-<body>
+<body layout="column" ng-controller="IndexController">
+    <!-- Container #1 (see wireframe) -->
+    <md-toolbar layout="row" hide-gt-sm class="ng-cloak">
+      <md-button class="menu" ng-click="toggleSidebar()" >
+          Menu
+      </md-button>
+      <h1>
+        Titan
+      </h1>
+    </md-toolbar>
 
-<div class="container" ng-controller="IndexController">
-  <br />
-  <br />
-  <br />
-  <br />
-  <div class="row ng-cloak">
-    <div class="col-md-2" ng-if="!selectedGroup">&nbsp;</div>
-    <div class="" ng-class="{'col-md-8': !selectedGroup, 'col-md-3': selectedGroup}">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Group name</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr ng-repeat="group in groups">
-            <td>
-              <a ng-click="selectGroup(group)">{{group.name}}</a>
-              <br>
-              <i>Created {{group.created_at| date: 'HH:mm MM/dd/yyyy' }}</i>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <!-- Container #2 -->
+    <div flex layout="row">
+
+        <!-- Container #3 -->
+        <md-sidenav md-is-locked-open="$mdMedia('gt-sm')"
+                    md-component-id="left"
+                    ng-click="ul.toggleList()" class="ng-cloak">
+          <div>
+            <!-- <md-icon md-svg-src="./images/titan-logo.svg" class="logo"></md-icon> -->
+
+          </div>
+          <md-button ng-click="showNewGroupDialog($event)">New Group</md-button>
+          <h2>Groups</h2>
+          <md-list>
+            <md-list-item ng-repeat="group in groups">
+              <md-button ng-click="selectGroup(group)">
+                {{group.name}} <br>
+                <i>Created {{group.created_at| date: 'HH:mm MM/dd/yyyy' }}</i>
+              </md-button>
+            </md-list-item>
+
+            <tr >
+              <td>
+                <a ng-click="selectGroup(group)"></a>
+                <br>
+
+              </td>
+            </tr>
+          </md-list>
+
+
+          <div class="col-md-2" ng-if="!selectedGroup">&nbsp;</div>
+
+
+        </md-sidenav>
+
+        <!-- Container #4 -->
+        <md-content flex id="content" class="ng-cloak">
+          <div class="col-md-9" ng-if="selectedGroup">
+            <h2>{{selectedGroup.name}}</h2>
+
+            <div class="btn-group" ng-if="groupJobs != null">
+
+              <span>Jobs <b>{{currentPage * perPage + (groupJobs.length ? 1 : 0)}}-{{currentPage * perPage + groupJobs.length}}</b></span>
+
+              <div class="btn-group pull-right">
+
+                <button type="button" class="btn btn-default" ng-click="previousPage()" ng-class="{disabled: currentPage == 0 || isLoading}">
+                  < <i class="fa fa-chevron-left"></i>&nbsp;Prev
+                </button>
+
+                <button type="button" class="btn btn-default disabled">{{currentPage + 1}}</button>
+
+                <!-- BUG - remove +1 then fixed -->
+                <button type="button" class="btn btn-default" ng-click="nextPage()" ng-class="{disabled: (groupJobs.length + 1) < perPage || isLoading}">
+                  Next&nbsp;&nbsp;&nbsp;
+                  <i class="fa fa-chevron-right"></i> >
+                </button>
+
+                <md-button ng-click="showNewJobDialog($event)">New Job</md-button>
+                <md-button ng-click="deleteGroup()">Delete Group</md-button>
+                <md-button ng-click="showEditGroupDialog($event)">Edit Group</md-button>
+
+                <div>
+                  Max Concurrency:
+                  <span ng-if="selectedGroup.max_concurrency">{{selectedGroup.max_concurrency | number}}</span>
+                  <span ng-if="!selectedGroup.max_concurrency">-</span>
+
+                </div>
+
+              </div>
+            </div>
+
+
+            <div ng-if="groupJobs == null">loading ....</div>
+
+            <table class="table" ng-if="groupJobs != null">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Status</th>
+                  <th>Image</th>
+                  <th title="Priority">Pr</th>
+                  <th>payload</th>
+                  <th>Created</th>
+                  <th>Started</th>
+                  <th>Completed</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="job in groupJobs">
+                  <td>{{job.id}}</td>
+                  <td>
+                    <span ng-if="job.status != 'error'">{{job.status}}</span>
+                    <a ng-if="job.status == 'error'" ng-click="showError($event, job)">error</a>
+                    </td>
+                  <td>{{job.image}}</td>
+                  <td>{{job.priority}}</td>
+                  <td>
+                    <a ng-click="showPayload($event, job)">payload</a>
+                  </td>
+                  <td>{{job.created_at| date: 'HH:mm MM/dd/yyyy'}}</td>
+                  <td>{{job.started_at| date: 'HH:mm MM/dd/yyyy'}}</td>
+                  <td>{{job.completed_at| date: 'HH:mm MM/dd/yyyy'}}</td>
+                  <td>
+                    <md-button ng-click="cancelJob(job)" ng-if="job.status == 'queued' || job.status == 'running' || job.status == 'delayed'">cancel</md-button>
+                    <md-button ng-click="retryJob(job)" ng-if="job.status == 'cancelled' || job.status == 'error' || job.status == '??'">retry</md-button>
+                    <md-button ng-click="showLog($event, job)" ng-if="job.status == 'success'">log</md-button>
+                  </td>
+                </tr>
+
+                <tr ng-if="groupJobs.length == 0">
+                  <td colspan="99">
+                    No Jobs
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </md-content>
+
     </div>
 
-    <div class="col-md-9" ng-if="selectedGroup">
-      <h2>{{selectedGroup.name}}</h2>
-
-
-      <div ng-if="groupJobs == null">loading ....</div>
-
-      <table class="table" ng-if="groupJobs != null">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Status</th>
-            <th>Image</th>
-            <th title="Priority">Pr</th>
-            <th>payload</th>
-            <th>Created</th>
-            <th>Started</th>
-            <th>Completed</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr ng-repeat="job in groupJobs">
-            <td>{{job.id}}</td>
-            <td>{{job.status}}</td>
-            <td>{{job.image}}</td>
-            <td>{{job.priority}}</td>
-            <td>
-              <a ng-click="showPayload(job)">payload</a>
-            </td>
-            <td>{{job.created_at| date: 'HH:mm MM/dd/yyyy'}}</td>
-            <td>{{job.started_at| date: 'HH:mm MM/dd/yyyy'}}</td>
-            <td>{{job.completed_at| date: 'HH:mm MM/dd/yyyy'}}</td>
-            <td>
-              <a class="btn btn-danger" ng-click="cancelJob(job)" ng-if="job.status == 'queued' || job.status == 'running' || job.status == 'delayed'">cancel</a>
-            </td>
-          </tr>
-
-          <tr ng-if="groupJobs.length == 0">
-            <td colspan="99">
-              No Jobs
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <div class="modal fade" tabindex="-1" role="dialog" id="jobPayloadModal">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title">
-            Payload for group "{{selectedGroup.name}}", job #{{selectedJob.id}}
-          </h4>
-        </div>
-        <div class="modal-body">
-          <p>
-            <pre>{{formattedPayload(selectedJob)}}</pre>
-          </p>
-        </div>
-      </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-  </div><!-- /.modal -->
-
-
-
-
-</div>
-<script src="/build/app.js"></script>
+  <script src="/build/app.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/angular_material/1.1.0-rc4/angular-material.min.js"></script>
 </body>
 </html>

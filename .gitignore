@@ -1,3 +1,6 @@
 /node_modules
 /build
 /public/build
+/data
+npm-debug.log
+.DS_Store

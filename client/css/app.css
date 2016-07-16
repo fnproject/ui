@@ -1,0 +1,27 @@
+@charset "utf-8";
+@import "bootstrap";
+@import "variables.css";
+@import "angular-material/angular-material.css";
+@import "vendor/test-vendor.css";
+
+body {
+  color: var(--mainColor);
+  font-family: Roboto, Helvetica, Arial, sans-serif;
+
+  /* font-family: 'Roboto Mono', monospace;
+  font-family: 'Roboto Condensed', sans-serif;
+  font-family: 'Roboto Slab', serif; */
+
+  & .modal {
+    color: #777;
+  }
+
+}
+
+a[ng-click] {
+  cursor: pointer;
+  &:hover, &:focus {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+}

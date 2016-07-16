@@ -1,0 +1,47 @@
+<md-dialog aria-label="New Job" ng-cloak>
+  <form ng-submit="createJob()" name="jobForm">
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2>New Job</h2>
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="cancel()">
+          <md-icon md-svg-src="/images/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+    <md-dialog-content>
+      <div class="md-dialog-content">
+        <md-input-container class="md-block">
+          <label>Group</label>
+          <input ng-model="group.name" disabled>
+        </md-input-container>
+        <md-input-container class="md-block">
+          <label>Image</label>
+          <input ng-model="job.image" name="image" required>
+          <div ng-messages="jobForm.image.$error">
+            <div ng-message="required">is required</div>
+          </div>
+        </md-input-container>
+        <md-radio-group ng-model="job.priority" class="md-primary">
+          <md-radio-button ng-repeat="p in possiblePriorities"
+                          ng-value="p">
+              Priority {{p}}
+              <span ng-if="p == possiblePriorities[0]">(min)</span>
+              <span ng-if="p == possiblePriorities[possiblePriorities.length - 1]">(max)</span>
+              <br/>
+          </md-radio-button>
+        </md-radio-group>
+        <md-input-container class="md-block">
+          <label>Payload</label>
+          <textarea ng-model="job.payload" name="payload" required rows="5" style="width: 400px;"></textarea>
+          <div ng-messages="jobForm.payload.$error" multiple md-auto-hide="true">
+            <div ng-message="required">is required</div>
+          </div>
+        </md-input-container>
+      </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+      <md-button type="submit">Create</md-button>
+    </md-dialog-actions>
+  </form>
+</md-dialog>
