@@ -4,7 +4,11 @@
 
 
 
+# Production
 
+```
+docker run --rm -it --link titan-api:api -p 4000:4000 -e "API_URL=http://api:8080" iron/titan-ui
+```
 
 
 # Development
