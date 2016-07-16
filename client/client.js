@@ -10,7 +10,10 @@ require('expose?angular-aria!angular-aria');
 require('expose?angular-sanitize!angular-sanitize');
 require('expose?angular-animate!angular-animate');
 require('expose?angular-messages!angular-messages');
+
+// Using vendored version. don't work well with expose
 //require('expose?angular-material!angular-material');
+require('./vendor/angular-material');
 
 require("./css/app.css");
 
