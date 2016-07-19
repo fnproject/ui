@@ -56,6 +56,7 @@ angular.module('Titan').controller('IndexController', ['$mdSidenav', '$mdBottomS
   $scope.selectGroup = function(group){
     $scope.resetGroupValues();
     $scope.selectedGroup = group;
+    $mdSidenav('right').close();
 
     $scope.loadGroupJobs();
   }
