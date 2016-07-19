@@ -29,7 +29,6 @@ angular.module('Titan').controller('IndexController', ['$mdSidenav', '$mdBottomS
     $scope.cursors = [];
     $scope.isLoading = false;
   }
-
   /**
    * Hide or Show the 'left' sideNav area
    */
@@ -38,9 +37,15 @@ angular.module('Titan').controller('IndexController', ['$mdSidenav', '$mdBottomS
   }
 
   $scope.showJobDetails = (job = null) => {
-    $scope.selectedJob = job;
-    if (!$mdSidenav('right').isOpen()) {
-      $mdSidenav('right').toggle();
+    if ($scope.selectedJob == job) {
+      $mdSidenav('right').close();
+      $scope.selectedJob = null;
+    }
+    else {
+      $scope.selectedJob = job;
+      if (!$mdSidenav('right').isOpen()) {
+        $mdSidenav('right').toggle();
+      }
     }
   }
 
