@@ -33,8 +33,19 @@ angular.module('Titan').controller('IndexController', ['$mdSidenav', '$mdBottomS
   /**
    * Hide or Show the 'left' sideNav area
    */
-  $scope.toggleSidebar = function() {
+  $scope.toggleSidebar = () => {
     $mdSidenav('left').toggle();
+  }
+
+  $scope.showJobDetails = (job = null) => {
+    $scope.selectedJob = job;
+    if (!$mdSidenav('right').isOpen()) {
+      $mdSidenav('right').toggle();
+    }
+  }
+
+  $scope.toggleJobDetails = () => {
+    $mdSidenav('right').toggle();
   }
 
   $scope.selectGroup = function(group){
@@ -69,20 +80,6 @@ angular.module('Titan').controller('IndexController', ['$mdSidenav', '$mdBottomS
       $scope.currentPage = $scope.currentPage + 1;
       $scope.loadGroupJobs();
     }
-  }
-
-  $scope.showPayload = function(ev, job) {
-    $scope.selectedJob = job;
-    var parentEl = angular.element(document.body);
-    $mdDialog.show(
-      $mdDialog.alert()
-        .parent(parentEl)
-        .clickOutsideToClose(true)
-        .title("Payload for job #" + $scope.selectedJob.id)
-        .htmlContent("<hr /><pre>" + $scope.formattedPayload($scope.selectedJob) + "</pre>")
-        .ok('Close')
-        .targetEvent(ev)
-    );
   }
 
   $scope.showError = function(ev, job) {
