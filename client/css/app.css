@@ -1,5 +1,4 @@
 @charset "utf-8";
-@import "bootstrap";
 @import "variables.css";
 @import "angular-material/angular-material.css";
 @import "vendor/test-vendor.css";

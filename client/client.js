@@ -1,7 +1,6 @@
 console.log("loading .... ");
 
-require('expose?$!expose?jQuery!jquery');
-// require('bootstrap-loader/extractStyles');
+// require('expose?$!expose?jQuery!jquery');
 
 require('expose?angular!angular');
 require('expose?angular-resource!angular-resource');

@@ -32,11 +32,18 @@
         <md-sidenav md-is-locked-open="$mdMedia('gt-sm')"
                     md-component-id="left" class="ng-cloak">
           <div>
-            <!-- <md-icon md-svg-src="./images/titan-logo.svg" class="logo"></md-icon> -->
-
+            <md-icon md-svg-src="./images/titan-logo.svg" class="logo"></md-icon>
+            <div ng-if="selectedGroup">
+              <h2>{{selectedGroup.name}}</h2>
+              <md-button ng-click="deleteGroup()">Delete Group</md-button>
+              <md-button ng-click="showEditGroupDialog($event)">Edit Group</md-button>
+            </div>
           </div>
-          <md-button ng-click="showNewGroupDialog($event)">New Group</md-button>
-          <h2>Groups</h2>
+
+          <h2>
+            Groups
+            <md-button ng-click="showNewGroupDialog($event)">New Group</md-button>
+          </h2>
           <md-list>
             <md-list-item ng-repeat="group in groups">
               <md-button ng-click="selectGroup(group)">
@@ -64,14 +71,16 @@
                     id="content"
                     class="ng-cloak">
           <div class="col-md-9" ng-if="selectedGroup">
-            <h2>{{selectedGroup.name}}</h2>
+            <h2>
+              Jobs
+              <md-button ng-click="showNewJobDialog($event)">New Job</md-button>
+            </h2>
 
             <div class="btn-group" ng-if="groupJobs != null">
 
               <span>Jobs <b>{{currentPage * perPage + (groupJobs.length ? 1 : 0)}}-{{currentPage * perPage + groupJobs.length}}</b></span>
 
-              <div class="btn-group pull-right">
-
+              <div>
                 <button type="button" class="btn btn-default" ng-click="previousPage()" ng-class="{disabled: currentPage == 0 || isLoading}">
                   < <i class="fa fa-chevron-left"></i>&nbsp;Prev
                 </button>
@@ -84,9 +93,8 @@
                   <i class="fa fa-chevron-right"></i> >
                 </button>
 
-                <md-button ng-click="showNewJobDialog($event)">New Job</md-button>
-                <md-button ng-click="deleteGroup()">Delete Group</md-button>
-                <md-button ng-click="showEditGroupDialog($event)">Edit Group</md-button>
+
+
 
                 <div>
                   Max Concurrency:
