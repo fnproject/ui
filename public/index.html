@@ -33,10 +33,15 @@
                     md-component-id="left" class="ng-cloak">
           <div>
             <md-icon md-svg-src="./images/titan-logo.svg" class="logo"></md-icon>
+            <div ng-if="!selectedGroup">
+              titan
+            </div>
             <div ng-if="selectedGroup">
-              <h2>{{selectedGroup.name}}</h2>
-              <md-button ng-click="deleteGroup()">Delete Group</md-button>
-              <md-button ng-click="showEditGroupDialog($event)">Edit Group</md-button>
+              <h2>
+                {{selectedGroup.name}}
+                <md-button ng-click="showEditGroupDialog($event)">Edit </md-button>
+                <md-button ng-click="deleteGroup()">Delete </md-button>
+              </h2>
             </div>
           </div>
 
