@@ -1,7 +1,13 @@
-angular.module('Titan').controller('IndexController', ['$mdSidenav', '$mdBottomSheet', '$mdDialog', '$scope', '$controller', '$timeout', 'Group', 'Job', function($mdSidenav, $mdBottomSheet, $mdDialog, $scope, $controller, $timeout, Group, Job) {
+angular.module('Titan').controller('IndexController', [
+    '$mdSidenav', '$mdBottomSheet', '$mdDialog', '$scope', '$controller', '$timeout', '$route', '$routeParams', '$location', 'Group', 'Job',
+    function($mdSidenav, $mdBottomSheet, $mdDialog, $scope, $controller, $timeout, $route, $routeParams, $location, Group, Job) {
   $controller('ParentCtrl', {$scope: $scope})
 
   $scope.perPage = 10;
+
+  $scope.$route = $route;
+  $scope.$location = $location;
+  $scope.$routeParams = $routeParams;
 
   var self = this;
   self.toggleList  = $scope.toggleSidebar;
@@ -57,17 +63,7 @@ angular.module('Titan').controller('IndexController', ['$mdSidenav', '$mdBottomS
     $scope.loadGroupJobs();
   }
 
-  $scope.loadGroupJobs = function(){
-    $scope.isLoading = true;
-    var page = $scope.currentPage;
-    var cursor = $scope.cursors[page];
-    var jobService = new Job($scope.selectedGroup, $scope.serverErrorHandler);
-    jobService.all({per_page: $scope.perPage, cursor: cursor}, function(data){
-      $scope.groupJobs = data.jobs || [];
-      $scope.cursors[page + 1] = data.cursor;
-      $scope.isLoading = false;
-    })
-  }
+
 
   $scope.previousPage = function(){
     if ($scope.currentPage > 0 && !$scope.isLoading) {

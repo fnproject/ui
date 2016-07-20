@@ -1,0 +1,137 @@
+<md-content flex
+                    id="content"
+                    class="ng-cloak">
+  <div class="col-md-9">
+    <h2>
+      {{$parent.selectedGroup.name}} >> Jobs
+      <md-button ng-click="showNewJobDialog($event)">New Job</md-button>
+    </h2>
+
+    <div class="btn-group" ng-if="groupJobs != null">
+
+      <span>Jobs <b>{{currentPage * perPage + (groupJobs.length ? 1 : 0)}}-{{currentPage * perPage + groupJobs.length}}</b></span>
+
+      <div>
+        <button type="button" class="btn btn-default" ng-click="previousPage()" ng-class="{disabled: currentPage == 0 || isLoading}">
+          < <i class="fa fa-chevron-left"></i>&nbsp;Prev
+        </button>
+
+        <button type="button" class="btn btn-default disabled">{{currentPage + 1}}</button>
+
+        <!-- BUG - remove +1 then fixed -->
+        <button type="button" class="btn btn-default" ng-click="nextPage()" ng-class="{disabled: (groupJobs.length + 1) < perPage || isLoading}">
+          Next&nbsp;&nbsp;&nbsp;
+          <i class="fa fa-chevron-right"></i> >
+        </button>
+
+
+
+
+        <div>
+          Max Concurrency:
+          <span ng-if="selectedGroup.max_concurrency">{{selectedGroup.max_concurrency | number}}</span>
+          <span ng-if="!selectedGroup.max_concurrency">-</span>
+
+        </div>
+
+      </div>
+    </div>
+
+
+    <div ng-if="groupJobs == null">loading ....</div>
+
+    <table class="table" ng-if="groupJobs != null">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Status</th>
+          <th>Image</th>
+          <th title="Priority">Pr</th>
+          <th>Created</th>
+          <th>Started</th>
+          <th>Completed</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="job in groupJobs">
+          <td>{{job.id}}</td>
+          <td>
+            <span ng-if="job.status != 'error'">{{job.status}}</span>
+            <a ng-if="job.status == 'error'" ng-click="showError($event, job)">error</a>
+            </td>
+          <td>{{job.image}}</td>
+          <td>{{job.priority}}</td>
+          <td>{{job.created_at| date: 'HH:mm MM/dd/yyyy'}}</td>
+          <td>{{job.started_at| date: 'HH:mm MM/dd/yyyy'}}</td>
+          <td>{{job.completed_at| date: 'HH:mm MM/dd/yyyy'}}</td>
+          <td>
+            <md-button ng-click="showJobDetails(job)">
+              Details
+            </md-button>
+            <md-button ng-click="cancelJob(job)" ng-if="job.status == 'queued' || job.status == 'running' || job.status == 'delayed'">cancel</md-button>
+            <md-button ng-click="retryJob(job)" ng-if="job.status == 'cancelled' || job.status == 'error' || job.status == '??'">retry</md-button>
+            <md-button ng-click="showLog($event, job)" ng-if="job.status == 'success' || job.status == 'error'">log</md-button>
+          </td>
+        </tr>
+
+        <tr ng-if="groupJobs.length == 0">
+          <td colspan="99">
+            No Jobs
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</md-content>
+
+<md-sidenav md-component-id="right"
+            md-disable-backdrop
+            class="md-sidenav-right md-whiteframe-4dp ng-cloak">
+  <md-toolbar class="md-theme-light" layout-padding>
+    <h1 class="md-toolbar-tools">
+      <div>
+        Job #{{selectedJob.id}}<br>
+        {{selectedJob.image}}<br>
+        {{selectedJob.priority}}<br>
+        <!-- retries_delay: {{selectedJob.retries_delay}}<br>
+        timeout: {{selectedJob.timeout}}<br> -->
+      </div>
+    </h1>
+    <h2>
+      Status:<br>
+      <span>{{selectedJob.status}}</span>
+
+      <md-button ng-click="cancelJob(selectedJob)" ng-if="selectedJob.status == 'queued' || selectedJob.status == 'running' || selectedJob.status == 'delayed'">cancel</md-button>
+      <md-button ng-click="retryJob(selectedJob)" ng-if="selectedJob.status == 'cancelled' || selectedJob.status == 'error' || selectedJob.status == '??'">retry</md-button>
+      <md-button ng-click="showLog($event, selectedJob)" ng-if="selectedJob.status == 'success' || selectedJob.status == 'error'">log</md-button>
+    </h2>
+  </md-toolbar>
+  <md-content layout-padding>
+    <div>
+      <h2>Payload</h2>
+      <pre>{{formattedPayload(selectedJob)}}</pre>
+    </div>
+
+    <div>
+      <h2>History</h2>
+
+      <div>
+        <div>
+          {{selectedJob.created_at| date: 'HH:mm MM/dd/yyyy'}} Created
+        </div>
+        <div>
+          {{selectedJob.started_at| date: 'HH:mm MM/dd/yyyy'}} Queued
+        </div>
+        <div>
+          {{selectedJob.completed_at| date: 'HH:mm MM/dd/yyyy'}} Completed
+        </div>
+      </div>
+    </div>
+
+    <md-button ng-click="toggleJobDetails()" class="md-primary">
+      Close Sidenav Right
+    </md-button>
+  </md-content>
+</md-sidenav>

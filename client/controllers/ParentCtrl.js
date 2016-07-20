@@ -13,4 +13,16 @@ angular.module('Titan').controller('ParentCtrl', ['$scope', function($scope) {
     // TODO: nice flash message
   };
 
+  $scope.formattedPayload = function(job) {
+    if (!job) {
+      return
+    };
+    var payload = job.payload;
+    try {
+      payload = JSON.stringify(JSON.parse(payload), null, 4);
+    } catch (undefined) {}
+
+    return payload;
+  }
+
 }]);
