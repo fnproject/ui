@@ -1,17 +1,54 @@
-angular.module('Titan').controller('GroupJobsController', ['$mdDialog', '$mdSidenav', '$scope', '$controller',  '$location', '$routeParams' , 'Job', function($mdDialog, $mdSidenav, $scope, $controller, $location, $routeParams, Job) {
+angular.module('Titan').controller('GroupJobsController', ['$mdDialog', '$mdSidenav', '$scope', '$controller',  '$location', '$routeParams' , '$interval', '$timeout', 'Job', function($mdDialog, $mdSidenav, $scope, $controller, $location, $routeParams, $interval, $timeout, Job) {
+
+  $scope.taskStatusPollInterval = 5000; // ms. Check for task's status this often
+  $scope.unfinishedTaskStatuses = ['running', 'queued', 'delayed'];
 
   $scope.$location = $location;
   $scope.$routeParams = $routeParams;
   $scope.currentPage = 0;
   $scope.cursors = [];
-
+  var stop;
   $scope.init = function(){
     console.log("GroupJobsController - loaded!", $scope.$routeParams);
 
-    $scope.$parent.selectedGroup = _.find($scope.groups, (gr) => gr.name == $scope.$routeParams.group_name);
+    $scope.$parent.selectedGroup = _.find($scope.$parent.groups, (gr) => gr.name == $scope.$routeParams.group_name);
 
-    $mdSidenav('right').close();
+    console.log("$scope.$parent.selectedGroup", $scope.$parent.groups, $scope.$parent.selectedGroup);
+
+    $scope.jobService = new Job($scope.$parent.selectedGroup, $scope.serverErrorHandler);
+
+    $timeout(function(){$mdSidenav('right').close();}, 100);
+
     $scope.loadGroupJobs();
+    // Check job statuses regularly
+    stop = $interval($scope.scheduledCheck, $scope.taskStatusPollInterval);
+  }
+
+  $scope.reloadGroupJobs = function (){
+    $scope.groupJobs = null;
+    $scope.loadGroupJobs();
+  }
+
+  $scope.scheduledCheck = function (){
+    let jobs = _.filter(($scope.groupJobs || []), (job) => $scope.unfinishedTaskStatuses.indexOf(job.status) > -1 );
+    console.log("unfinished jobs: ", jobs);
+
+    var len;
+    for (let i = 0, len = jobs.length; i < len; i++) {
+      let job = jobs[i];
+      console.log(">" + i + " | " + job.id + "delay: " + 200 * i);
+      $timeout(function(){ $scope.checkJobStatus(job) }, 200 * i);
+    }
+  }
+
+  $scope.checkJobStatus = function(job){
+    console.log("checkJobStatus " + job.id);
+    $scope.jobService.find(job.id, function(res){
+      var pos = $scope.groupJobs.indexOf(job);
+      if (pos > -1) {
+        $scope.groupJobs[pos] = res.toJSON();
+      }
+    })
   }
 
   $scope.previousPage = function(){
@@ -78,10 +115,10 @@ angular.module('Titan').controller('GroupJobsController', ['$mdDialog', '$mdSide
       }
     }).then(function(group) {
       // ok
-      var pos =  $scope.groups.indexOf($scope.$parent.selectedGroup)
+      var pos =  $scope.$parent.groups.indexOf($scope.$parent.selectedGroup)
       $scope.$parent.selectedGroup = group;
       if (pos != -1) {
-        $scope.groups[pos] = group;
+        $scope.$parent.groups[pos] = group;
       }
     }, function() {
       // cancel
@@ -91,9 +128,8 @@ angular.module('Titan').controller('GroupJobsController', ['$mdDialog', '$mdSide
   $scope.showLog = function(ev, job) {
     $scope.selectedJob = job;
     var parentEl = angular.element(document.body);
-    var jobService = new Job($scope.$parent.selectedGroup, $scope.serverErrorHandler);
 
-    jobService.log($scope.selectedJob.id, function(data){
+    $scope.jobService.log($scope.selectedJob.id, function(data){
       console.log(data);
       $mdDialog.show(
         $mdDialog.alert()
@@ -126,13 +162,20 @@ angular.module('Titan').controller('GroupJobsController', ['$mdDialog', '$mdSide
     $scope.isLoading = true;
     var page = $scope.currentPage;
     var cursor = $scope.cursors[page];
-    var jobService = new Job($scope.$parent.selectedGroup, $scope.$parent.serverErrorHandler);
-    jobService.all({per_page: $scope.perPage, cursor: cursor}, function(data){
+    $scope.jobService.all({per_page: $scope.perPage, cursor: cursor}, function(data){
       $scope.groupJobs = data.jobs || [];
       $scope.cursors[page + 1] = data.cursor;
       $scope.isLoading = false;
     })
   }
+
+  $scope.$on('$destroy', function () {
+    // Stop polling for task updates
+    if (angular.isDefined(stop)) {
+      $interval.cancel(stop);
+      stop = undefined;
+    }
+  });
 
 
 

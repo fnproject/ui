@@ -23,6 +23,8 @@ app.use(bodyParser.json());
 
 app.use(require('./server/router.js'));
 
+app.disable('etag');
+
 app.listen(port, function () {
   console.log('Using API url: ' + apiUrl.host);
   console.log('Server running on port ' + port);

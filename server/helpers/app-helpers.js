@@ -53,11 +53,14 @@ exports.requrestCb = function (error, response, body) {
       } else {
         parsed = body;
       }
-      successcb(parsed);
     } catch (e) {
       console.warn("Can not parse json:", body, e);
+    };
+    if (parsed){
+      successcb(parsed);
+    } else {
       errorcb(response.statusCode, "Can not parse api response");
-    }
+    };
   } else {
     var message;
     try {
@@ -75,7 +78,7 @@ exports.requrestCb = function (error, response, body) {
     message = message || "An error ocurred."
 
     console.warn("[ERR] " + response.statusCode + " | "  + message);
-    return errorcb(response.statusCode, message);
+    errorcb(response.statusCode, message);
   }
 }
 

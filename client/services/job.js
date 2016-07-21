@@ -28,6 +28,14 @@ angular.module('Titan').factory('Job', ['$resource', '$http', function($resource
       }), this.errorHandler);
     };
 
+    Job.prototype.find = function(id, cb) {
+      return this.service.get({id: id}, (function(job) {
+        if (typeof cb === "function") {
+          cb(job);
+        }
+      }), this.errorHandler);
+    }
+
     // Job.prototype["delete"] = function(group, cb) {
     //   if (cb == null) {
     //     cb = null;

@@ -35,6 +35,20 @@ router.get('/:group/jobs', function(req, res) {
   helpers.getApiEndpoint(req, path, {n: req.query.per_page || per_page, cursor: req.query.cursor || null}, successcb, errorcb);
 });
 
+router.get('/:group/jobs/:id', function(req, res) {
+  var path = "/v1/groups/" + encodeURIComponent(req.params.group) + "/jobs/" + encodeURIComponent(req.params.id);
+
+  successcb = function(data){
+    res.json(data.job);
+  }
+  errorcb = function(status, err){
+    console.log("error!", status, err);
+    res.status(400).json({msg: "Error: Api responded with " + status + ". " + err});
+  }
+
+  helpers.getApiEndpoint(req, path, {}, successcb, errorcb);
+});
+
 router.post('/:group/jobs/:id/cancel', function(req, res) {
   processJobAction(req, res, "cancel");
 });
