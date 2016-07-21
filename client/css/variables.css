@@ -1,3 +1,27 @@
 :root {
-  --mainColor: #66758b;
+  --logoYellow:       #FFF200;
+
+  --textColor:        #66758b;
+  --text2ndColor:     rgba(#66758b, .5);
+  --disabledColor:    rgba(#66758b, .3);
+  --dividerColor:     rgba(#66758b, .1);
+
+  --darkBgColor:      #222D32;
+  --textOnDColor:     white;
+  --text2ndOnDColor:  rgba(#D8DFE2, .7);
+  --textDisabledOnDColor:  rgba(#D8DFE2, .3);
+  --greyColor:             #D2D6DE;
+
+
+  --primaryColor:     #0072A5;
+  --blueColor:        #378CBE;
+  --yellowColor:      #F59D00;
+  --redColor:         #DF4A32;
+  --greenColor:       #00A757;
+
+  --yellowColor:      #FF8500;
+  --maroonColor:      #DA135F;
+  --tealColor:        #2DCCCD;
+  --purpleColor:      #605AAA;
+
 }

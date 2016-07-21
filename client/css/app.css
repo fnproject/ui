@@ -4,7 +4,7 @@
 @import "vendor/test-vendor.css";
 
 body {
-  color: var(--mainColor);
+  color: var(--textColor);
   font-family: Roboto, Helvetica, Arial, sans-serif;
 
   /* font-family: 'Roboto Mono', monospace;
