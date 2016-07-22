@@ -6,14 +6,17 @@
   --disabledColor:    rgba(#66758b, .3);
   --dividerColor:     rgba(#66758b, .1);
 
-  --darkBgColor:      #222D32;
-  --textOnDColor:     white;
-  --text2ndOnDColor:  rgba(#D8DFE2, .7);
+  --darkBgColor:           #222D32;
+  --textOnDColor:          white;
+  --text2ndOnDColor:       rgba(#D8DFE2, .7);
   --textDisabledOnDColor:  rgba(#D8DFE2, .3);
   --greyColor:             #D2D6DE;
 
 
   --primaryColor:     #0072A5;
+  --accentColor:      #FCB104;
+  --warnColor:        var(--redColor);
+
   --blueColor:        #378CBE;
   --yellowColor:      #F59D00;
   --redColor:         #DF4A32;

@@ -2,6 +2,7 @@
 @import "variables.css";
 @import "angular-material/angular-material.css";
 @import "vendor/test-vendor.css";
+@import "sidebar.css";
 
 body {
   color: var(--textColor);
@@ -22,5 +23,20 @@ a[ng-click] {
   &:hover, &:focus {
     text-decoration: underline;
     cursor: pointer;
+  }
+}
+
+md-sidenav.ttn-sidebar {
+  width: 320px;
+  background: var(--darkBgColor);
+  color: var(--text2ndOnDColor);
+
+  & a {
+    color: var(--text2ndOnDColor);
+    transition: color .1s ease;
+
+    &:hover {
+      color: white;
+    }
   }
 }
