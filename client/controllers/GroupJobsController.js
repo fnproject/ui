@@ -37,12 +37,10 @@ angular.module('Titan').controller('GroupJobsController', ['$mdDialog', '$mdSide
   $scope.scheduledCheck = function (){
     let jobs = _.filter(($scope.groupJobs || []), (job) => $scope.unfinishedTaskStatuses.indexOf(job.status) > -1 );
     console.log("unfinished jobs: ", jobs);
-
     var len;
     for (let i = 0, len = jobs.length; i < len; i++) {
       let job = jobs[i];
-      console.log(">" + i + " | " + job.id + "delay: " + 200 * i);
-      $timeout(function(){ $scope.checkJobStatus(job) }, 200 * i);
+      $scope.checkJobStatus(job);
     }
   }
 
@@ -65,7 +63,7 @@ angular.module('Titan').controller('GroupJobsController', ['$mdDialog', '$mdSide
 
   $scope.nextPage = function(){
     // TODO: remove +1 after fix
-    if (($scope.groupJobs.length + 1) >= $scope.perPage && !$scope.isLoading) {
+    if (($scope.groupJobs.length + 1) >= $scope.$parent.perPage && !$scope.isLoading) {
       $scope.currentPage = $scope.currentPage + 1;
       $scope.loadGroupJobs();
     }
@@ -167,11 +165,36 @@ angular.module('Titan').controller('GroupJobsController', ['$mdDialog', '$mdSide
     $scope.isLoading = true;
     var page = $scope.currentPage;
     var cursor = $scope.cursors[page];
-    $scope.jobService.all({per_page: $scope.perPage, cursor: cursor}, function(data){
+    $scope.jobService.all({per_page: $scope.$parent.perPage, cursor: cursor}, function(data){
       $scope.groupJobs = data.jobs || [];
       $scope.cursors[page + 1] = data.cursor;
       $scope.isLoading = false;
     })
+  }
+
+  $scope.cancelJob = function(job) {
+    var jobService = new Job($scope.$parent.selectedGroup, $scope.serverErrorHandler)
+
+    if (confirm("Do you really want to cancel job #" + job.id + " ?")){
+      jobService.cancel(job, function(res){
+        var pos = $scope.groupJobs.indexOf(job);
+        if (pos > -1) {
+          $scope.groupJobs[pos] = res.toJSON();
+        }
+      });
+    }
+  }
+
+  $scope.retryJob = function(job) {
+    var jobService = new Job($scope.$parent.selectedGroup, $scope.serverErrorHandler)
+
+    if (confirm("Do you really want to retry job #" + job.id + " ?")){
+      jobService.retry(job, function(updatedjob){
+        console.log("jobService.retry!!", updatedjob);
+        // TODO: update properly
+        job.status = updatedjob.status;
+      });
+    }
   }
 
   $scope.$on('$destroy', function () {

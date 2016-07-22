@@ -9,7 +9,7 @@
 
     <div class="btn-group" ng-if="groupJobs != null">
 
-      <span>Jobs <b>{{currentPage * perPage + (groupJobs.length ? 1 : 0)}}-{{currentPage * perPage + groupJobs.length}}</b></span>
+      <span>Jobs <b>{{currentPage * $parent.perPage + (groupJobs.length ? 1 : 0)}}-{{currentPage * $parent.perPage + groupJobs.length}}</b></span>
 
       <md-button ng-click="reloadGroupJobs()">Reload</md-button>
 

@@ -3,7 +3,7 @@ angular.module('Titan').controller('IndexController', [
     function($mdSidenav, $mdBottomSheet, $mdDialog, $scope, $controller, $timeout, $route, $routeParams, $location, Group, Job) {
   $controller('ParentCtrl', {$scope: $scope})
 
-  $scope.perPage = 10;
+  $scope.perPage = 20;
 
   $scope.$route = $route;
   $scope.$location = $location;
@@ -47,30 +47,6 @@ angular.module('Titan').controller('IndexController', [
     }, function() {
       // cancel
     });
-  }
-
-  $scope.cancelJob = function(job) {
-    var jobService = new Job($scope.selectedGroup, $scope.serverErrorHandler)
-
-    if (confirm("Do you really want to cancel job #" + job.id + " ?")){
-      jobService.cancel(job, function(updatedjob){
-        console.log("jobService.cancel!!", updatedjob);
-        // TODO: update properly
-        job.status = updatedjob.status;
-      });
-    }
-  }
-
-  $scope.retryJob = function(job) {
-    var jobService = new Job($scope.selectedGroup, $scope.serverErrorHandler)
-
-    if (confirm("Do you really want to retry job #" + job.id + " ?")){
-      jobService.retry(job, function(updatedjob){
-        console.log("jobService.retry!!", updatedjob);
-        // TODO: update properly
-        job.status = updatedjob.status;
-      });
-    }
   }
 
   $scope.deleteGroup = function() {

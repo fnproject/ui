@@ -76,9 +76,9 @@ exports.requrestCb = function (error, response, body) {
       message = "Can not parse api response";
     }
     message = message || "An error ocurred."
-
-    console.warn("[ERR] " + response.statusCode + " | "  + message);
-    errorcb(response.statusCode, message);
+    var status = response ? response.statusCode : error.code;
+    console.warn("[ERR] " + status + " | "  + message);
+    errorcb(status, message);
   }
 }
 
