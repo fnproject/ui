@@ -23,7 +23,7 @@ exports.getApiEndpoint = function(req, path, params, successcb, errorcb) {
 
   console.log("GET " + url + ", params: ", params);
 
-  request({url: url, qs: params}, exports.requrestCb);
+  request({url: url, qs: params}, function(error, response, body){exports.requrestCb(successcb, errorcb, error, response, body)});
 }
 
 exports.postApiEndpoint = function(req, path, params, postfields, successcb, errorcb) {
@@ -39,12 +39,10 @@ exports.execApiEndpoint = function(method, req, path, params, postfields, succes
 
   console.log(options.method + " " + options.uri + ", params: ", options.json);
 
-  request(options, exports.requrestCb);
+  request(options, function(error, response, body){exports.requrestCb(successcb, errorcb, error, response, body)});
 }
 
-
-
-exports.requrestCb = function (error, response, body) {
+exports.requrestCb = function (successcb, errorcb, error, response, body) {
   var parsed;
   if (!error && response.statusCode >= 200 && response.statusCode < 300) {
     try {
@@ -80,6 +78,11 @@ exports.requrestCb = function (error, response, body) {
     console.warn("[ERR] " + status + " | "  + message);
     errorcb(status, message);
   }
+}
+
+exports.standardErrorcb = function(status, err){
+  console.log("error!", status, err);
+  res.status(400).json({msg: "Error: Api responded with " + status + ". " + err});
 }
 
 

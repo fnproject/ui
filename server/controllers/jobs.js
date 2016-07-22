@@ -13,12 +13,8 @@ var processJobAction = function(req, res, action){
     //console.log(action + " success!", data);
     res.json(data.job);
   }
-  errorcb = function(status, err){
-    console.log("error!", err);
-    res.status(400).json({msg: "Error: Api responded with " + status + ". " + err});
-  }
 
-  helpers.postApiEndpoint(req, path, {}, {}, successcb, errorcb);
+  helpers.postApiEndpoint(req, path, {}, {}, successcb, helpers.standardErrorcb);
 }
 
 router.get('/:group/jobs', function(req, res) {
@@ -27,42 +23,19 @@ router.get('/:group/jobs', function(req, res) {
   successcb = function(data){
     res.json(data);
   }
-  errorcb = function(status, err){
-    console.log("error!", status, err);
-    res.status(400).json({msg: "Error: Api responded with " + status + ". " + err});
-  }
 
-  helpers.getApiEndpoint(req, path, {n: req.query.per_page || per_page, cursor: req.query.cursor || null}, successcb, errorcb);
+  helpers.getApiEndpoint(req, path, {n: req.query.per_page || per_page, cursor: req.query.cursor || null}, successcb, helpers.standardErrorcb);
 });
 
 router.get('/:group/jobs/:id', function(req, res) {
   var msg;
   var path = "/v1/groups/" + encodeURIComponent(req.params.group) + "/jobs/" + encodeURIComponent(req.params.id);
-  var url = helpers.apiFullUrl(req, path);
-  console.log(">GET " + url);
 
-  // successcb = function(data){
-  //   res.json(data.job);
-  // }
-  // errorcb = function(status, err){
-  //   console.log("error!", status, err);
-  //   res.status(400).json({msg: "Error: Api responded with " + status + ". " + err});
-  // }
-  cb = function(error, response, body){
-    if (error) {
-      if (response){
-        msg = "Error: Api responded with " + response.statusCode
-      }else {
-        msg = error.code
-      }
-      res.status(400).json({msg: msg});
-    } else {
-      res.json(JSON.parse(body).job);
-    }
+  successcb = function(data){
+    res.json(data.job);
   }
 
-  request({url: url, qs: {}}, cb);
-  //helpers.getApiEndpoint(req, path, {}, successcb, errorcb);
+  helpers.getApiEndpoint(req, path, {}, successcb, helpers.standardErrorcb);
 });
 
 router.post('/:group/jobs/:id/cancel', function(req, res) {
@@ -82,11 +55,8 @@ router.post('/:group/jobs', function(req, res) {
     //console.log(action + " success!", data);
     res.json(data.jobs[0]);
   }
-  errorcb = function(status, err){
-    console.log("error!", err);
-    res.status(400).json({msg: "Error: Api responded with " + status + ". " + err});
-  }
-  helpers.postApiEndpoint(req, path, {}, attrs, successcb, errorcb);
+
+  helpers.postApiEndpoint(req, path, {}, attrs, successcb, helpers.standardErrorcb);
 });
 
 router.get('/:group/jobs/:id/log', function(req, res) {
