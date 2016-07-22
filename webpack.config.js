@@ -52,7 +52,7 @@ module.exports = [
     externals: nodeModules,
     module: {
       preLoaders: [
-        { test: /\.(css)$/, loader: 'stylelint' }
+        { test: /\.css$/, loader: 'stylelint' }
       ],
       loaders: [
         // {
@@ -113,6 +113,7 @@ module.exports = [
         // hosted: './public/fonts/Roboto'
       }),
       postcssURL(),
+      require('postcss-hexrgba')(),
       cssnext()
     ]
   }

@@ -41,6 +41,7 @@
     "postcss-cssnext": "^2.7.0",
     "postcss-font-magician": "^1.4.0",
     "postcss-fontpath": "^0.3.0",
+    "postcss-hexrgba": "^0.2.0",
     "postcss-import": "^8.1.2",
     "postcss-loader": "^0.9.1",
     "postcss-url": "^5.1.2",

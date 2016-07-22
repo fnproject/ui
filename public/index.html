@@ -29,9 +29,15 @@
 
     <div flex layout="row">
 
+        <div ng-view flex flex-order="2"></div>
+
         <md-sidenav md-is-locked-open="$mdMedia('gt-sm')"
-                    md-component-id="left" class="ng-cloak">
-          <div>
+                    md-component-id="left"
+                    class="ttn-sidebar ng-cloak"
+                    layout="column"
+                    flex="none"
+                    flex-order="1">
+          <header>
             <md-icon md-svg-src="./images/titan-logo.svg" class="logo"></md-icon>
             <div ng-if="!selectedGroup">
               titan
@@ -43,30 +49,66 @@
                 <md-button ng-click="deleteGroup()">Delete </md-button>
               </h2>
             </div>
-          </div>
+          </header>
 
-          <h2>
-            Groups
-            <md-button ng-click="showNewGroupDialog($event)">New Group</md-button>
-          </h2>
-          <md-list>
-            <md-list-item ng-repeat="group in groups">
-              <md-button href="#/groups/{{group.name}}" style="{{group == selectedGroup ? 'background-color: #ddd;' : ''}}">
-                {{group.name}} <br>
-                <i>Created {{group.created_at| date: 'HH:mm MM/dd/yyyy' }}</i>
-              </md-button>
-            </md-list-item>
+          <!-- if not Welcome screen -->
+          <section ng-if="selectedGroup" flex>
+            <h2>
+              Groups
+              <md-button ng-click="showNewGroupDialog($event)">New Group</md-button>
+            </h2>
+            <md-list>
+              <md-list-item ng-repeat="group in groups">
+                <md-button href="#/groups/{{group.name}}" style="{{group == selectedGroup ? 'background-color: #ddd;' : ''}}">
+                  {{group.name}} <br>
+                  <i>Created {{group.created_at| date: 'HH:mm MM/dd/yyyy' }}</i>
+                </md-button>
+              </md-list-item>
 
-            <tr >
-              <td>
-                <a ng-click="selectGroup(group)"></a>
-                <br>
-              </td>
-            </tr>
-          </md-list>
+              <tr >
+                <td>
+                  <a ng-click="selectGroup(group)"></a>
+                  <br>
+                </td>
+              </tr>
+            </md-list>
+          </section>
+
+          <!-- else if welcome screen -->
+          <section ng-if="!selectedGroup" flex layout="column">
+            <div flex>
+
+              <h1>Welcome to TITAN!</h1>
+              <h2>
+                The ultimate language agnostic, container based job processing system.
+              </h2>
+              <p>
+
+                <a href="https://github.com/iron-io/titan">Titan on GitHub</a>
+              </p>
+            </div>
+
+            <div layout="column">
+              <div layout="row">
+                <a href="#" flex>
+                  ★ Quickstart
+                </a>
+                <a href="#" flex>
+                  † TITAN API
+                </a>
+              </div>
+              <div layout="row">
+                <a href="#" flex>
+                  ♠ CLIENT LIBS
+                </a>
+                <a href="#" flex>
+                  ☎ REPORT ISSUE
+                </a>
+              </div>
+            </div>
+          </section>
+
         </md-sidenav>
-
-        <div ng-view></div>
 
 
 

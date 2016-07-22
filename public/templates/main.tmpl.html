@@ -1,1 +1,24 @@
-foo!
+<md-content flex
+            id="content"
+            class="ng-cloak">
+  <h2>
+    Groups
+    <md-button ng-click="showNewGroupDialog($event)">New Group</md-button>
+  </h2>
+  <md-list>
+    <md-list-item ng-repeat="group in groups">
+      <md-button href="#/groups/{{group.name}}" style="{{group == selectedGroup ? 'background-color: #ddd;' : ''}}">
+        {{group.name}} <br>
+        <i>Created {{group.created_at| date: 'HH:mm MM/dd/yyyy' }}</i>
+      </md-button>
+    </md-list-item>
+
+    <tr >
+      <td>
+        <a ng-click="selectGroup(group)"></a>
+        <br>
+      </td>
+    </tr>
+  </md-list>
+
+</md-content>
