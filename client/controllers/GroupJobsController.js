@@ -15,6 +15,11 @@ angular.module('Titan').controller('GroupJobsController', ['$mdDialog', '$mdSide
 
     console.log("$scope.$parent.selectedGroup", $scope.$parent.groups, $scope.$parent.selectedGroup);
 
+    if (!$scope.$parent.selectedGroup ){
+      $location.path('/');
+      return;
+    }
+
     $scope.jobService = new Job($scope.$parent.selectedGroup, $scope.serverErrorHandler);
 
     $timeout(function(){$mdSidenav('right').close();}, 100);
