@@ -16,14 +16,14 @@
   </style>
 
 </head>
-<body layout="column" ng-controller="IndexController">
+<body id="titan-app" layout="column" ng-controller="IndexController">
     <!-- Container #1 (see wireframe) -->
     <md-toolbar layout="row" hide-gt-sm class="ng-cloak">
       <md-button class="menu" ng-click="toggleSidebar()" >
           Menu
       </md-button>
       <h1>
-        Titan
+        <md-icon md-svg-src="./images/titan-logo.svg" class="logo"></md-icon> titan
       </h1>
     </md-toolbar>
 
@@ -59,7 +59,7 @@
             </h2>
             <md-list>
               <md-list-item ng-repeat="group in groups">
-                <md-button href="#/groups/{{group.name}}" style="{{group == selectedGroup ? 'background-color: #ddd;' : ''}}">
+                <md-button href="#/groups/{{group.name}}" style="{{group == selectedGroup ? 'background-color: #555;' : ''}}">
                   {{group.name}} <br>
                   <i>Created {{group.created_at| date: 'HH:mm MM/dd/yyyy' }}</i>
                 </md-button>

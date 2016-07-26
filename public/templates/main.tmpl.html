@@ -2,8 +2,10 @@
             id="content"
             class="ng-cloak">
   <h2>
-    Groups
-    <md-button ng-click="showNewGroupDialog($event)">New Group</md-button>
+    {{groups.length}} Job Groups
+    <md-button class="md-fab md-primary md-button md-ink-ripple" ng-click="showNewGroupDialog($event)">
+      <md-icon md-svg-src="./images/icons/plus.svg" aria-label="Create New Group"></md-icon>
+    </md-button>
   </h2>
   <md-list>
     <md-list-item ng-repeat="group in groups">

@@ -18,6 +18,13 @@ body {
 
 }
 
+html.md-default-theme,
+html,
+body.md-default-theme,
+body {
+  color: var(--textColor);
+}
+
 a[ng-click] {
   cursor: pointer;
   &:hover, &:focus {
@@ -37,6 +44,59 @@ md-sidenav.ttn-sidebar {
 
     &:hover {
       color: white;
+    }
+  }
+}
+
+#titan-app {
+  /* layout */
+  & md-content.md-default-theme,
+  & md-content {
+    color: var(--textColor);
+  }
+
+  /* buttons */
+  & .md-button.md-default-theme.md-warn.md-raised,
+  & .md-button.md-warn.md-raised,
+  & .md-button.md-default-theme.md-warn.md-fab,
+  & .md-button.md-warn.md-fab,
+  & .md-button.md-default-theme.md-hue-2.md-warn.md-raised,
+  & .md-button.md-hue-2.md-warn.md-raised,
+  & .md-button.md-default-theme.md-hue-2.md-warn.md-fab,
+  & .md-button.md-hue-2.md-warn.md-fab,
+  & .md-button.md-default-theme.md-primary.md-raised,
+  & .md-button.md-primary.md-raised,
+  & .md-button.md-default-theme.md-primary.md-fab,
+  & .md-button.md-primary.md-fab {
+    color: white;
+  }
+  & .md-button.md-default-theme.md-hue-1.md-accent.md-raised,
+  & .md-button.md-hue-1.md-accent.md-raised,
+  & .md-button.md-default-theme.md-hue-1.md-accent.md-fab,
+  & .md-button.md-hue-1.md-accent.md-fab {
+    color: var(--textColor);
+  }
+
+  & .md-button.md-default-theme.md-primary.md-raised:not([disabled]) md-icon,
+  & .md-button.md-primary.md-raised:not([disabled]) md-icon,
+  & .md-button.md-default-theme.md-primary.md-fab:not([disabled]) md-icon,
+  & .md-button.md-primary.md-fab:not([disabled]) md-icon {
+    color: white;
+  }
+
+  /* angular material custom */
+  & md-toolbar.md-default-theme:not(.md-menu-toolbar),
+  & md-toolbar:not(.md-menu-toolbar) {
+    background: var(--darkBgColor);
+    color: white;
+
+    & a {
+      color: var(--text2ndOnDColor);
+      transition: color .1s ease;
+
+      &:hover {
+        color: white;
+      }
     }
   }
 }
