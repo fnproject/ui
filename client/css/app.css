@@ -1,7 +1,7 @@
 @charset "utf-8";
 @import "variables.css";
 @import "angular-material/angular-material.css";
-@import "vendor/test-vendor.css";
+@import "vendor/md-data-table.css";
 @import "sidebar.css";
 
 body {

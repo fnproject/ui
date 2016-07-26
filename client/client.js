@@ -16,11 +16,12 @@ require('expose?angular-route!angular-route');
 // Using vendored version. don't work well with expose
 //require('expose?angular-material!angular-material');
 require('./vendor/angular-material');
+require('./vendor/md-data-table');
 
 require("./css/app.css");
 
 var titan = angular
-            .module('Titan', ['ngResource', 'ngMaterial', 'ngSanitize', 'ngMessages', 'ngRoute'])
+            .module('Titan', ['ngResource', 'ngMaterial', 'ngSanitize', 'ngMessages', 'ngRoute', 'md.data.table'])
             .config(function($mdThemingProvider, $mdIconProvider, $routeProvider){
   var customPrimary = {
       '50': '#25bcff',
