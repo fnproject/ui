@@ -17,11 +17,11 @@
   <!-- exact table from live demo -->
   <md-table-container>
     <table md-table md-row-select multiple ng-model="selected" md-progress="promise" ng-if="groupJobs != null">
-      <thead md-head md-order="query.order" md-on-reorder="getDesserts">
+      <thead md-head md-order="myOrder" md-on-reorder="getDesserts">
         <tr md-row>
-          <th md-column md-numeric><span>ID</span></th>
+          <th md-column md-order-by="nameToLower"><span>ID</span></th>
           <th md-column md-order-by="nameToLower"><span>Status</span></th>
-          <th md-column md-order-by="nameToLower">Image</th>
+          <th md-column>Image</th>
           <th md-column md-numeric title="Priority">Pr</th>
           <th md-column md-numeric>Created</th>
           <th md-column md-numeric>Started</th>
@@ -31,8 +31,8 @@
       </thead>
       <tbody md-body>
 
-        <tr md-row md-select="job" md-select-id="name" md-auto-select ng-repeat="job in groupJobs">
-          <td md-cell>{{job.id}}</td>
+        <tr md-row md-select="job" md-select-id="name" md-auto-select ng-repeat="job in groupJobs | orderBy: myOrder">
+          <td md-cell md-order-by="nameToLower">{{job.id}}</td>
           <td md-cell>
             <span ng-if="job.status != 'error'">{{job.status}}</span>
             <a ng-if="job.status == 'error'" ng-click="showError($event, job)">error</a>
@@ -46,9 +46,6 @@
             <md-button ng-click="showJobDetails(job)">
               Details
             </md-button>
-            <md-button ng-click="cancelJob(job)" ng-if="job.status == 'queued' || job.status == 'running' || job.status == 'delayed'">cancel</md-button>
-            <md-button ng-click="retryJob(job)" ng-if="job.status == 'cancelled' || job.status == 'error' || job.status == '??'">retry</md-button>
-            <md-button ng-click="showLog($event, job)" ng-if="job.status == 'success' || job.status == 'error'">log</md-button>
           </td>
         </tr>
       </tbody>

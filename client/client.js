@@ -23,7 +23,7 @@ require("./css/app.css");
 var titan = angular
             .module('Titan', ['ngResource', 'ngMaterial', 'ngSanitize', 'ngMessages', 'ngRoute', 'md.data.table'])
             .config(function($mdThemingProvider, $mdIconProvider, $routeProvider){
-  var customPrimary = {
+  const customPrimary = {
       '50': '#25bcff',
       '100': '#0cb4ff',
       '200': '#00a7f1',
@@ -43,7 +43,7 @@ var titan = angular
       .definePalette('customPrimary',
                       customPrimary);
 
-  var customAccent = {
+  const customAccent = {
       '50': '#664701',
       '100': '#7f5902',
       '200': '#986b02',
@@ -63,7 +63,7 @@ var titan = angular
       .definePalette('customAccent',
                       customAccent);
 
-  var customWarn = {
+  const customWarn = {
       '50': '#f0aba0',
       '100': '#ed988a',
       '200': '#e98474',
@@ -83,7 +83,7 @@ var titan = angular
       .definePalette('customWarn',
                       customWarn);
 
-  var customBackground = {
+  const customBackground = {
       '50': '#ffffff',
       '100': '#ffffff',
       '200': '#ffffff',
@@ -108,6 +108,8 @@ var titan = angular
      .accentPalette('customAccent')
      .warnPalette('customWarn')
      .backgroundPalette('customBackground');
+
+  $mdIconProvider.icon('titan-logo', '/images/titan-logo.svg');
 
   $routeProvider.when("/", {
     activePage: 'main',

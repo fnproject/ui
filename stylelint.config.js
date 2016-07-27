@@ -36,7 +36,7 @@ module.exports = {
     "declaration-colon-space-before": "never",
     "function-calc-no-unspaced-operator": true,
     "function-comma-newline-after": "always-multi-line",
-    "function-comma-space-after": "always",
+    "function-comma-space-after": "never",
     "function-comma-space-before": "never",
     "function-linear-gradient-no-nonstandard-direction": true,
     "function-max-empty-lines": 0,

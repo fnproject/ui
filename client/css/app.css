@@ -18,7 +18,6 @@ body {
 
 }
 
-
 a[ng-click] {
   cursor: pointer;
   &:hover, &:focus {
@@ -100,6 +99,30 @@ md-sidenav.ttn-sidebar {
       color: white;
     }
   }
+
+  & .md-subheader {
+    background: rgba(0,0,0,.3);
+    color: var(--textColor);
+    height: 56px;
+
+    & ._md-subheader-inner {
+      padding: 0 16px;
+      padding: 24px 16px 16px;
+    }
+
+    & .md-icon-button {
+      padding: 0;
+      width: 20px;
+      height: 20px;
+      min-height: 20px;
+      float: right;
+      margin-top: -5px;
+
+      & svg {
+        width: 16px;
+      }
+    }
+  }
 }
 
 #titan-app {
@@ -107,6 +130,27 @@ md-sidenav.ttn-sidebar {
   & md-content.md-default-theme,
   & md-content {
     color: var(--textColor);
+  }
+
+  /* dialog and toolbar */
+  & md-toolbar.md-default-theme:not(.md-menu-toolbar) md-icon,
+  & md-toolbar:not(.md-menu-toolbar) md-icon {
+    color: var(--textDisabledOnDColor);
+    fill: var(--textDisabledOnDColor);
+
+    &:hover {
+      color: var(--text2ndOnDColor);
+      fill: var(--text2ndOnDColor);
+    }
+  }
+
+  /* menu */
+  & md-menu-content.md-default-theme md-menu-item,
+  & md-menu-content md-menu-item {
+    color: var(--textColor);
+    & md-icon {
+      color: var(--textColor);
+    }
   }
 
   /* buttons */

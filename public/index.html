@@ -23,7 +23,7 @@
           Menu
       </md-button>
       <h1>
-        <md-icon md-svg-src="./images/titan-logo.svg" class="logo"></md-icon> titan
+        <md-icon md-svg-icon="titan-logo" class="logo"></md-icon> titan
       </h1>
     </md-toolbar>
 
@@ -39,32 +39,53 @@
                   flex-order="1">
         <header>
           <a href="#/" ng-click="selectGroup(null)" class="logo">
-            <md-icon md-svg-src="./images/titan-logo.svg" ></md-icon>
+            <md-icon md-svg-icon="titan-logo"></md-icon>
           </a>
+
           <div ng-if="!selectedGroup">
             <div class="md-headline">titan</div>
           </div>
-          <div ng-if="selectedGroup">
-            <h2>
-              <div class="md-headline">
-                {{selectedGroup.name}}
-                <md-button class="md-icon-button" aria-label="Edit" ng-click="showEditGroupDialog($event)">
-                  <md-icon md-svg-icon="./images/icons/wrench.svg"></md-icon>
-                </md-button>
-              </div>
-              <div class="md-caption">
-                {{selectedGroup.created_at| date: 'HH:mm MM/dd/yyyy' }}
-              </div>
-            </h2>
+
+          <div ng-if="selectedGroup" layout="row" layout-align="end center">
+            <div flex>
+              <h2>
+                <div class="md-headline">
+                  {{selectedGroup.name}}
+                </div>
+                <div class="md-caption">
+                  <span>
+                    <md-tooltip md-direction="right">
+                      Created
+                    </md-tooltip>
+                    {{selectedGroup.created_at| date: 'HH:mm MM/dd/yyyy' }}
+                  </span>
+                </div>
+              </h2>
+            </div>
+            <div flex="nogrow" layout-align="center" ng-controller="GroupJobsController">
+              <md-button class="md-icon-button"
+              aria-label="Edit Group Settings" ng-click="showEditGroupDialog($event)">
+                <md-tooltip>
+                  Edit Group Settings
+                </md-tooltip>
+                <md-icon md-svg-icon="/images/icons/wrench.svg"></md-icon>
+              </md-button>
+            </div>
           </div>
         </header>
 
         <!-- if not Welcome screen -->
         <section ng-if="selectedGroup" flex>
-          <h2>
+          <md-subheader>
             Groups
-            <md-button ng-click="showNewGroupDialog($event)">New Group</md-button>
-          </h2>
+            <md-button class="md-icon-button"
+              aria-label="Create New Group" ng-click="showNewGroupDialog($event)">
+              <md-tooltip>
+                Create New Group
+              </md-tooltip>
+              <md-icon md-svg-icon="/images/icons/plus.svg"></md-icon>
+            </md-button>
+          </md-subheader>
           <md-list>
             <md-list-item ng-repeat="group in groups">
               <md-button href="#/groups/{{group.name}}" style="{{group == selectedGroup ? 'background-color: #555;' : ''}}">
@@ -92,8 +113,11 @@
               </p>
               <p>
                 <md-button class="md-primary" ng-href="https://github.com/iron-io/titan" target="_blank">
-                  <md-icon md-svg-icon="./images/icons/github-logo.svg"></md-icon>
+                  <md-icon md-svg-icon="/images/icons/github-logo.svg"></md-icon>
                   Titan on GitHub
+                </md-button>
+                <md-button class="md-primary" ng-href="#/styleguide">
+                  <span style="font-size: 2em">★</span> Styleguide
                 </md-button>
               </p>
             </div>
@@ -101,9 +125,6 @@
 
           <div layout="column">
             <div layout="row">
-              <a href="#/styleguide" flex>
-                ★ Styleguide
-              </a>
               <a href="#" flex>
                 ★ Quickstart
               </a>

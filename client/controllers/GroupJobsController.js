@@ -7,6 +7,7 @@ angular.module('Titan').controller('GroupJobsController', ['$mdDialog', '$mdSide
   $scope.$routeParams = $routeParams;
   $scope.currentPage = 0;
   $scope.cursors = [];
+
   var stop;
   $scope.init = function(){
     console.log("GroupJobsController - loaded!", $scope.$routeParams);

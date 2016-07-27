@@ -30,7 +30,10 @@ angular.module('Titan').controller('IndexController', [
   $scope.toggleSidebar = () => $mdSidenav('left').toggle();
   $scope.toggleJobDetails = () =>  $mdSidenav('right').toggle();
 
-
+  $scope.openGroupMenu = ($mdOpenMenu, ev) => {
+    // $scope.originatorEv = ev;
+    $mdOpenMenu(ev);
+  }
 
 
   $scope.showNewGroupDialog = function(ev) {
