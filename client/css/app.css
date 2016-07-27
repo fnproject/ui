@@ -41,19 +41,32 @@ md-sidenav.ttn-sidebar {
   background: var(--darkBgColor);
   color: var(--text2ndOnDColor);
 
-  & .md-button.md-default-theme.md-primary,
-  & .md-button.md-primary
+  & a.md-button.md-default-theme.md-primary,
+  & a.md-button.md-primary,
   & md-icon.md-default-theme,
   & md-icon {
     color: var(--text2ndOnDColor);
 
+    & md-icon.md-default-theme,
+    & md-icon {
+      color: var(--text2ndOnDColor);
+      margin: -5px 5px 0 0;
+    }
+
     &:hover {
       color: white;
+
+      & md-icon.md-default-theme,
+      & md-icon {
+        color: white;
+      }
+
     }
   }
 
   & .md-headline {
     color: white;
+    margin-top: 80px;
   }
 
   & header {
