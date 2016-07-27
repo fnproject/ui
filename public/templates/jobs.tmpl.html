@@ -1,87 +1,69 @@
-<md-content>
-    <section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
-      <md-button>{{title1}}</md-button>
-      <md-button md-no-ink class="md-primary">Primary (md-noink)</md-button>
-      <md-button ng-disabled="true" class="md-primary">Disabled</md-button>
-      <md-button class="md-warn">{{title4}}</md-button>
-      <div class="label">Flat</div>
-    </section>
-    <section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
-      <md-button class="md-raised">Button</md-button>
-      <md-button class="md-raised md-primary">Primary</md-button>
-      <md-button ng-disabled="true" class="md-raised md-primary">Disabled</md-button>
-      <md-button class="md-raised md-warn">Warn</md-button>
-      <div class="label">Raised</div>
-    </section>
-    <section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
-        <md-button class="md-fab" aria-label="Eat cake">
-            <md-icon md-svg-src="img/icons/cake.svg"></md-icon>
-        </md-button>
-        <md-button class="md-fab md-primary" aria-label="Use Android">
-          <md-icon md-svg-src="img/icons/android.svg"></md-icon>
-        </md-button>
-        <md-button class="md-fab" ng-disabled="true" aria-label="Comment">
-            <md-icon md-svg-src="img/icons/ic_comment_24px.svg"></md-icon>
-        </md-button>
-        <md-button class="md-fab md-primary md-hue-2" aria-label="Profile">
-            <md-icon md-svg-src="img/icons/ic_people_24px.svg"></md-icon>
-        </md-button>
-        <md-button class="md-fab md-mini" aria-label="Eat cake">
-            <md-icon md-svg-src="img/icons/cake.svg"></md-icon>
-        </md-button>
-        <md-button class="md-fab md-mini md-primary" aria-label="Use Android">
-          <md-icon md-svg-src="img/icons/android.svg" style="color: greenyellow;"></md-icon>
-        </md-button>
-      <div class="label">FAB</div>
-    </section>
-    <section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
-        <md-button ng-href="{{googleUrl}}" target="_blank">Default Link</md-button>
-        <md-button class="md-primary" ng-href="{{googleUrl}}" target="_blank">Primary Link</md-button>
-        <md-button>Default Button</md-button>
-      <div class="label">Link vs. Button</div>
-    </section>
-    <section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
-      <md-button class="md-primary md-hue-1">Primary Hue 1</md-button>
-      <md-button class="md-warn md-raised md-hue-2">Warn Hue 2</md-button>
-      <md-button class="md-accent">Accent</md-button>
-      <md-button class="md-accent md-raised md-hue-1">Accent Hue 1</md-button>
-      <div class="label">Themed</div>
-    </section>
-    <section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
-      <md-button class="md-icon-button md-primary" aria-label="Settings">
-        <md-icon md-svg-icon="img/icons/menu.svg"></md-icon>
-      </md-button>
-      <md-button class="md-icon-button md-accent" aria-label="Favorite">
-        <md-icon md-svg-icon="img/icons/favorite.svg"></md-icon>
-      </md-button>
-      <md-button class="md-icon-button" aria-label="More">
-        <md-icon md-svg-icon="img/icons/more_vert.svg"></md-icon>
-      </md-button>
-      <md-button href="http://google.com"
-                 title="Launch Google.com in new window"
-                 target="_blank"
-                 ng-disabled="true"
-                 aria-label="Google.com"
-                 class="md-icon-button launch" >
-        <md-icon md-svg-icon="img/icons/launch.svg"></md-icon>
-      </md-button>
-      <div class="label">Icon Button</div>
-    </section>
-  </md-content>
 <md-content flex
             id="content"
             class="ng-cloak">
   <div>
-    <h2>
-      {{$parent.selectedGroup.name}} >> Jobs
-      <md-button ng-click="showNewJobDialog($event)">New Job</md-button>
-    </h2>
+
+
+  <md-toolbar class="md-table-toolbar md-default">
+    <div class="md-toolbar-tools">
+      <span>Jobs List</span>
+        <md-button ng-click="showNewJobDialog($event)">New Job</md-button>
+        <md-button ng-click="reloadGroupJobs()">Reload</md-button>
+    </div>
+  </md-toolbar>
+
+  <div ng-if="groupJobs == null">loading ....</div>
+
+  <!-- exact table from live demo -->
+  <md-table-container>
+    <table md-table md-row-select multiple ng-model="selected" md-progress="promise" ng-if="groupJobs != null">
+      <thead md-head md-order="query.order" md-on-reorder="getDesserts">
+        <tr md-row>
+          <th md-column md-numeric><span>ID</span></th>
+          <th md-column md-order-by="nameToLower"><span>Status</span></th>
+          <th md-column md-order-by="nameToLower">Image</th>
+          <th md-column md-numeric title="Priority">Pr</th>
+          <th md-column md-numeric>Created</th>
+          <th md-column md-numeric>Started</th>
+          <th md-column md-numeric>Completed</th>
+          <th md-column></th>
+        </tr>
+      </thead>
+      <tbody md-body>
+
+        <tr md-row md-select="job" md-select-id="name" md-auto-select ng-repeat="job in groupJobs">
+          <td md-cell>{{job.id}}</td>
+          <td md-cell>
+            <span ng-if="job.status != 'error'">{{job.status}}</span>
+            <a ng-if="job.status == 'error'" ng-click="showError($event, job)">error</a>
+          </td>
+          <td md-cell>{{job.image}}</td>
+          <td md-cell>{{job.priority}}</td>
+          <td md-cell>{{job.created_at| date: 'HH:mm MM/dd/yyyy'}}</td>
+          <td md-cell>{{job.started_at| date: 'HH:mm MM/dd/yyyy'}}</td>
+          <td md-cell>{{job.completed_at| date: 'HH:mm MM/dd/yyyy'}}</td>
+          <td md-cell>
+            <md-button ng-click="showJobDetails(job)">
+              Details
+            </md-button>
+            <md-button ng-click="cancelJob(job)" ng-if="job.status == 'queued' || job.status == 'running' || job.status == 'delayed'">cancel</md-button>
+            <md-button ng-click="retryJob(job)" ng-if="job.status == 'cancelled' || job.status == 'error' || job.status == '??'">retry</md-button>
+            <md-button ng-click="showLog($event, job)" ng-if="job.status == 'success' || job.status == 'error'">log</md-button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </md-table-container>
+
+  <md-table-pagination md-limit="query.limit" md-limit-options="[5, 10, 15]" md-page="currentPage" md-total="{{groupJobs.length}}" md-on-paginate="getDesserts" md-page-select></md-table-pagination>
+
+
 
     <div class="btn-group" ng-if="groupJobs != null">
 
       <span>Jobs <b>{{currentPage * $parent.perPage + (groupJobs.length ? 1 : 0)}}-{{currentPage * $parent.perPage + groupJobs.length}}</b></span>
 
-      <md-button ng-click="reloadGroupJobs()">Reload</md-button>
+
 
       <div>
         <button type="button" class="btn btn-default" ng-click="previousPage()" ng-class="{disabled: currentPage == 0 || isLoading}">
@@ -96,9 +78,6 @@
           <i class="fa fa-chevron-right"></i> >
         </button>
 
-
-
-
         <div>
           Max Concurrency:
           <span ng-if="selectedGroup.max_concurrency">{{selectedGroup.max_concurrency | number}}</span>
@@ -109,51 +88,6 @@
       </div>
     </div>
 
-
-    <div ng-if="groupJobs == null">loading ....</div>
-
-    <table class="table" ng-if="groupJobs != null">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Status</th>
-          <th>Image</th>
-          <th title="Priority">Pr</th>
-          <th>Created</th>
-          <th>Started</th>
-          <th>Completed</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr ng-repeat="job in groupJobs">
-          <td>{{job.id}}</td>
-          <td>
-            <span ng-if="job.status != 'error'">{{job.status}}</span>
-            <a ng-if="job.status == 'error'" ng-click="showError($event, job)">error</a>
-            </td>
-          <td>{{job.image}}</td>
-          <td>{{job.priority}}</td>
-          <td>{{job.created_at| date: 'HH:mm MM/dd/yyyy'}}</td>
-          <td>{{job.started_at| date: 'HH:mm MM/dd/yyyy'}}</td>
-          <td>{{job.completed_at| date: 'HH:mm MM/dd/yyyy'}}</td>
-          <td>
-            <md-button ng-click="showJobDetails(job)">
-              Details
-            </md-button>
-            <md-button ng-click="cancelJob(job)" ng-if="job.status == 'queued' || job.status == 'running' || job.status == 'delayed'">cancel</md-button>
-            <md-button ng-click="retryJob(job)" ng-if="job.status == 'cancelled' || job.status == 'error' || job.status == '??'">retry</md-button>
-            <md-button ng-click="showLog($event, job)" ng-if="job.status == 'success' || job.status == 'error'">log</md-button>
-          </td>
-        </tr>
-
-        <tr ng-if="groupJobs.length == 0">
-          <td colspan="99">
-            No Jobs
-          </td>
-        </tr>
-      </tbody>
-    </table>
   </div>
 
 </md-content>

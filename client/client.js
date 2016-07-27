@@ -116,6 +116,8 @@ var titan = angular
     activePage: 'jobs',
     templateUrl: '/templates/jobs.tmpl.html',
     controller: 'GroupJobsController'
+  }).when("/styleguide", {
+    templateUrl: '/templates/styleguide.tmpl.html'
   }).otherwise({redirectTo:'/'});
 });
 

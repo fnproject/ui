@@ -1,26 +1,47 @@
 <md-content flex
             id="content"
             class="ng-cloak">
-  <h2>
-    {{groups.length}} Job Groups
-    <md-button class="md-fab md-primary md-button md-ink-ripple" ng-click="showNewGroupDialog($event)">
-      <md-icon md-svg-src="./images/icons/plus.svg" aria-label="Create New Group"></md-icon>
-    </md-button>
-  </h2>
-  <md-list>
-    <md-list-item ng-repeat="group in groups">
-      <md-button href="#/groups/{{group.name}}" style="{{group == selectedGroup ? 'background-color: #ddd;' : ''}}">
-        {{group.name}} <br>
-        <i>Created {{group.created_at| date: 'HH:mm MM/dd/yyyy' }}</i>
-      </md-button>
-    </md-list-item>
+    <md-toolbar class="md-table-toolbar md-default">
+      <div class="md-toolbar-tools">
+        {{groups.length}} Job Groups
+        <md-button class="md-fab md-primary md-button md-ink-ripple" ng-click="showNewGroupDialog($event)">
+          <md-icon md-svg-src="./images/icons/plus.svg" aria-label="Create New Group"></md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
 
-    <tr >
-      <td>
-        <a ng-click="selectGroup(group)"></a>
-        <br>
-      </td>
-    </tr>
-  </md-list>
-
+    <!-- exact table from live demo -->
+    <md-table-container>
+      <table md-table md-row-select multiple ng-model="selected" md-progress="promise">
+        <thead md-head md-order="query.order" md-on-reorder="getDesserts">
+          <tr md-row>
+            <th md-column md-order-by="group.name">
+              <span>Group Name</span>
+            </th>
+            <th md-column md-numeric >
+              <span>Created</span>
+            </th>
+            <th md-column>
+            </th>
+          </tr>
+        </thead>
+        <tbody md-body>
+          <tr md-row md-select="dessert" md-select-id="name" md-auto-select ng-repeat="group in groups" ng-click="selectGroup(group)">
+            <td md-cell>
+              <md-button href="#/groups/{{group.name}}">
+                {{group.name}}
+              </md-button>
+            </td>
+            <td md-cell>
+              <i>{{group.created_at| date: 'HH:mm MM/dd/yyyy' }}</i>
+            </td>
+            <td md-cell>
+              <md-button class="md-icon-button" aria-label="More">
+                <md-icon md-svg-icon="./images/icons/more_vert.svg"></md-icon>
+              </md-button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </md-table-container>
 </md-content>

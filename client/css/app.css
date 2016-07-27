@@ -18,12 +18,6 @@ body {
 
 }
 
-html.md-default-theme,
-html,
-body.md-default-theme,
-body {
-  color: var(--textColor);
-}
 
 a[ng-click] {
   cursor: pointer;
@@ -33,10 +27,53 @@ a[ng-click] {
   }
 }
 
+html.md-default-theme,
+html,
+body.md-default-theme,
+body,
+md-icon.md-default-theme,
+md-icon {
+  color: var(--textColor);
+}
+
 md-sidenav.ttn-sidebar {
   width: 320px;
   background: var(--darkBgColor);
   color: var(--text2ndOnDColor);
+
+  & .md-button.md-default-theme.md-primary,
+  & .md-button.md-primary
+  & md-icon.md-default-theme,
+  & md-icon {
+    color: var(--text2ndOnDColor);
+
+    &:hover {
+      color: white;
+    }
+  }
+
+  & .md-headline {
+    color: white;
+  }
+
+  & header {
+    height: 80px;
+    display: flex;
+    align-items: center;
+
+    & a.logo {
+      flex: 0 0;
+      padding: 0 16px;
+      & md-icon {
+        width: 50px;
+        height: 50px;
+      }
+    }
+
+    & > div {
+      flex: 1;
+    }
+  }
 
   & a {
     color: var(--text2ndOnDColor);
@@ -69,7 +106,16 @@ md-sidenav.ttn-sidebar {
   & .md-button.md-default-theme.md-primary.md-fab,
   & .md-button.md-primary.md-fab {
     color: white;
+
+    & svg {
+      fill: white;
+    }
   }
+
+  & .md-button.md-default-theme.md-fab,
+  & .md-button.md-fab,
+  & .md-button.md-default-theme.md-fab md-icon,
+  & .md-button.md-fab md-icon,
   & .md-button.md-default-theme.md-hue-1.md-accent.md-raised,
   & .md-button.md-hue-1.md-accent.md-raised,
   & .md-button.md-default-theme.md-hue-1.md-accent.md-fab,
@@ -82,6 +128,11 @@ md-sidenav.ttn-sidebar {
   & .md-button.md-default-theme.md-primary.md-fab:not([disabled]) md-icon,
   & .md-button.md-primary.md-fab:not([disabled]) md-icon {
     color: white;
+  }
+
+  /* table */
+  & table.md-table .md-cell {
+    color: var(--textColor);
   }
 
   /* angular material custom */
