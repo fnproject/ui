@@ -83,6 +83,10 @@ md-sidenav.ttn-sidebar {
       }
     }
 
+    & .md-headline {
+      margin-top: 0;
+    }
+
     & > div {
       flex: 1;
     }
