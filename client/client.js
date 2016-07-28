@@ -112,10 +112,9 @@ var titan = angular
   $mdIconProvider.icon('titan-logo', '/images/titan-logo.svg');
 
   $routeProvider.when("/", {
-    activePage: 'main',
-    templateUrl: '/templates/main.tmpl.html'
+    templateUrl: '/templates/main.tmpl.html',
+    controller: 'RootCtrl'
   }).when("/groups/:group_name", {
-    activePage: 'jobs',
     templateUrl: '/templates/jobs.tmpl.html',
     controller: 'GroupJobsController'
   }).when("/styleguide", {
@@ -133,6 +132,7 @@ require('./controllers/NewGroupDialogController');
 require('./controllers/NewJobDialogController');
 require('./controllers/EditGroupDialogController');
 require('./controllers/GroupJobsController');
+require('./controllers/RootController');
 
 require('./controllers/IndexController');
 

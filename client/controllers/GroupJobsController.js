@@ -10,11 +10,8 @@ angular.module('Titan').controller('GroupJobsController', ['$mdDialog', '$mdSide
 
   var stop;
   $scope.init = function(){
-    console.log("GroupJobsController - loaded!", $scope.$routeParams);
-
+    //console.log("GroupJobsController - loaded!", $scope.$routeParams);
     $scope.$parent.selectedGroup = _.find($scope.$parent.groups, (gr) => gr.name == $scope.$routeParams.group_name);
-
-    console.log("$scope.$parent.selectedGroup", $scope.$parent.groups, $scope.$parent.selectedGroup);
 
     if (!$scope.$parent.selectedGroup ){
       $location.path('/');
@@ -37,7 +34,7 @@ angular.module('Titan').controller('GroupJobsController', ['$mdDialog', '$mdSide
 
   $scope.scheduledCheck = function (){
     let jobs = _.filter(($scope.groupJobs || []), (job) => $scope.unfinishedTaskStatuses.indexOf(job.status) > -1 );
-    console.log("unfinished jobs: ", jobs);
+    //console.log("unfinished jobs: ", jobs);
     var len;
     for (let i = 0, len = jobs.length; i < len; i++) {
       let job = jobs[i];
@@ -46,7 +43,7 @@ angular.module('Titan').controller('GroupJobsController', ['$mdDialog', '$mdSide
   }
 
   $scope.checkJobStatus = function(job){
-    console.log("checkJobStatus " + job.id);
+    //console.log("checkJobStatus " + job.id);
     $scope.jobService.find(job.id, function(res){
       var pos = $scope.groupJobs.indexOf(job);
       if (pos > -1) {
@@ -134,7 +131,7 @@ angular.module('Titan').controller('GroupJobsController', ['$mdDialog', '$mdSide
     var parentEl = angular.element(document.body);
 
     $scope.jobService.log($scope.selectedJob.id, function(data){
-      console.log(data);
+      //console.log(data);
       $mdDialog.show(
         $mdDialog.alert()
           .parent(parentEl)
@@ -191,7 +188,7 @@ angular.module('Titan').controller('GroupJobsController', ['$mdDialog', '$mdSide
 
     if (confirm("Do you really want to retry job #" + job.id + " ?")){
       jobService.retry(job, function(updatedjob){
-        console.log("jobService.retry!!", updatedjob);
+        //console.log("jobService.retry!!", updatedjob);
         // TODO: update properly
         job.status = updatedjob.status;
       });
