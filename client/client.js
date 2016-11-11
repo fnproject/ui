@@ -114,24 +114,24 @@ var titan = angular
   $routeProvider.when("/", {
     templateUrl: '/templates/main.tmpl.html',
     controller: 'RootCtrl'
-  }).when("/groups/:group_name", {
-    templateUrl: '/templates/jobs.tmpl.html',
-    controller: 'GroupJobsController'
+  }).when("/apps/:app_name", {
+    templateUrl: '/templates/routes.tmpl.html',
+    controller: 'RoutesController'
   }).when("/styleguide", {
     templateUrl: '/templates/styleguide.tmpl.html'
   }).otherwise({redirectTo:'/'});
 });
 
-require('./services/group');
+require('./services/app');
 require('./services/job');
 
 require('./controllers/ParentCtrl');
 require('./controllers/ParentDialogCtrl');
 
-require('./controllers/NewGroupDialogController');
+require('./controllers/NewAppDialogController');
 require('./controllers/NewJobDialogController');
 require('./controllers/EditGroupDialogController');
-require('./controllers/GroupJobsController');
+require('./controllers/RoutesController');
 require('./controllers/RootController');
 
 require('./controllers/IndexController');

@@ -1,9 +1,9 @@
-angular.module('Titan').factory('Group', ['$resource', '$http', function($resource, $http) {
-  var Group;
-  return Group = (function() {
-    function Group(errorHandler) {
+angular.module('Titan').factory('App', ['$resource', '$http', function($resource, $http) {
+  var App;
+  return App = (function() {
+    function App(errorHandler) {
       var defaults;
-      this.service = $resource('/api/groups/:id/:action', {
+      this.service = $resource('/api/apps/:id/:action', {
         id: '@id'
       }, {
         update: {
@@ -16,7 +16,7 @@ angular.module('Titan').factory('Group', ['$resource', '$http', function($resour
       defaults.patch['Content-Type'] = 'application/json';
     }
 
-    Group.prototype.create = function(attrs, cb) {
+    App.prototype.create = function(attrs, cb) {
       if (cb == null) {
         cb = null;
       }
@@ -27,7 +27,7 @@ angular.module('Titan').factory('Group', ['$resource', '$http', function($resour
       }), this.errorHandler);
     };
 
-    Group.prototype["delete"] = function(group, cb) {
+    App.prototype["delete"] = function(group, cb) {
       if (cb == null) {
         cb = null;
       }
@@ -38,7 +38,7 @@ angular.module('Titan').factory('Group', ['$resource', '$http', function($resour
       }), this.errorHandler);
     };
 
-    Group.prototype.update = function(group, attrs, cb) {
+    App.prototype.update = function(group, attrs, cb) {
       if (cb == null) {
         cb = null;
       }
@@ -51,7 +51,7 @@ angular.module('Titan').factory('Group', ['$resource', '$http', function($resour
       }), this.errorHandler);
     };
 
-    Group.prototype.all = function(params, cb) {
+    App.prototype.all = function(params, cb) {
       var k, v;
       if (cb == null) {
         cb = null;
@@ -63,19 +63,7 @@ angular.module('Titan').factory('Group', ['$resource', '$http', function($resour
       }), this.errorHandler);
     };
 
-    Group.prototype.jobs = function(id, cb) {
-      return this.service.query({
-        id: id,
-        action: 'jobs'
-      }, (function(group) {
-        if (typeof cb === "function") {
-          cb(group);
-        }
-        return group;
-      }), this.errorHandler);
-    };
-
-    return Group;
+    return App;
 
   })();
 

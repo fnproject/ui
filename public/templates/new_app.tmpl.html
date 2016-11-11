@@ -1,8 +1,8 @@
-<md-dialog aria-label="New Group" ng-cloak>
-  <form ng-submit="createGroup()" name="groupForm">
+<md-dialog aria-label="New App" ng-cloak>
+  <form ng-submit="createApp()" name="appForm">
     <md-toolbar>
       <div class="md-toolbar-tools">
-        <h2>New Group</h2>
+        <h2>New App</h2>
         <span flex></span>
         <md-button class="md-icon-button" ng-click="cancel()">
           <md-icon md-svg-src="/images/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
@@ -13,16 +13,16 @@
       <div class="md-dialog-content">
         <md-input-container class="md-block">
           <label>Name</label>
-          <input ng-model="group.name" name="name" required>
-          <div ng-messages="groupForm.name.$error">
+          <input ng-model="app.name" name="name" required>
+          <div ng-messages="appForm.name.$error">
             <div ng-message="required">is required</div>
           </div>
         </md-input-container>
 
-        <md-input-container class="md-block">
+        <!--<md-input-container class="md-block">
           <label>Image</label>
-          <input ng-model="group.image">
-        </md-input-container>
+          <input ng-model="app.image">
+        </md-input-container>-->
       </div>
     </md-dialog-content>
     <md-dialog-actions layout="row">

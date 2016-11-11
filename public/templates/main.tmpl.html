@@ -3,12 +3,12 @@
             class="ng-cloak">
   <md-toolbar class="md-table-toolbar md-default">
     <div class="md-toolbar-tools">
-      {{groups.length}} Job Groups
-      <md-button class="md-fab md-primary md-button md-ink-ripple" ng-click="showNewGroupDialog($event)">
+      {{apps.length}} Apps
+      <md-button class="md-fab md-primary md-button md-ink-ripple" ng-click="showNewAppDialog($event)">
         <md-tooltip>
-          Create New Group
+          Create New App
         </md-tooltip>
-        <md-icon md-svg-src="./images/icons/plus.svg" aria-label="Create New Group"></md-icon>
+        <md-icon md-svg-src="./images/icons/plus.svg" aria-label="Create New App"></md-icon>
       </md-button>
     </div>
   </md-toolbar>
@@ -17,8 +17,8 @@
     <table md-table md-row-select multiple ng-model="selected" md-progress="promise">
       <thead md-head md-order="query.order" md-on-reorder="getDesserts">
         <tr md-row>
-          <th md-column md-order-by="group.name">
-            <span>Group Name</span>
+          <th md-column md-order-by="app.name">
+            <span>App Name</span>
           </th>
           <th md-column md-numeric >
             <span>Created</span>
@@ -29,40 +29,45 @@
       </thead>
       <tbody md-body>
         <tr md-row
-            ng-repeat="group in groups"
-            ng-click="selectGroup(group)"
-            ng-href="#/groups/{{group.name}}">
+            ng-repeat="app in apps"
+            ng-click="selectApp(app)"
+            ng-href="#/app/{{app.name}}">
           <td md-cell>
-            <md-button href="#/groups/{{group.name}}">
-              {{group.name}}
+            <md-button href="#/apps/{{app.name}}">
+              {{app.name}}
             </md-button>
           </td>
+          <!--
           <td md-cell>
-            <i>{{group.created_at| date: 'HH:mm MM/dd/yyyy' }}</i>
+            <i>{{app.created_at| date: 'HH:mm MM/dd/yyyy' }}</i>
           </td>
+          -->
+          <!--
           <td md-cell>
             <md-menu md-position-mode="target-right target">
-              <md-button class="md-icon-button" aria-label="More" ng-click="openGroupMenu($mdOpenMenu, $event)">
+              <md-button class="md-icon-button" aria-label="More" ng-click="openAppMenu($mdOpenMenu, $event)">
                 <md-icon md-menu-origin md-svg-icon="./images/icons/more_vert.svg"></md-icon>
               </md-button>
 
-              <md-menu-content width="3" ng-controller="GroupJobsController">
+              <!- -<md-menu-content width="3" ng-controller="RoutesController">- ->
+              <md-menu-content width="3">
                 <md-menu-item>
-                  <md-button ng-click="showEditGroupDialog(group)">
+                  <md-button ng-click="showEditAppDialog(app)">
                     <md-icon md-menu-align-target md-svg-icon="./images/icons/more_vert.svg"></md-icon>
-                    Edit Group
+                    Edit App
                   </md-button>
                 </md-menu-item>
                 <md-menu-divider></md-menu-divider>
                 <md-menu-item>
-                  <md-button ng-click="showEditGroupDialog()">
+                  <md-button ng-click="showEditAppDialog(app)">
                     <md-icon  md-svg-icon="./images/icons/more_vert.svg"></md-icon>
-                    Remove Group
+                    Remove App
                   </md-button>
                 </md-menu-item>
               </md-menu-content>
             </md-menu>
           </td>
+          -->
         </tr>
       </tbody>
     </table>

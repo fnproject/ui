@@ -1,4 +1,4 @@
-angular.module('Titan').controller('GroupJobsController', ['$mdDialog', '$mdSidenav', '$scope', '$controller',  '$location', '$routeParams' , '$interval', '$timeout', 'Job', function($mdDialog, $mdSidenav, $scope, $controller, $location, $routeParams, $interval, $timeout, Job) {
+angular.module('Titan').controller('RoutesController', ['$mdDialog', '$mdSidenav', '$scope', '$controller',  '$location', '$routeParams' , '$interval', '$timeout', 'Job', function($mdDialog, $mdSidenav, $scope, $controller, $location, $routeParams, $interval, $timeout, Job) {
 
   $scope.taskStatusPollInterval = 5000; // ms. Check for task's status this often
   $scope.unfinishedTaskStatuses = ['running', 'queued', 'delayed'];

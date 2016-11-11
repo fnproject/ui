@@ -1,10 +1,10 @@
-angular.module('Titan').controller('EditGroupDialogController', ['$mdDialog', '$scope', '$controller', 'Group', 'group', function($mdDialog, $scope, $controller, Group, group) {
+angular.module('Titan').controller('EditGroupDialogController', ['$mdDialog', '$scope', '$controller', 'App', 'group', function($mdDialog, $scope, $controller, App, group) {
   $controller('ParentDialogCtrl', {$scope: $scope});
 
   $scope.group = group;
 
   $scope.init = function() {
-    $scope.groupService = new Group($scope.serverErrorHandler)
+    $scope.appService = new App($scope.serverErrorHandler)
 
     $scope.envVarsArray = $scope.envVarsToArray($scope.group.env_vars || {});
   };
@@ -31,7 +31,7 @@ angular.module('Titan').controller('EditGroupDialogController', ['$mdDialog', '$
   $scope.updateGroup = function(){
     $scope.group.env_vars = $scope.envVarsFromArray($scope.envVarsArray);
 
-    $scope.groupService.update($scope.group, $scope.group, function(group){
+    $scope.appService.update($scope.group, $scope.group, function(group){
       $mdDialog.hide(group);
     });
   };
