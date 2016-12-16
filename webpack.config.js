@@ -44,12 +44,15 @@ module.exports = [
       path: path.join(__dirname, 'public', 'build'),
       filename: 'app.js',
     },
-    // resolve: {
-    //     alias: {
-    //         jquery: "jquery/src/jquery"
-    //     }
-    // },
-    externals: nodeModules,
+    resolve: {
+      extensions: ['', '.js', '.vue', '.json'],
+      fallback: [path.join(__dirname, './node_modules')],
+
+      alias: {
+        'vue$': path.join(__dirname, './node_modules/vue/dist/vue.common.js'),
+        'vue-router$': path.join(__dirname, './node_modules/vue-router/dist/vue-router.common.js'),
+      }
+    },
     module: {
       preLoaders: [
         { test: /\.css$/, loader: 'stylelint' }
@@ -59,6 +62,13 @@ module.exports = [
         //   test:/bootstrap-sass[\/\\]assets[\/\\]javascripts[\/\\]/,
         //   loader: 'imports?jQuery=jquery'
         // },
+        {
+          test: /\.vue$/,
+          loader: 'vue',
+          options: {
+            // vue-loader options go here
+          }
+        },
 
         // Extract css files
         {
@@ -70,10 +80,7 @@ module.exports = [
         {
           test: /\.js$/,
           loader: 'babel',
-          exclude: /node_modules/,
-          query: {
-            presets: ['es2015']
-          }
+          exclude: /node_modules/
         },
 
         {

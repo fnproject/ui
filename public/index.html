@@ -1,150 +1,31 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="Titan" class="no-js">
+<html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Titan</title>
+  <title>Functions UI</title>
 
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width,initial-scale=1">
 
   <link rel=stylesheet href="/build/app.css">
-  <style type="text/css">
-    [ng-cloak], .ng-cloak {
-      display: none !important;
-    }
-  </style>
-
 </head>
-<body id="titan-app" layout="column" ng-controller="IndexController">
-    <!-- Container #1 (see wireframe) -->
-    <md-toolbar layout="row" hide-gt-sm class="ng-cloak">
-      <md-button class="menu" ng-click="toggleSidebar()" >
-          Menu
-      </md-button>
-      <h1>
-        <md-icon md-svg-icon="titan-logo" class="logo"></md-icon> titan
-      </h1>
-    </md-toolbar>
+<body class="container-fluid">
+  <div id="app">
+      <div class="row">
+        <div class="col-md-2">
+          <fn-sidebar>
+        </div>
+        <div class="col-md-10">
+          <div>
 
-    <div flex layout="row">
 
-      <div ng-view flex flex-order="2"></div>
+            <router-view :apps="apps"></router-view>
 
-      <md-sidenav md-is-locked-open="$mdMedia('gt-sm')"
-                  md-component-id="left"
-                  class="ttn-sidebar ng-cloak"
-                  layout="column"
-                  flex="none"
-                  flex-order="1">
-        <header>
-          <a href="#/" ng-click="selectGroup(null)" class="logo">
-            <md-icon md-svg-icon="titan-logo"></md-icon>
-          </a>
-
-          <div ng-if="!selectedGroup">
-            <div class="md-headline">titan</div>
           </div>
-
-          <div ng-if="selectedGroup" layout="row" layout-align="end center">
-            <div flex>
-              <h2>
-                <div class="md-headline">
-                  {{selectedGroup.name}}
-                </div>
-                <div class="md-caption">
-                  <span>
-                    <md-tooltip md-direction="right">
-                      Created
-                    </md-tooltip>
-                    {{selectedGroup.created_at| date: 'HH:mm MM/dd/yyyy' }}
-                  </span>
-                </div>
-              </h2>
-            </div>
-            <div flex="nogrow" layout-align="center" ng-controller="GroupJobsController">
-              <md-button class="md-icon-button"
-              aria-label="Edit Group Settings" ng-click="showEditGroupDialog($event)">
-                <md-tooltip>
-                  Edit Group Settings
-                </md-tooltip>
-                <md-icon md-svg-icon="/images/icons/wrench.svg"></md-icon>
-              </md-button>
-            </div>
-          </div>
-        </header>
-
-        <!-- if not Welcome screen -->
-        <section ng-if="selectedGroup" flex>
-          <md-subheader>
-            Groups
-            <md-button class="md-icon-button"
-              aria-label="Create New Group" ng-click="showNewGroupDialog($event)">
-              <md-tooltip>
-                Create New Group
-              </md-tooltip>
-              <md-icon md-svg-icon="/images/icons/plus.svg"></md-icon>
-            </md-button>
-          </md-subheader>
-          <md-list>
-            <md-list-item ng-repeat="group in groups">
-              <md-button href="#/groups/{{group.name}}" style="{{group == selectedGroup ? 'background-color: #555;' : ''}}">
-                {{group.name}}
-              </md-button>
-            </md-list-item>
-
-            <tr >
-              <td>
-                <a ng-click="selectGroup(group)"></a>
-                <br>
-              </td>
-            </tr>
-          </md-list>
-        </section>
-
-        <!-- else if welcome screen -->
-        <section ng-if="!selectedGroup" flex layout="column" layout-padding>
-          <div flex>
-
-            <h1 class="md-headline">Welcome to TITAN!</h1>
-            <div class="md-body-1">
-              <p>
-                The ultimate language agnostic, container based job processing system.
-              </p>
-              <p>
-                <md-button class="md-primary" ng-href="https://github.com/iron-io/titan" target="_blank">
-                  <md-icon md-svg-icon="/images/icons/github-logo.svg"></md-icon>
-                  Titan on GitHub
-                </md-button>
-                <md-button class="md-primary" ng-href="#/styleguide">
-                  <span style="font-size: 2em">★</span> Styleguide
-                </md-button>
-              </p>
-            </div>
-          </div>
-
-          <div layout="column">
-            <div layout="row">
-              <a href="#" flex>
-                ★ Quickstart
-              </a>
-              <a href="#" flex>
-                † TITAN API
-              </a>
-            </div>
-            <div layout="row">
-              <a href="#" flex>
-                ♠ CLIENT LIBS
-              </a>
-              <a href="#" flex>
-                ☎ REPORT ISSUE
-              </a>
-            </div>
-          </div>
-        </section>
-
-      </md-sidenav>
-    </div>
+        </div>
+      </div>
+  </div>
 
   <script src="/build/app.js"></script>
 </body>

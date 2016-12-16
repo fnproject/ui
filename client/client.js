@@ -1,140 +1,46 @@
-console.log("loading .... ");
-
-// require('expose?$!expose?jQuery!jquery');
-
-var _ = require('lodash/core');
-
-require('expose?angular!angular');
-require('expose?angular-resource!angular-resource');
-
-require('expose?angular-aria!angular-aria');
-require('expose?angular-sanitize!angular-sanitize');
-require('expose?angular-animate!angular-animate');
-require('expose?angular-messages!angular-messages');
-require('expose?angular-route!angular-route');
-
-// Using vendored version. don't work well with expose
-//require('expose?angular-material!angular-material');
-require('./vendor/angular-material');
-require('./vendor/md-data-table');
-
 require("./css/app.css");
 
-var titan = angular
-            .module('Titan', ['ngResource', 'ngMaterial', 'ngSanitize', 'ngMessages', 'ngRoute', 'md.data.table'])
-            .config(function($mdThemingProvider, $mdIconProvider, $routeProvider){
-  const customPrimary = {
-      '50': '#25bcff',
-      '100': '#0cb4ff',
-      '200': '#00a7f1',
-      '300': '#0095d8',
-      '400': '#0084be',
-      '500': '#0072A5',
-      '600': '#00608b',
-      '700': '#004f72',
-      '800': '#003d58',
-      '900': '#002c3f',
-      'A100': '#3fc4ff',
-      'A200': '#58ccff',
-      'A400': '#72d3ff',
-      'A700': '#001a25'
-  };
-  $mdThemingProvider
-      .definePalette('customPrimary',
-                      customPrimary);
+require('expose?$!expose?jQuery!jquery');
+import _ from 'lodash/core';
 
-  const customAccent = {
-      '50': '#664701',
-      '100': '#7f5902',
-      '200': '#986b02',
-      '300': '#b17c02',
-      '400': '#cb8e02',
-      '500': '#e4a003',
-      '600': '#fcb91d',
-      '700': '#fdc136',
-      '800': '#fdc850',
-      '900': '#fdd069',
-      'A100': '#fcb91d',
-      'A200': '#FCB104',
-      'A400': '#e4a003',
-      'A700': '#fed882'
-  };
-  $mdThemingProvider
-      .definePalette('customAccent',
-                      customAccent);
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+Vue.use(VueRouter);
 
-  const customWarn = {
-      '50': '#f0aba0',
-      '100': '#ed988a',
-      '200': '#e98474',
-      '300': '#e6715e',
-      '400': '#e25d48',
-      '500': '#DF4A32',
-      '600': '#d63a21',
-      '700': '#c0341e',
-      '800': '#aa2e1b',
-      '900': '#942817',
-      'A100': '#f4bfb6',
-      'A200': '#f7d2cc',
-      'A400': '#fbe6e2',
-      'A700': '#7e2214'
-  };
-  $mdThemingProvider
-      .definePalette('customWarn',
-                      customWarn);
+import IndexPage from './pages/IndexPage.vue';
+import AppPage from './pages/AppPage.vue';
 
-  const customBackground = {
-      '50': '#ffffff',
-      '100': '#ffffff',
-      '200': '#ffffff',
-      '300': '#f5f7f8',
-      '400': '#e7ebed',
-      '500': '#D8DFE2',
-      '600': '#c9d3d7',
-      '700': '#bbc7cc',
-      '800': '#acbbc1',
-      '900': '#9dafb6',
-      'A100': '#ffffff',
-      'A200': '#ffffff',
-      'A400': '#ffffff',
-      'A700': '#8fa3ac'
-  };
-  $mdThemingProvider
-      .definePalette('customBackground',
-                      customBackground);
+import FnSidebar from './components/FnSidebar.vue';
 
-  $mdThemingProvider.theme('default')
-     .primaryPalette('customPrimary')
-     .accentPalette('customAccent')
-     .warnPalette('customWarn')
-     .backgroundPalette('customBackground');
-
-  $mdIconProvider.icon('titan-logo', '/images/titan-logo.svg');
-
-  $routeProvider.when("/", {
-    templateUrl: '/templates/main.tmpl.html',
-    controller: 'RootCtrl'
-  }).when("/apps/:app_name", {
-    templateUrl: '/templates/routes.tmpl.html',
-    controller: 'RoutesController'
-  }).when("/styleguide", {
-    templateUrl: '/templates/styleguide.tmpl.html'
-  }).otherwise({redirectTo:'/'});
+const router = new VueRouter({
+  routes: [
+    { path: '/', component: IndexPage },
+    { path: '/app/:appname', component: AppPage }
+  ]
 });
 
-require('./services/app');
-require('./services/job');
+new Vue({
+  router: router,
+  data: {
+    apps: null
+  },
+  components: {
+    IndexPage,
+    FnSidebar,
+    //VueRouter
+  },
+  mounted: function () {
+      var t = this;
+      $.ajax({
+        url: '/api/apps',
+        dataType: 'json',
+        success: (apps) => t.apps = apps,
+        error: function(jqXHR, textStatus, errorThrown){
+          console.log("error", jqXHR, textStatus, errorThrown)
+        }
+      })
+    }
+}).$mount('#app')
 
-require('./controllers/ParentCtrl');
-require('./controllers/ParentDialogCtrl');
 
-require('./controllers/NewAppDialogController');
-require('./controllers/NewJobDialogController');
-require('./controllers/EditGroupDialogController');
-require('./controllers/RoutesController');
-require('./controllers/RootController');
-
-require('./controllers/IndexController');
-
-
-console.log("client initialized");
+//console.log("client initialized");

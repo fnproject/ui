@@ -34,26 +34,14 @@ webpack --watch
 
 Example:
 ```
-# Launch Titan API
-docker run --rm -it -p 8080:8080 -e DB="bolt:///titan/data/bolt.db" -v $PWD/data:/titan/data --name titan-api iron/titan-api
+# Launch Functions API
+docker run --rm -it --name functions --privileged -v $PWD/data:/app/data -p 8080:8080 iron/functions
 
-# Launch Runner
-docker run --rm -it --link titan-api:api -e "API_URL=http://api:8080" -v /var/run/docker.sock:/var/run/docker.sock iron/titan-runner
 
-# Launch TitanUI (use `docker-machine ip` instead of localhost if needed - for mac only)
+# Launch FunctionsUI (use `docker-machine ip` instead of localhost if needed - for mac only)
 API_URL=http://localhost:8080 npm start
 
 # Launch launch automatic asset recompilation:
 webpack --watch
-```
-
-Start jobs:
-```
- curl -X POST -H "Content-Type: application/json" -d '{
-    "jobs": [{
-    "image": "treeder/hello:1.0.0",
-    "payload": "{\"name\": \"Johnny Utah\"}"
-  }]
-}' "http://`docker-machine ip`:8080/v1/groups/foobar/jobs"|jj
 ```
 
