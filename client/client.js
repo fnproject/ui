@@ -30,16 +30,16 @@ new Vue({
     //VueRouter
   },
   mounted: function () {
-      var t = this;
-      $.ajax({
-        url: '/api/apps',
-        dataType: 'json',
-        success: (apps) => t.apps = apps,
-        error: function(jqXHR, textStatus, errorThrown){
-          console.log("error", jqXHR, textStatus, errorThrown)
-        }
-      })
-    }
+    var t = this;
+    $.ajax({
+      url: '/api/apps',
+      dataType: 'json',
+      success: (apps) => t.apps = apps,
+      error: function(jqXHR, textStatus, errorThrown){
+        console.log("error", jqXHR, textStatus, errorThrown)
+      }
+    })
+  }
 }).$mount('#app')
 
 

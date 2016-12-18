@@ -23,6 +23,9 @@
             <span class="fa fa-plus"></span>
           </td>
         </tr>
+        <tr v-if="apps && apps.length == 0">
+          <td colspan="99" class="no-matches"><div>No Apps</div></td>
+        </tr>
       </tbody>
     </table>
 

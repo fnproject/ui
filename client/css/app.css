@@ -4,6 +4,15 @@
 @import "bootstrap/dist/css/bootstrap.min.css";
 @import "bootstrap/dist/css/bootstrap-theme.min.css";
 
-.foobar {
-  width: 100px;
+
+
+.no-matches {
+  text-align: center;
+  width: 100%;
+  z-index: 1;
+  font-size: 30px;
+  opacity: 1;
+  color: #b8b8b8;
+  margin: 40px 0;
+  line-height: 1.5em;
 }

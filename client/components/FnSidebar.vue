@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="height: 1000px;background-color: #eee;">
     sidebar
   </div>
 </template>
