@@ -8,6 +8,9 @@
     <br />
     <br />
 
+    <div class="pull-right">
+      <button class="btn btn-default"><i class="fa fa-plus"></i> Add App</button>
+    </div>
 
     <table class="table">
       <thead>
@@ -20,7 +23,8 @@
             <router-link :to="'/app/' + encodeURIComponent(app.name)">{{app.name}}</router-link>
           </td>
           <td>
-            <span class="fa fa-plus"></span>
+            <button class="btn btn-default"><i class="fa fa-gear"></i></button>
+            <button class="btn btn-default"><i class="fa fa-times"></i></button>
           </td>
         </tr>
         <tr v-if="apps && apps.length == 0">

@@ -12,6 +12,8 @@ import AppPage from './pages/AppPage.vue';
 
 import FnSidebar from './components/FnSidebar.vue';
 
+export const eventBus = new Vue();
+
 const router = new VueRouter({
   routes: [
     { path: '/', component: IndexPage },
