@@ -2,8 +2,8 @@
   <modal title="Add App" :show="show" @closed="closed" @ok="ok" @cancel="closed">
     <form class="form-horizontal" v-on:submit.prevent="ok">
       <div class="form-group">
-        <label class="col-sm-2 control-label">Name</label>
-        <div class="col-sm-10">
+        <label class="col-sm-3 control-label">Name</label>
+        <div class="col-sm-9">
           <input type="text" class="form-control" placeholder="e.g. my-app" v-model="app.name" required>
         </div>
       </div>

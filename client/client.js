@@ -49,6 +49,9 @@ new Vue({
     eventBus.$on('AppAdded', (app) => {
       this.loadApps()
     });
+    eventBus.$on('AppUpdated', (app) => {
+      this.loadApps()
+    });
     eventBus.$on('AppDeleted', (app) => {
       this.loadApps()
     });

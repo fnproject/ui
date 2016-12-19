@@ -35,7 +35,10 @@ router.patch('/:app', function(req, res) {
     res.json(data);
   }
 
-  helpers.execApiEndpoint('PATCH', req,  "/v1/apps/" + encodeURIComponent(req.params.app) , {}, {app: {name: req.body.name}}, successcb, helpers.standardErrorcb(res));
+  var data = req.body;
+  delete data.name;
+
+  helpers.execApiEndpoint('PATCH', req,  "/v1/apps/" + encodeURIComponent(req.params.app) , {}, {app: data}, successcb, helpers.standardErrorcb(res));
 });
 
 // Delete App
