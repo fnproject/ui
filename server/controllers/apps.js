@@ -21,7 +21,6 @@ router.get('/:app', function(req, res) {
 // Create New App
 router.post('/', function(req, res) {
   successcb = function(data){
-    //console.log("success!", data);
     res.json(data);
   }
 
@@ -31,7 +30,6 @@ router.post('/', function(req, res) {
 // Update App
 router.patch('/:app', function(req, res) {
   successcb = function(data){
-    //console.log("success!", data);
     res.json(data);
   }
 
@@ -44,7 +42,6 @@ router.patch('/:app', function(req, res) {
 // Delete App
 router.delete('/:app', function(req, res) {
   successcb = function(data){
-    //console.log("success!", data);
     res.json(data);
   }
 

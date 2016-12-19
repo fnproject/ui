@@ -35,8 +35,6 @@ module.exports = [
     name: 'client',
     entry: [
       'jquery/',
-      'angular/',
-      //'bootstrap-loader/extractStyles',
       './client/client.js',
     ],
     // target: 'web', // by default
@@ -95,11 +93,6 @@ module.exports = [
       ]
     },
     plugins: [
-      // new webpack.ProvidePlugin({
-      //     $: "jquery",
-      //     jQuery: "jquery",
-      //     "window.jQuery": "jquery"
-      // }),
       new extractTextPlugin("app.css", {
         allChunks: true
       })
@@ -117,7 +110,6 @@ module.exports = [
       postcssImport(),
       fontMagician({
         hosted: path.join(__dirname, './public/fonts/Roboto')
-        // hosted: './public/fonts/Roboto'
       }),
       postcssURL(),
       require('postcss-hexrgba')(),
