@@ -12,6 +12,7 @@ import AppPage from './pages/AppPage.vue';
 
 import FnSidebar from './components/FnSidebar.vue';
 import FnNotification from './components/FnNotification.vue';
+import { defaultErrorHander } from './lib/helpers';
 
 export const eventBus = new Vue();
 
@@ -32,16 +33,25 @@ new Vue({
     FnSidebar,
     FnNotification
   },
-  mounted: function () {
-    var t = this;
-    $.ajax({
-      url: '/api/apps',
-      dataType: 'json',
-      success: (apps) => t.apps = apps,
-      error: function(jqXHR, textStatus, errorThrown){
-        console.log("error", jqXHR, textStatus, errorThrown)
-      }
-    })
+  methods: {
+    loadApps: function(){
+      var t = this;
+      $.ajax({
+        url: '/api/apps',
+        dataType: 'json',
+        success: (apps) => t.apps = apps,
+        error: defaultErrorHander
+      })
+    }
+  },
+  created: function(){
+    this.loadApps();
+    eventBus.$on('AppAdded', (app) => {
+      this.loadApps()
+    });
+    eventBus.$on('AppDeleted', (app) => {
+      this.loadApps()
+    });
   }
 }).$mount('#app')
 

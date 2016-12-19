@@ -9,13 +9,13 @@
     <br />
 
     <div class="pull-right">
-      <button class="btn btn-default"><i class="fa fa-plus"></i> Add App</button>
+      <button class="btn btn-default" @click="openAddApp"><i class="fa fa-plus"></i> Add App</button>
     </div>
 
     <table class="table">
       <thead>
         <th>Name</th>
-        <th>Actions</th>
+        <th width="100">Actions</th>
       </thead>
       <tbody>
         <tr v-for="app in apps">
@@ -23,8 +23,8 @@
             <router-link :to="'/app/' + encodeURIComponent(app.name)">{{app.name}}</router-link>
           </td>
           <td>
-            <button class="btn btn-default"><i class="fa fa-gear"></i></button>
-            <button class="btn btn-default"><i class="fa fa-times"></i></button>
+            <button class="btn btn-default" @click="openEditApp(app)"><i class="fa fa-gear"></i></button>
+            <button class="btn btn-default" @click="deleteApp(app)"><i class="fa fa-times"></i></button>
           </td>
         </tr>
         <tr v-if="apps && apps.length == 0">
@@ -35,25 +35,46 @@
 
     <!-- <pre>{{ JSON.stringify($data, null, 2) }}</pre> -->
 
-
+    <fn-add-app></fn-add-app>
+    <fn-edit-app></fn-edit-app>
   </div>
 </template>
 
 <script>
+import FnAddApp from '../components/FnAddApp';
+import FnEditApp from '../components/FnEditApp';
+import { defaultErrorHander } from '../lib/helpers';
+import { eventBus } from '../client';
 
-  export default {
-    props: ['apps'],
-    components: {
-
+export default {
+  props: ['apps'],
+  components: {
+    FnAddApp,
+    FnEditApp
+  },
+  methods: {
+    openAddApp: function(){
+      eventBus.$emit('openAddApp');
     },
-    methods: {
-      btnClicked: function(){
-        console.log("!1", this.$data);
-        console.log("!2", this.$root.$data);
-        console.log("!3", this.apps);
+    openEditApp: function(app){
+      eventBus.$emit('openEditApp', app);
+    },
+    deleteApp: function(app){
+      if (confirm('Are you sure you want to delete app ' + app.name + '?')) {
+        var t = this;
+        $.ajax({
+          url: '/api/apps/' + encodeURIComponent(app.name),
+          method: 'DELETE',
+          dataType: 'json',
+          success: (app) => { eventBus.$emit('AppDeleted', app) },
+          error: defaultErrorHander
+        })
       }
     }
+  },
+  created: function (){
   }
+}
 </script>
 
 <style>

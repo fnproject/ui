@@ -13,27 +13,26 @@ router.get('/:app/routes', function(req, res) {
 // Create New Route
 router.post('/:app/routes', function(req, res) {
   successcb = function(data){
-    //console.log("success!", data);
     res.json(data);
   }
 
-  helpers.postApiEndpoint(req, "/v1/apps/" + encodeURIComponent(req.params.app) + "/routes", {}, {route: {path: req.body.path, image: req.body.image}}, successcb, helpers.standardErrorcb(res));
+  helpers.postApiEndpoint(req, "/v1/apps/" + encodeURIComponent(req.params.app) + "/routes", {}, {route: req.body}, successcb, helpers.standardErrorcb(res));
 });
 
 // Update Route
 router.patch('/:app/routes/:route', function(req, res) {
   successcb = function(data){
-    //console.log("success!", data);
     res.json(data);
   }
+  var data = req.body;
+  delete data.path;
 
-  helpers.execApiEndpoint('PUT', req,  "/v1/apps/" + encodeURIComponent(req.params.app)+ "/routes/" + encodeURIComponent(req.params.route), {}, {route: {path: req.body.path, image: req.body.image}}, successcb, helpers.standardErrorcb(res));
+  helpers.execApiEndpoint('PATCH', req,  "/v1/apps/" + encodeURIComponent(req.params.app)+ "/routes/" + encodeURIComponent(req.params.route), {}, {route: data}, successcb, helpers.standardErrorcb(res));
 });
 
 // Delete Route
 router.delete('/:app/routes/:route', function(req, res) {
   successcb = function(data){
-    //console.log("success!", data);
     res.json(data);
   }
 

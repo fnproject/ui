@@ -25,7 +25,7 @@ router.post('/', function(req, res) {
     res.json(data);
   }
 
-  helpers.postApiEndpoint(req, "/v1/apps", {}, {app: {name: req.body.app}}, successcb, helpers.standardErrorcb(res));
+  helpers.postApiEndpoint(req, "/v1/apps", {}, {app: {name: req.body.name}}, successcb, helpers.standardErrorcb(res));
 });
 
 // Update App
@@ -35,7 +35,7 @@ router.patch('/:app', function(req, res) {
     res.json(data);
   }
 
-  helpers.execApiEndpoint('PUT', req,  "/v1/apps/" + encodeURIComponent(req.params.app) , {}, {app: req.body.app}, successcb, helpers.standardErrorcb(res));
+  helpers.execApiEndpoint('PATCH', req,  "/v1/apps/" + encodeURIComponent(req.params.app) , {}, {app: {name: req.body.name}}, successcb, helpers.standardErrorcb(res));
 });
 
 // Delete App

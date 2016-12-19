@@ -1,24 +1,49 @@
 <template>
   <modal title="Edit Route" :show="show" @closed="closed" @ok="ok" @cancel="closed">
-      <form class="form-horizontal">
-        <div class="form-group">
-          <label class="col-sm-2 control-label">Path</label>
-          <div class="col-sm-10">
-            <input type="text" class="form-control" placeholder="e.g. /hello" v-model="route.path" disabled>
-          </div>
+    <form class="form-horizontal" v-on:submit.prevent="ok">
+      <div class="form-group">
+        <label class="col-sm-3 control-label">Path *</label>
+        <div class="col-sm-9">
+          <input type="text" class="form-control" placeholder="e.g. /hello" v-model="route.path" disabled>
         </div>
-        <div class="form-group">
-          <label class="col-sm-2 control-label">Image</label>
-          <div class="col-sm-10">
-            <input type="text" class="form-control" placeholder="e.g. iron/hello"  v-model="route.image">
-          </div>
-        </div>
-      </form>
-
-      <div slot="footer">
-        <button type="button" class="btn btn-primary" @click="ok" :disabled="submitting">Save</button>
       </div>
-    </modal>
+      <div class="form-group">
+        <label class="col-sm-3 control-label">Image *</label>
+        <div class="col-sm-9">
+          <input type="text" class="form-control" placeholder="e.g. iron/hello"  v-model="route.image">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-3 control-label">Type</label>
+        <div class="col-sm-9">
+          <label class="radio-inline"><input type="radio" value="sync" v-model="route.type"> Sync</label>
+          <label class="radio-inline"><input type="radio" value="async" v-model="route.type"> Async</label>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-3 control-label">Memory, MB</label>
+        <div class="col-sm-9">
+          <input type="number" class="form-control" placeholder="e.g. 128"  v-model="route.memory">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-3 control-label">Max Concurrency</label>
+        <div class="col-sm-9">
+          <input type="number" class="form-control" placeholder="e.g. 100"  v-model="route.max_concurrency">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-3 control-label">Timeout, sec</label>
+        <div class="col-sm-9">
+          <input type="number" class="form-control" placeholder="e.g. 60"  v-model="route.timeout">
+        </div>
+      </div>
+    </form>
+
+    <div slot="footer">
+      <button type="button" class="btn btn-primary" @click="ok" :disabled="submitting">Save</button>
+    </div>
+  </modal>
 </template>
 
 <script>
@@ -53,8 +78,7 @@ export default {
         contentType: "application/json",
         dataType: 'json',
         success: (res) => {
-          console.log("res", res);
-          eventBus.$emit('RouteUpdated', t.route);
+          eventBus.$emit('RouteUpdated', res.route);
           t.submitting = false;
           t.closed();
         },

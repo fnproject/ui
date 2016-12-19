@@ -18,19 +18,23 @@
       <thead>
         <th>Path</th>
         <th>Image</th>
-        <th>Memory</th>
         <th>Type</th>
-        <th>Actions</th>
+        <th>Memory</th>
+        <th>MaxCC</th>
+        <th>Timeout</th>
+        <th width="100">Actions</th>
       </thead>
       <tbody>
         <tr v-for="route in routes">
           <td>{{route.path}}</td>
           <td>{{route.image}}</td>
-          <td>{{route.memory}} MB</td>
           <td>{{route.type}}</td>
+          <td>{{route.memory}} MB</td>
+          <td>{{route.max_concurrency}}</td>
+          <td>{{route.timeout}}</td>
           <td>
             <!-- Not implemented on api side -->
-            <!-- <button class="btn btn-default" @click="openEditRoute(route)"><i class="fa fa-gear"></i></button> -->
+            <button class="btn btn-default" @click="openEditRoute(route)"><i class="fa fa-gear"></i></button>
             <button class="btn btn-default" @click="deleteRoute(route)"><i class="fa fa-times"></i></button>
           </td>
         </tr>
@@ -114,7 +118,6 @@ export default {
       } else {
         vm.loadApp(to.params.appname, () => { vm.loadRoutes() });
       }
-
     })
   },
   created:  function (){
