@@ -80,9 +80,11 @@ exports.requrestCb = function (successcb, errorcb, error, response, body) {
   }
 }
 
-exports.standardErrorcb = function(status, err){
-  console.log("error!", status, err);
-  res.status(400).json({msg: "Error: Api responded with " + status + ". " + err});
+exports.standardErrorcb = function(res){
+  return function(status, err){
+    console.log("Error. Api responded with ", status, err);
+    res.status(400).json({msg: "Error: " + err});
+  }
 }
 
 
