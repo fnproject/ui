@@ -41,7 +41,7 @@
 
 
 
-    <fn-add-route :show="showAddRoute" @added="routeAded"></fn-add-route>
+    <fn-add-route :app="app" @added="routeAded"></fn-add-route>
 
   </div>
 </template>
@@ -110,6 +110,11 @@ export default {
       }
 
     })
+  },
+  created:  function (){
+    eventBus.$on('RouteAdded', (route) => {
+      console.log("route", route);
+    });
   }
 }
 </script>

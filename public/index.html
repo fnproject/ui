@@ -12,19 +12,21 @@
 </head>
 <body class="container-fluid">
   <div id="app">
-      <div class="row">
-        <div class="col-md-2">
-          <fn-sidebar>
-        </div>
-        <div class="col-md-10">
-          <div>
+    <fn-notification></fn-notification>
+
+    <div class="row">
+      <div class="col-md-2">
+        <fn-sidebar>
+      </div>
+      <div class="col-md-10">
+        <div>
 
 
-            <router-view :apps="apps"></router-view>
+          <router-view :apps="apps"></router-view>
 
-          </div>
         </div>
       </div>
+    </div>
   </div>
 
   <script src="/build/app.js"></script>

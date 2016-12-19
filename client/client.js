@@ -11,6 +11,7 @@ import IndexPage from './pages/IndexPage.vue';
 import AppPage from './pages/AppPage.vue';
 
 import FnSidebar from './components/FnSidebar.vue';
+import FnNotification from './components/FnNotification.vue';
 
 export const eventBus = new Vue();
 
@@ -29,7 +30,7 @@ new Vue({
   components: {
     IndexPage,
     FnSidebar,
-    //VueRouter
+    FnNotification
   },
   mounted: function () {
     var t = this;

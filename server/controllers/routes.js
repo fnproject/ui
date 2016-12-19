@@ -7,7 +7,7 @@ router.get('/:app/routes', function(req, res) {
     res.json(data.routes);
   }
 
-  helpers.getApiEndpoint(req, "/v1/apps/" + encodeURIComponent(req.params.app) + "/routes", {}, successcb, helpers.standardErrorcb)
+  helpers.getApiEndpoint(req, "/v1/apps/" + encodeURIComponent(req.params.app) + "/routes", {}, successcb, helpers.standardErrorcb(res))
 });
 
 // Create New Route
@@ -17,7 +17,7 @@ router.post('/:app/routes', function(req, res) {
     res.json(data);
   }
 
-  helpers.postApiEndpoint(req, "/v1/apps/" + encodeURIComponent(req.params.app) + "/routes", {}, {route: {path: req.body.path, image: req.body.image}}, successcb, helpers.standardErrorcb);
+  helpers.postApiEndpoint(req, "/v1/apps/" + encodeURIComponent(req.params.app) + "/routes", {}, {route: {path: req.body.path, image: req.body.image}}, successcb, helpers.standardErrorcb(res));
 });
 
 // Update Route
@@ -27,7 +27,7 @@ router.patch('/:app/routes/:route', function(req, res) {
     res.json(data);
   }
 
-  helpers.execApiEndpoint('PUT', req,  "/v1/apps/" + encodeURIComponent(req.params.app)+ "/routes/" + encodeURIComponent(req.params.route), {}, {route: {path: req.body.path, image: req.body.image}}, successcb, helpers.standardErrorcb);
+  helpers.execApiEndpoint('PUT', req,  "/v1/apps/" + encodeURIComponent(req.params.app)+ "/routes/" + encodeURIComponent(req.params.route), {}, {route: {path: req.body.path, image: req.body.image}}, successcb, helpers.standardErrorcb(res));
 });
 
 // Delete Route
@@ -37,7 +37,7 @@ router.delete('/:app/routes/:route', function(req, res) {
     res.json(data);
   }
 
-  helpers.execApiEndpoint('DELETE', req,  "/v1/apps/" + encodeURIComponent(req.params.app)+ "/routes/" + encodeURIComponent(req.params.route) , {}, {}, successcb, helpers.standardErrorcb);
+  helpers.execApiEndpoint('DELETE', req,  "/v1/apps/" + encodeURIComponent(req.params.app)+ "/routes/" + encodeURIComponent(req.params.route) , {}, {}, successcb, helpers.standardErrorcb(res));
 });
 
 

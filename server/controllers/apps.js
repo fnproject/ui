@@ -7,7 +7,7 @@ router.get('/', function(req, res) {
     res.json(data.apps);
   }
 
-  helpers.getApiEndpoint(req, "/v1/apps", {}, successcb, helpers.standardErrorcb)
+  helpers.getApiEndpoint(req, "/v1/apps", {}, successcb, helpers.standardErrorcb(res))
 });
 
 router.get('/:app', function(req, res) {
@@ -15,7 +15,7 @@ router.get('/:app', function(req, res) {
     res.json(data.app);
   }
 
-  helpers.getApiEndpoint(req, "/v1/apps/" + encodeURIComponent(req.params.app), {}, successcb, helpers.standardErrorcb)
+  helpers.getApiEndpoint(req, "/v1/apps/" + encodeURIComponent(req.params.app), {}, successcb, helpers.standardErrorcb(res))
 });
 
 // Create New App
@@ -25,7 +25,7 @@ router.post('/', function(req, res) {
     res.json(data);
   }
 
-  helpers.postApiEndpoint(req, "/v1/apps", {}, {app: {name: req.body.app}}, successcb, helpers.standardErrorcb);
+  helpers.postApiEndpoint(req, "/v1/apps", {}, {app: {name: req.body.app}}, successcb, helpers.standardErrorcb(res));
 });
 
 // Update App
@@ -35,7 +35,7 @@ router.patch('/:app', function(req, res) {
     res.json(data);
   }
 
-  helpers.execApiEndpoint('PUT', req,  "/v1/apps/" + encodeURIComponent(req.params.app) , {}, {app: req.body.app}, successcb, helpers.standardErrorcb);
+  helpers.execApiEndpoint('PUT', req,  "/v1/apps/" + encodeURIComponent(req.params.app) , {}, {app: req.body.app}, successcb, helpers.standardErrorcb(res));
 });
 
 // Delete App
@@ -45,7 +45,7 @@ router.delete('/:app', function(req, res) {
     res.json(data);
   }
 
-  helpers.execApiEndpoint('DELETE', req,  "/v1/apps/" + encodeURIComponent(req.params.app) , {}, {}, successcb, helpers.standardErrorcb);
+  helpers.execApiEndpoint('DELETE', req,  "/v1/apps/" + encodeURIComponent(req.params.app) , {}, {}, successcb, helpers.standardErrorcb(res));
 });
 
 
