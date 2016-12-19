@@ -20,6 +20,7 @@ export default {
   },
   methods: {
     showNotification: function(text, type){
+      // escape html, allow line breaks only
       this.text = $("<div/>").text(text).html().replace(/\n/g, "<br />")
       this.type = type;
       this.show = true;
@@ -27,8 +28,13 @@ export default {
   },
   created:  function (){
     eventBus.$on('NotificationError', (text) => {
-      console.log("NotificationError", text);
       this.showNotification(text, 'alert alert-danger');
+    });
+    eventBus.$on('NotificationInfo', (text) => {
+      this.showNotification(text, 'alert alert-info');
+    });
+    eventBus.$on('NotificationSuccess', (text) => {
+      this.showNotification(text, 'alert alert-success');
     });
     eventBus.$on('NotificationClear', () => {
       this.show = false;

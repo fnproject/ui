@@ -1,10 +1,10 @@
 <template>
-  <modal title="Add Route" :show="show" @closed="closed" @ok="ok" @cancel="closed">
+  <modal title="Edit Route" :show="show" @closed="closed" @ok="ok" @cancel="closed">
       <form class="form-horizontal">
         <div class="form-group">
           <label class="col-sm-2 control-label">Path</label>
           <div class="col-sm-10">
-            <input type="text" class="form-control" placeholder="e.g. /hello" v-model="route.path">
+            <input type="text" class="form-control" placeholder="e.g. /hello" v-model="route.path" disabled>
           </div>
         </div>
         <div class="form-group">
@@ -47,14 +47,14 @@ export default {
       eventBus.$emit('NotificationClear');
       this.submitting = true;
       $.ajax({
-        url: '/api/apps/' + encodeURIComponent(this.app.name) + '/routes',
-        method: 'POST',
+        url: '/api/apps/' + encodeURIComponent(this.app.name) + '/routes/' + encodeURIComponent(this.route.path),
+        method: 'PATCH',
         data: JSON.stringify(this.route),
         contentType: "application/json",
         dataType: 'json',
         success: (res) => {
           console.log("res", res);
-          eventBus.$emit('RouteAdded', t.route);
+          eventBus.$emit('RouteUpdated', t.route);
           t.submitting = false;
           t.closed();
         },
@@ -66,7 +66,8 @@ export default {
     },
   },
   created:  function (){
-    eventBus.$on('openAddRoute', () => {
+    eventBus.$on('openEditRoute', (route) => {
+      this.route = jQuery.extend(true, {}, route);
       this.show = true;
     });
   }

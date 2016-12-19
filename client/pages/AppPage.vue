@@ -29,8 +29,9 @@
           <td>{{route.memory}} MB</td>
           <td>{{route.type}}</td>
           <td>
-            <button class="btn btn-default"><i class="fa fa-gear"></i></button>
-            <button class="btn btn-default"><i class="fa fa-times"></i></button>
+            <!-- Not implemented on api side -->
+            <!-- <button class="btn btn-default" @click="openEditRoute(route)"><i class="fa fa-gear"></i></button> -->
+            <button class="btn btn-default" @click="deleteRoute(route)"><i class="fa fa-times"></i></button>
           </td>
         </tr>
         <tr v-if="routes && routes.length == 0">
@@ -41,7 +42,8 @@
 
 
 
-    <fn-add-route :app="app" @added="routeAded"></fn-add-route>
+    <fn-add-route :app="app"></fn-add-route>
+    <fn-edit-route :app="app"></fn-edit-route>
 
   </div>
 </template>
@@ -49,30 +51,28 @@
 <script>
 //import Modal from '../lib/vue-bootstrap-modal.vue';
 import FnAddRoute from '../components/FnAddRoute';
+import FnEditRoute from '../components/FnEditRoute';
 import { eventBus } from '../client';
-
+import { defaultErrorHander } from '../lib/helpers';
 
 export default {
   props: ['apps'],
   data: function(){
     return {
-      showAddRoute: false,
       app: {},
       routes: []
     }
   },
   components: {
-    FnAddRoute
+    FnAddRoute,
+    FnEditRoute
   },
   methods: {
     openAddRoute: function(){
       eventBus.$emit('openAddRoute');
     },
-    routeAded: function(data){
-      console.log("routeAded", data);
-    },
-    closeAddRoute: function(){
-      this.showAddRoute = false;
+    openEditRoute: function(route){
+      eventBus.$emit('openEditRoute', route);
     },
     loadRoutes: function(){
       var t = this;
@@ -80,9 +80,7 @@ export default {
         url: '/api/apps/' + encodeURIComponent(t.app.name) + '/routes',
         dataType: 'json',
         success: (routes) => t.routes = routes,
-        error: function(jqXHR, textStatus, errorThrown){
-          console.log("error", jqXHR, textStatus, errorThrown)
-        }
+        error: defaultErrorHander
       })
     },
     loadApp: function(name, cb){
@@ -91,13 +89,21 @@ export default {
         url: '/api/apps/' + encodeURIComponent(name),
         dataType: 'json',
         success: (app) => {t.app = app; if (cb) {cb()} },
-        error: function(jqXHR, textStatus, errorThrown){
-          console.log("error", jqXHR, textStatus, errorThrown)
-        }
+        error: defaultErrorHander
       })
+    },
+    deleteRoute: function(route){
+      if (confirm('Are you sure you want to delete route ' + route.path + '?')) {
+        var t = this;
+        $.ajax({
+          url: '/api/apps/' + encodeURIComponent(t.app.name) + '/routes/' + encodeURIComponent(route.path),
+          method: 'DELETE',
+          dataType: 'json',
+          success: (app) => { t.loadRoutes() },
+          error: defaultErrorHander
+        })
+      }
     }
-
-
   },
   beforeRouteEnter (to, from, next) {
     // access to component instance via `vm`
@@ -113,7 +119,10 @@ export default {
   },
   created:  function (){
     eventBus.$on('RouteAdded', (route) => {
-      console.log("route", route);
+      this.loadRoutes()
+    });
+    eventBus.$on('RouteUpdated', (route) => {
+      this.loadRoutes()
     });
   }
 }
