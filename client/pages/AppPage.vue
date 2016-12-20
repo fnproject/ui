@@ -6,13 +6,12 @@
       <li class="active">{{app.name}}</li>
     </ol>
 
-    <h3>{{app.name}}</h3>
-    <br />
-
-    <!-- <pre>{{ JSON.stringify(routes, null, 2) }}</pre> -->
     <div class="pull-right">
       <button class="btn btn-default" @click="openAddRoute()"><i class="fa fa-plus"></i> Add Route</button>
     </div>
+
+    <h3>{{app.name}}</h3>
+    <br />
 
     <table class="table">
       <thead>
@@ -22,7 +21,7 @@
         <th>Memory</th>
         <th>MaxCC</th>
         <th>Timeout</th>
-        <th width="100">Actions</th>
+        <th width="120">Actions</th>
       </thead>
       <tbody>
         <tr v-for="route in routes">
@@ -33,9 +32,10 @@
           <td>{{route.max_concurrency}}</td>
           <td>{{route.timeout}}</td>
           <td>
-            <!-- Not implemented on api side -->
-            <button class="btn btn-default" @click="openEditRoute(route)"><i class="fa fa-gear"></i></button>
-            <button class="btn btn-default" @click="deleteRoute(route)"><i class="fa fa-times"></i></button>
+            <div class="toolbar">
+              <button class="btn btn-default" @click="openEditRoute(route)" title="Edit Route"><i class="fa fa-gear"></i></button>
+              <button class="btn btn-default" @click="deleteRoute(route)" title="Delete Route"><i class="fa fa-times"></i></button>
+            </div>
           </td>
         </tr>
         <tr v-if="routes && routes.length == 0">
@@ -107,6 +107,9 @@ export default {
           error: defaultErrorHander
         })
       }
+    },
+    setTitle: function(){
+      document.title = this.app.name + " | Functions UI";
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -114,13 +117,15 @@ export default {
     next(vm => {
       if (vm.apps){
         vm.app = _.find(vm.apps, (app) => {return app.name == to.params.appname});
-        vm.loadRoutes()
+        vm.loadRoutes();
+        vm.setTitle();
       } else {
-        vm.loadApp(to.params.appname, () => { vm.loadRoutes() });
+        vm.loadApp(to.params.appname, () => { vm.loadRoutes();vm.setTitle(); });
       }
     })
   },
   created:  function (){
+
     eventBus.$on('RouteAdded', (route) => {
       this.loadRoutes()
     });

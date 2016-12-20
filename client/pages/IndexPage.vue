@@ -5,17 +5,17 @@
       <li class="active">Apps</li>
     </ol>
 
-    <br />
-    <br />
-
     <div class="pull-right">
       <button class="btn btn-default" @click="openAddApp"><i class="fa fa-plus"></i> Add App</button>
     </div>
 
+    <br />
+    <br />
+
     <table class="table">
       <thead>
         <th>Name</th>
-        <th width="100">Actions</th>
+        <th width="120">Actions</th>
       </thead>
       <tbody>
         <tr v-for="app in apps">
@@ -23,8 +23,10 @@
             <router-link :to="'/app/' + encodeURIComponent(app.name)">{{app.name}}</router-link>
           </td>
           <td>
-            <button class="btn btn-default" @click="openEditApp(app)"><i class="fa fa-gear"></i></button>
-            <button class="btn btn-default" @click="deleteApp(app)"><i class="fa fa-times"></i></button>
+            <div class="toolbar">
+              <button class="btn btn-default" @click="openEditApp(app)" title="Edit App"><i class="fa fa-gear"></i></button>
+              <button class="btn btn-default" @click="deleteApp(app)" title="Delete App"><i class="fa fa-times"></i></button>
+            </div>
           </td>
         </tr>
         <tr v-if="apps && apps.length == 0">
@@ -73,6 +75,7 @@ export default {
     }
   },
   created: function (){
+    document.title = "Functions UI"
   }
 }
 </script>
