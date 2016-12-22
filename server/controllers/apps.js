@@ -23,8 +23,9 @@ router.post('/', function(req, res) {
   successcb = function(data){
     res.json(data);
   }
+  var data = req.body;
 
-  helpers.postApiEndpoint(req, "/v1/apps", {}, {app: {name: req.body.name}}, successcb, helpers.standardErrorcb(res));
+  helpers.postApiEndpoint(req, "/v1/apps", {}, {app: data}, successcb, helpers.standardErrorcb(res));
 });
 
 // Update App

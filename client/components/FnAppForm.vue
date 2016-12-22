@@ -1,10 +1,10 @@
 <template>
-  <modal title="Edit App" :show="show" @closed="closed" @ok="ok" @cancel="closed">
+  <modal :title="title()" :show="show" @closed="closed" @ok="ok" @cancel="closed">
     <form class="form-horizontal" v-on:submit.prevent="ok">
       <div class="form-group">
         <label class="col-sm-3 control-label">Name</label>
         <div class="col-sm-9">
-          <input type="text" class="form-control" placeholder="e.g. my-app" v-model="app.name" required disabled>
+          <input type="text" class="form-control" placeholder="e.g. my-app" v-model="app.name" required :disabled="edit">
         </div>
       </div>
 
@@ -29,7 +29,7 @@
     </form>
 
     <div slot="footer">
-      <button type="button" class="btn btn-primary" @click="ok">Save</button>
+      <button type="button" class="btn btn-primary" @click="ok">{{okBtnName()}}</button>
     </div>
   </modal>
 </template>
@@ -47,11 +47,18 @@ export default {
   data: function(){
     return {
       show: false,
+      edit: false,
       app: {},
       appConfig: [{key: "", value: ""}]
     }
   },
   methods: {
+    title: function(){
+      return this.edit ? 'Edit App' : 'Add App';
+    },
+    okBtnName: function(){
+      return this.edit ? 'Save' : 'Create';
+    },
     closed: function(){
       this.show = false;
     },
@@ -65,15 +72,23 @@ export default {
       var t = this;
       eventBus.$emit('NotificationClear');
       this.app.config = linesToConfig(this.appConfig);
-
+      if (this.edit) {
+        var url = '/api/apps/' + encodeURIComponent(this.app.name);
+      } else {
+        var url = '/api/apps';
+      };
       $.ajax({
-        url: '/api/apps/' + encodeURIComponent(this.app.name),
-        method: 'PATCH',
+        url: url,
+        method: this.edit ? 'PATCH' : 'POST',
         data: JSON.stringify(this.app),
         contentType: "application/json",
         dataType: 'json',
         success: (res) => {
-          eventBus.$emit('AppUpdated', res.app);
+          if (this.edit){
+            eventBus.$emit('AppUpdated', res.app);
+          } else {
+            eventBus.$emit('AppAdded', res.app);
+          }
           t.closed();
           t.app = {};
         },
@@ -85,6 +100,13 @@ export default {
     eventBus.$on('openEditApp', (app) => {
       this.app = jQuery.extend(true, {}, app);
       this.appConfig = configToLines(app.config)
+      this.edit = true;
+      this.show = true;
+    });
+    eventBus.$on('openAddApp', () => {
+      this.app = {};
+      this.appConfig = configToLines({});
+      this.edit = false;
       this.show = true;
     });
   }

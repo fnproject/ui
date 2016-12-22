@@ -46,7 +46,7 @@
 
 
 
-    <fn-route-form :app="app"></fn-add-route>
+    <fn-route-form :app="app"></fn-route-form>
   </div>
 </template>
 

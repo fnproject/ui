@@ -37,22 +37,19 @@
 
     <!-- <pre>{{ JSON.stringify($data, null, 2) }}</pre> -->
 
-    <fn-add-app></fn-add-app>
-    <fn-edit-app></fn-edit-app>
+    <fn-app-form></fn-app-form>
   </div>
 </template>
 
 <script>
-import FnAddApp from '../components/FnAddApp';
-import FnEditApp from '../components/FnEditApp';
+import FnAppForm from '../components/FnAppForm';
 import { defaultErrorHander } from '../lib/helpers';
 import { eventBus } from '../client';
 
 export default {
   props: ['apps'],
   components: {
-    FnAddApp,
-    FnEditApp
+    FnAppForm
   },
   methods: {
     openAddApp: function(){
