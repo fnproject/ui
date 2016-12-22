@@ -38,6 +38,44 @@
           <input type="number" class="form-control" placeholder="e.g. 60"  v-model="route.timeout">
         </div>
       </div>
+      <div class="form-group">
+        <label class="col-sm-3 control-label">Config</label>
+        <div class="col-sm-9">
+          <div class="row" v-for="(line, index) in routeConfig">
+            <div class="col-sm-5 cfg-key">
+              <input type="text" class="form-control" placeholder="Key" v-model="line.key">
+            </div>
+            <div class="col-sm-5 cfg-val">
+              <input type="text" class="form-control" placeholder="Value" v-model="line.value">
+            </div>
+            <div class="col-sm-1">
+              <button class="btn btn-default" @click.prevent="removeConfigLine(index)"><i class="fa fa-times"></i></button>
+            </div>
+          </div>
+          <a href="#" class="pull-right" @click.prevent="addConfigLine">Add line</a>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="col-sm-3 control-label">Headers</label>
+        <div class="col-sm-9">
+          <div class="row" v-for="(line, index) in routeHeaders">
+            <div class="col-sm-5 cfg-key">
+              <input type="text" class="form-control" placeholder="Key" v-model="line.key">
+            </div>
+            <div class="col-sm-5 cfg-val">
+              <input type="text" class="form-control" placeholder="Value" v-model="line.value">
+            </div>
+            <div class="col-sm-1">
+              <button class="btn btn-default" @click.prevent="removeHeadersLine(index)"><i class="fa fa-times"></i></button>
+            </div>
+          </div>
+          <a href="#" class="pull-right" @click.prevent="addHeadersLine">Add line</a>
+        </div>
+      </div>
+
+
+
     </form>
 
     <div slot="footer">
@@ -49,7 +87,7 @@
 <script>
 import Modal from '../lib/VueBootstrapModal.vue';
 import { eventBus } from '../client';
-import { defaultErrorHander } from '../lib/helpers';
+import { defaultErrorHander, configToLines, linesToConfig, headersToLines, linesToHeaders } from '../lib/helpers';
 
 var defaultRoute = function(){
   return jQuery.extend(true, {}, {
@@ -70,7 +108,9 @@ export default {
       edit: false,
       show: false,
       submitting: false,
-      route: {}
+      route: {},
+      routeConfig: [],
+      routeHeaders: []
     }
   },
   methods: {
@@ -83,10 +123,26 @@ export default {
     closed: function(){
       this.show = false;
     },
+    addConfigLine: function(){
+      this.routeConfig.push({key: "", value: ""});
+    },
+    removeConfigLine: function(index){
+      this.routeConfig.splice(index, 1)
+    },
+    addHeadersLine: function(){
+      this.routeHeaders.push({key: "", value: ""});
+    },
+    removeHeadersLine: function(index){
+      this.routeHeaders.splice(index, 1)
+    },
     ok: function(){
       var t = this;
       eventBus.$emit('NotificationClear');
       this.submitting = true;
+
+      this.route.config = linesToConfig(this.routeConfig);
+      this.route.headers = linesToHeaders(this.routeHeaders);
+
       if (this.edit){
         var url = '/api/apps/' + encodeURIComponent(this.app.name) + '/routes/' + encodeURIComponent(this.route.path)
       }else{
@@ -117,14 +173,27 @@ export default {
   created:  function (){
     eventBus.$on('openEditRoute', (route) => {
       this.route = jQuery.extend(true, {}, route);
+      this.routeConfig = configToLines(route.config);
+      this.routeHeaders = headersToLines(route.headers);
       this.edit = true;
       this.show = true;
     });
     eventBus.$on('openAddRoute', () => {
       this.route = defaultRoute();
+      this.routeConfig = [{key: "", value: ""}];
+      this.routeHeaders = [{key: "", value: ""}];
       this.edit = false;
       this.show = true;
     });
   }
 }
 </script>
+
+<style scoped>
+.cfg-key {
+  padding: 0 5px 5px 15px;
+}
+.cfg-val {
+  padding: 0 5px 5px 5px;
+}
+</style>

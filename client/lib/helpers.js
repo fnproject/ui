@@ -37,3 +37,28 @@ export const linesToConfig = function(lines){
   }
   return config;
 }
+
+export const headersToLines = function(headers){
+  headers = headers || {};
+  var lines = [];
+  var k;
+  for (k in headers) {
+    lines.push({key: k, value: headers[k][0]})
+  };
+  // Always show at least one empty line
+  if (lines.length == 0) {
+    lines.push({key: "", value: ""})
+  }
+  return lines;
+}
+
+export const linesToHeaders = function(lines){
+  var headers = {};
+  for (var k = 0, i = 0, len = lines.length; i < len; k = ++i) {
+    var v = lines[k];
+    if (v.key){
+      headers[v.key] = [v.value];
+    }
+  }
+  return headers;
+}
