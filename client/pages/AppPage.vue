@@ -46,16 +46,13 @@
 
 
 
-    <fn-add-route :app="app"></fn-add-route>
-    <fn-edit-route :app="app"></fn-edit-route>
-
+    <fn-route-form :app="app"></fn-add-route>
   </div>
 </template>
 
 <script>
 //import Modal from '../lib/vue-bootstrap-modal.vue';
-import FnAddRoute from '../components/FnAddRoute';
-import FnEditRoute from '../components/FnEditRoute';
+import FnRouteForm from '../components/FnRouteForm';
 import { eventBus } from '../client';
 import { defaultErrorHander } from '../lib/helpers';
 
@@ -68,8 +65,7 @@ export default {
     }
   },
   components: {
-    FnAddRoute,
-    FnEditRoute
+    FnRouteForm
   },
   methods: {
     openAddRoute: function(){

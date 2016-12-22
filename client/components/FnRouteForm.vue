@@ -1,23 +1,23 @@
 <template>
-  <modal title="Add Route" :show="show" @closed="closed" @ok="ok" @cancel="closed">
-    <form class="form-horizontal" v-on:submit.prevent="ok()">
+  <modal :title="title()" :show="show" @closed="closed" @ok="ok" @cancel="closed">
+    <form class="form-horizontal" v-on:submit.prevent="ok">
       <div class="form-group">
         <label class="col-sm-3 control-label">Path *</label>
         <div class="col-sm-9">
-          <input type="text" class="form-control" placeholder="e.g. /hello" v-model="route.path" required>
+          <input type="text" class="form-control" placeholder="e.g. /hello" v-model="route.path" :disabled="edit">
         </div>
       </div>
       <div class="form-group">
         <label class="col-sm-3 control-label">Image *</label>
         <div class="col-sm-9">
-          <input type="text" class="form-control" placeholder="e.g. iron/hello"  v-model="route.image" required>
+          <input type="text" class="form-control" placeholder="e.g. iron/hello"  v-model="route.image">
         </div>
       </div>
       <div class="form-group">
         <label class="col-sm-3 control-label">Type</label>
         <div class="col-sm-9">
-          <label class="radio-inline"><input type="radio" value="sync" v-model="route.type"> Sync</label>
-          <label class="radio-inline"><input type="radio" value="async" v-model="route.type"> Async</label>
+          <label class="radio-inline"><input type="radio" value="sync" name="type" v-model="route.type"> Sync</label>
+          <label class="radio-inline"><input type="radio" value="async" name="type" v-model="route.type"> Async</label>
         </div>
       </div>
       <div class="form-group">
@@ -41,7 +41,7 @@
     </form>
 
     <div slot="footer">
-      <button type="button" class="btn btn-primary" @click="ok" :disabled="submitting">Create</button>
+      <button type="button" class="btn btn-primary" @click="ok" :disabled="submitting">{{okBtnName()}}</button>
     </div>
   </modal>
 </template>
@@ -67,12 +67,19 @@ export default {
   },
   data: function(){
     return {
+      edit: false,
       show: false,
       submitting: false,
-      route: defaultRoute()
+      route: {}
     }
   },
   methods: {
+    title: function(){
+      return this.edit ? 'Edit Route' : 'Add Route';
+    },
+    okBtnName: function(){
+      return this.edit ? 'Save' : 'Create';
+    },
     closed: function(){
       this.show = false;
     },
@@ -80,17 +87,25 @@ export default {
       var t = this;
       eventBus.$emit('NotificationClear');
       this.submitting = true;
+      if (this.edit){
+        var url = '/api/apps/' + encodeURIComponent(this.app.name) + '/routes/' + encodeURIComponent(this.route.path)
+      }else{
+        var url = '/api/apps/' + encodeURIComponent(this.app.name) + '/routes'
+      }
       $.ajax({
-        url: '/api/apps/' + encodeURIComponent(this.app.name) + '/routes',
-        method: 'POST',
+        url: url,
+        method: this.edit ? 'PATCH' : 'POST',
         data: JSON.stringify(this.route),
         contentType: "application/json",
         dataType: 'json',
         success: (res) => {
-          eventBus.$emit('RouteAdded', res.route);
+          if (t.edit){
+            eventBus.$emit('RouteUpdated', res.route);
+          } else {
+            eventBus.$emit('RouteAdded', res.route);
+          }
           t.submitting = false;
           t.closed();
-          t.route = defaultRoute();
         },
         error: function(jqXHR, textStatus, errorThrown){
           t.submitting = false;
@@ -100,7 +115,14 @@ export default {
     },
   },
   created:  function (){
+    eventBus.$on('openEditRoute', (route) => {
+      this.route = jQuery.extend(true, {}, route);
+      this.edit = true;
+      this.show = true;
+    });
     eventBus.$on('openAddRoute', () => {
+      this.route = defaultRoute();
+      this.edit = false;
       this.show = true;
     });
   }
