@@ -43,7 +43,7 @@
 
 <script>
 import FnAppForm from '../components/FnAppForm';
-import { defaultErrorHander } from '../lib/helpers';
+import { defaultErrorHandler } from '../lib/helpers';
 import { eventBus } from '../client';
 
 export default {
@@ -66,7 +66,7 @@ export default {
           method: 'DELETE',
           dataType: 'json',
           success: (app) => { eventBus.$emit('AppDeleted', app) },
-          error: defaultErrorHander
+          error: defaultErrorHandler
         })
       }
     }

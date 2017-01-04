@@ -2,7 +2,7 @@ import { eventBus } from '../client';
 
 
 
-export const defaultErrorHander = function(jqXHR){
+export const defaultErrorHandler = function(jqXHR){
   var text = "Error " + jqXHR.status + '. Can not complete action';
   try {
     text = jqXHR.responseJSON.msg

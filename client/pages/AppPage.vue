@@ -21,7 +21,7 @@
         <th>Memory</th>
         <th>MaxCC</th>
         <th>Timeout</th>
-        <th width="120">Actions</th>
+        <th width="140">Actions</th>
       </thead>
       <tbody>
         <tr v-for="route in routes">
@@ -33,6 +33,7 @@
           <td>{{route.timeout}}</td>
           <td>
             <div class="toolbar">
+              <button class="btn btn-default" @click="openRunFunction(route)" title="Run Function"><i class="fa fa-play"></i></button>
               <button class="btn btn-default" @click="openEditRoute(route)" title="Edit Route"><i class="fa fa-gear"></i></button>
               <button class="btn btn-default" @click="deleteRoute(route)" title="Delete Route"><i class="fa fa-times"></i></button>
             </div>
@@ -47,14 +48,16 @@
 
 
     <fn-route-form :app="app"></fn-route-form>
+    <fn-run-function :app="app"></fn-run-function>
   </div>
 </template>
 
 <script>
 //import Modal from '../lib/vue-bootstrap-modal.vue';
 import FnRouteForm from '../components/FnRouteForm';
+import FnRunFunction from '../components/FnRunFunction';
 import { eventBus } from '../client';
-import { defaultErrorHander } from '../lib/helpers';
+import { defaultErrorHandler } from '../lib/helpers';
 
 export default {
   props: ['apps'],
@@ -65,7 +68,8 @@ export default {
     }
   },
   components: {
-    FnRouteForm
+    FnRouteForm,
+    FnRunFunction
   },
   methods: {
     openAddRoute: function(){
@@ -74,13 +78,16 @@ export default {
     openEditRoute: function(route){
       eventBus.$emit('openEditRoute', route);
     },
+    openRunFunction: function(route){
+      eventBus.$emit('openRunFunction', route);
+    },
     loadRoutes: function(){
       var t = this;
       $.ajax({
         url: '/api/apps/' + encodeURIComponent(t.app.name) + '/routes',
         dataType: 'json',
         success: (routes) => t.routes = routes,
-        error: defaultErrorHander
+        error: defaultErrorHandler
       })
     },
     loadApp: function(name, cb){
@@ -89,7 +96,7 @@ export default {
         url: '/api/apps/' + encodeURIComponent(name),
         dataType: 'json',
         success: (app) => {t.app = app; if (cb) {cb()} },
-        error: defaultErrorHander
+        error: defaultErrorHandler
       })
     },
     deleteRoute: function(route){
@@ -100,7 +107,7 @@ export default {
           method: 'DELETE',
           dataType: 'json',
           success: (app) => { t.loadRoutes() },
-          error: defaultErrorHander
+          error: defaultErrorHandler
         })
       }
     },

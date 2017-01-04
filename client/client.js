@@ -12,7 +12,7 @@ import AppPage from './pages/AppPage.vue';
 
 import FnSidebar from './components/FnSidebar.vue';
 import FnNotification from './components/FnNotification.vue';
-import { defaultErrorHander } from './lib/helpers';
+import { defaultErrorHandler } from './lib/helpers';
 
 export const eventBus = new Vue();
 
@@ -40,7 +40,7 @@ new Vue({
         url: '/api/apps',
         dataType: 'json',
         success: (apps) => t.apps = apps,
-        error: defaultErrorHander
+        error: defaultErrorHandler
       })
     }
   },

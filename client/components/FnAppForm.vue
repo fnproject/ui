@@ -18,7 +18,7 @@
             <div class="col-sm-5 cfg-val">
               <input type="text" class="form-control" placeholder="Value" v-model="line.value">
             </div>
-            <div class="col-sm-1">
+            <div class="col-sm-1 toolbar">
               <button class="btn btn-default" @click.prevent="removeConfigLine(index)"><i class="fa fa-times"></i></button>
             </div>
           </div>
@@ -37,7 +37,7 @@
 <script>
 import Modal from '../lib/VueBootstrapModal.vue';
 import { eventBus } from '../client';
-import { defaultErrorHander, configToLines, linesToConfig } from '../lib/helpers';
+import { defaultErrorHandler, configToLines, linesToConfig } from '../lib/helpers';
 
 export default {
   props: [],
@@ -92,7 +92,7 @@ export default {
           t.closed();
           t.app = {};
         },
-        error: defaultErrorHander
+        error: defaultErrorHandler
       })
     },
   },

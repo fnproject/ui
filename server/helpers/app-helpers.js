@@ -42,6 +42,19 @@ exports.execApiEndpoint = function(method, req, path, params, postfields, succes
   request(options, function(error, response, body){exports.requrestCb(successcb, errorcb, error, response, body)});
 }
 
+exports.execApiEndpointRaw = function(method, req, path, params, postfields, successcb, errorcb) {
+  var options = {
+    uri: exports.apiFullUrl(req, path),
+    method: method,
+    body: postfields
+  };
+
+  console.log(options.method + " " + options.uri + ", params: ", options.body);
+
+  request(options, function(error, response, body){exports.requrestCbRaw(successcb, errorcb, error, response, body)});
+}
+
+// expects response as json
 exports.requrestCb = function (successcb, errorcb, error, response, body) {
   var parsed;
   if (!error && response.statusCode >= 200 && response.statusCode < 300) {
@@ -77,6 +90,16 @@ exports.requrestCb = function (successcb, errorcb, error, response, body) {
     var status = response ? response.statusCode : error.code;
     console.warn("[ERR] " + status + " | "  + message);
     errorcb(status, message);
+  }
+}
+
+// expects response as plain text
+exports.requrestCbRaw = function (successcb, errorcb, error, response, body) {
+  if (!error && response.statusCode >= 200 && response.statusCode < 300) {
+    successcb(body);
+  } else {
+    var status = response ? response.statusCode : error.code;
+    errorcb(status, body);
   }
 }
 

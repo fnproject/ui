@@ -39,5 +39,15 @@ router.delete('/:app/routes/:route', function(req, res) {
   helpers.execApiEndpoint('DELETE', req,  "/v1/apps/" + encodeURIComponent(req.params.app)+ "/routes/" + encodeURIComponent(req.params.route) , {}, {}, successcb, helpers.standardErrorcb(res));
 });
 
+// Run Route
+router.post('/:app/routes/:route/run', function(req, res) {
+  successcb = function(data){
+    res.json({output: data});
+  }
+  var data = req.body.payload;
+
+  helpers.execApiEndpointRaw('POST', req,  "/r/" + encodeURIComponent(req.params.app)+ "/" + encodeURIComponent(req.params.route), {}, data, successcb, helpers.standardErrorcb(res));
+});
+
 
 module.exports = router;

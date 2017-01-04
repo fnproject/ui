@@ -48,7 +48,7 @@
             <div class="col-sm-5 cfg-val">
               <input type="text" class="form-control" placeholder="Value" v-model="line.value">
             </div>
-            <div class="col-sm-1">
+            <div class="col-sm-1 toolbar">
               <button class="btn btn-default" @click.prevent="removeConfigLine(index)"><i class="fa fa-times"></i></button>
             </div>
           </div>
@@ -66,7 +66,7 @@
             <div class="col-sm-5 cfg-val">
               <input type="text" class="form-control" placeholder="Value" v-model="line.value">
             </div>
-            <div class="col-sm-1">
+            <div class="col-sm-1 toolbar">
               <button class="btn btn-default" @click.prevent="removeHeadersLine(index)"><i class="fa fa-times"></i></button>
             </div>
           </div>
@@ -87,7 +87,7 @@
 <script>
 import Modal from '../lib/VueBootstrapModal.vue';
 import { eventBus } from '../client';
-import { defaultErrorHander, configToLines, linesToConfig, headersToLines, linesToHeaders } from '../lib/helpers';
+import { defaultErrorHandler, configToLines, linesToConfig, headersToLines, linesToHeaders } from '../lib/helpers';
 
 var defaultRoute = function(){
   return jQuery.extend(true, {}, {
@@ -165,7 +165,7 @@ export default {
         },
         error: function(jqXHR, textStatus, errorThrown){
           t.submitting = false;
-          defaultErrorHander(jqXHR);
+          defaultErrorHandler(jqXHR);
         }
       })
     },
