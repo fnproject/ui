@@ -62,3 +62,19 @@ export const linesToHeaders = function(lines){
   }
   return headers;
 }
+
+export const getApiUrl = function(cb, errCb){
+  var errCb = errCb || null;
+  $.ajax({
+    url: '/api/info/api-url',
+    method: 'GET',
+    contentType: "application/json",
+    dataType: 'json',
+    success: (res) => {
+      cb(res.url)
+    },
+    error: function(jqXHR, textStatus, errorThrown){
+      if (errCb){errCb(jqXHR, textStatus, errorThrown)}
+    }
+  })
+}

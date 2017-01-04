@@ -19,8 +19,12 @@
           <textarea class="form-control" v-model="payload" placeholder="e.g. {}"></textarea>
         </div>
       </div>
+      <div>
+        <h5>cURL command</h5>
+        <pre>curl -X POST -d '{{payload}}' {{apiUrl}}r/{{encodeURIComponent(this.app.name)}}/{{encodeURIComponent(this.route.path)}}</pre>
+      </div>
 
-      <div v-show="output">
+      <div v-show="output"></div>
         <h5>Output</h5>
         <pre>{{output}}</pre>
       </div>
@@ -35,7 +39,7 @@
 <script>
 import Modal from '../lib/VueBootstrapModal.vue';
 import { eventBus } from '../client';
-import { defaultErrorHandler } from '../lib/helpers';
+import { defaultErrorHandler, getApiUrl } from '../lib/helpers';
 
 export default {
   props: ['app'],
@@ -48,7 +52,8 @@ export default {
       show: false,
       submitting: false,
       payload: '{}',
-      output: null
+      output: null,
+      apiUrl: ''
     }
   },
   methods: {
@@ -81,12 +86,14 @@ export default {
     },
   },
   created:  function (){
+    var t = this;
     eventBus.$on('openRunFunction', (route) => {
       this.route = route;
       this.payload = '{}';
       this.output = null;
       this.show = true;
     });
+    getApiUrl( url => t.apiUrl = url );
   }
 }
 </script>
