@@ -24,7 +24,7 @@
         <pre>curl -X POST -d '{{payload}}' {{apiUrl}}r/{{encodeURIComponent(this.app.name)}}/{{encodeURIComponent(this.route.path)}}</pre>
       </div>
 
-      <div v-show="output"></div>
+      <div v-show="output">
         <h5>Output</h5>
         <pre>{{output}}</pre>
       </div>
