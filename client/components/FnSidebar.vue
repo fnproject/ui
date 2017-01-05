@@ -15,7 +15,7 @@
     </ul>
 
 
-    <fn-welcome-section v-if="app"></fn-welcome-section>
+    <fn-welcome-section v-if="!app"></fn-welcome-section>
   </div>
 </template>
 

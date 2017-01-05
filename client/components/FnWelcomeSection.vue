@@ -6,8 +6,6 @@
       Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
     </p>
     -->
-    <br />
-    <br />
     <ul class="nav nav-sidebar">
       <li><a href="https://github.com/iron-io/functions#quickstart" target="_blank">Quick Start</a></li>
       <li><a href="http://petstore.swagger.io/?url=https://raw.githubusercontent.com/iron-io/functions/master/docs/swagger.yml" target="_blank">IronFunctions API</a></li>

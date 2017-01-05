@@ -44,17 +44,12 @@
     </div>
 
 
-    <div>
-      <fn-welcome-section></fn-welcome-section>
-    </div>
-
     <fn-app-form></fn-app-form>
   </div>
 </template>
 
 <script>
 import FnAppForm from '../components/FnAppForm';
-import FnWelcomeSection from '../components/FnWelcomeSection';
 
 import { defaultErrorHandler } from '../lib/helpers';
 import { eventBus } from '../client';
@@ -62,8 +57,7 @@ import { eventBus } from '../client';
 export default {
   props: ['apps'],
   components: {
-    FnAppForm,
-    FnWelcomeSection
+    FnAppForm
   },
   methods: {
     openAddApp: function(){
