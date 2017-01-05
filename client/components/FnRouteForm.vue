@@ -195,5 +195,7 @@ export default {
 }
 .cfg-val {
   padding: 0 5px 5px 5px;
+  margin-right: -20px;
+  width: 50%;
 }
 </style>
