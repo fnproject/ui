@@ -1,6 +1,6 @@
 <template>
   <div>
-    
+
     <ol class="breadcrumb">
       <li class="active">Apps</li>
     </ol>
@@ -44,7 +44,9 @@
     </div>
 
 
-    <!-- <pre>{{ JSON.stringify($data, null, 2) }}</pre> -->
+    <div>
+      <fn-welcome-section></fn-welcome-section>
+    </div>
 
     <fn-app-form></fn-app-form>
   </div>
@@ -52,13 +54,16 @@
 
 <script>
 import FnAppForm from '../components/FnAppForm';
+import FnWelcomeSection from '../components/FnWelcomeSection';
+
 import { defaultErrorHandler } from '../lib/helpers';
 import { eventBus } from '../client';
 
 export default {
   props: ['apps'],
   components: {
-    FnAppForm
+    FnAppForm,
+    FnWelcomeSection
   },
   methods: {
     openAddApp: function(){

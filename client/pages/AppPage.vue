@@ -115,22 +115,34 @@ export default {
     },
     setTitle: function(){
       document.title = this.app.name + " | Functions UI";
+    },
+    appLoaded: function(){
+      this.loadRoutes();
+      this.setTitle();
+      eventBus.$emit('AppOpened', this.app);
+    },
+    appSwitched: function(){
+      this.loadApp(this.$route.params.appname, () => { this.appLoaded(); });
     }
+  },
+  watch: {
+    '$route': 'appSwitched'
   },
   beforeRouteEnter (to, from, next) {
     // access to component instance via `vm`
     next(vm => {
       if (vm.apps){
         vm.app = _.find(vm.apps, (app) => {return app.name == to.params.appname});
-        vm.loadRoutes();
-        vm.setTitle();
+        vm.appLoaded();
       } else {
-        vm.loadApp(to.params.appname, () => { vm.loadRoutes();vm.setTitle(); });
+        vm.loadApp(to.params.appname, () => { vm.appLoaded(); });
       }
     })
   },
+  destroyed: function(){
+    eventBus.$emit('AppClosed');
+  },
   created:  function (){
-
     eventBus.$on('RouteAdded', (route) => {
       this.loadRoutes()
     });
