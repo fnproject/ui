@@ -1,0 +1,17 @@
+.main {
+  padding: 20px;
+
+  & .page-header {
+    margin-top: 0;
+  }
+  & a {
+    /*color: #8A58E6;*/
+  }
+}
+
+@media (min-width: 768px) {
+  .main {
+    padding-right: 40px;
+    padding-left: 40px;
+  }
+}

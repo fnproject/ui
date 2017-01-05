@@ -71,7 +71,7 @@ module.exports = [
         // Extract css files
         {
             test: /\.css$/,
-            loader: extractTextPlugin.extract("style-loader", "css-loader!postcss-loader")
+            loader: extractTextPlugin.extract("style-loader", "css-loader!postcss")
         },
 
         // ES2015

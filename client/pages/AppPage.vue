@@ -13,7 +13,9 @@
     <h3>{{app.name}}</h3>
     <br />
 
-    <table class="table">
+    <div class="table-responsive">
+
+      <table class="table table-striped">
       <thead>
         <th>Path</th>
         <th>Image</th>
@@ -45,7 +47,7 @@
       </tbody>
     </table>
 
-
+    </div>
 
     <fn-route-form :app="app"></fn-route-form>
     <fn-run-function :app="app"></fn-run-function>
