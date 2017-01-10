@@ -34,14 +34,14 @@
                   <div class="toolbar">
 
                     <div class="btn-group">
-                      <button class="btn btn-default btn-sm" @click="openEditApp(app)" title="Edit App"><i class="fa fa-gear"></i> Edit</button>
+                      <button class="btn btn-default btn-sm" @click.prevent="openEditApp(app)" title="Edit App"><i class="fa fa-gear"></i> Edit</button>
                       <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <span class="caret"></span>
                         <span class="sr-only">Toggle Dropdown</span>
                       </button>
                       <ul class="dropdown-menu dropdown-menu-right">
                         <li>
-                          <a href="#" @click="deleteApp(app)" class="text-danger"  title="Delete App">
+                          <a href="#" @click.prevent="deleteApp(app)" class="text-danger"  title="Delete App">
                             <i class="fa fa-times"></i> Delete App
                           </a>
                         </li>
