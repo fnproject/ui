@@ -1,6 +1,8 @@
 require("./css/app.css");
 
 require('expose?$!expose?jQuery!jquery');
+require("bootstrap/dist/js/bootstrap.min");
+
 import _ from 'lodash/core';
 
 import Vue from 'vue';

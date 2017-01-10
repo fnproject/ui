@@ -7,6 +7,38 @@
   & a {
     /*color: #8A58E6;*/
   }
+
+  & .dropdown-menu {
+    border-radius: 1px;
+    & > li > a {
+      padding: 5px 10px;
+    }
+  }
+
+  & .toolbar {
+    & .btn-group {
+      white-space: nowrap;
+      display: flex;
+
+      & .dropdown-toggle {
+        border-left: 1px solid #DDD;
+      }
+    }
+    & .btn {
+      border: none;
+    }
+    & .fa {
+      font-size: 1em;
+      margin-right: 5px;
+    }
+  }
+
+  & a.text-danger,
+  & .text-danger,
+  & a.text-danger:hover,
+  & .text-danger:hover {
+    color: #E74C3C;
+  }
 }
 
 @media (min-width: 768px) {

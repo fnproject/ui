@@ -1,10 +1,10 @@
 <template>
   <div>
-    <br />
     <ol class="breadcrumb">
       <li><router-link to="/">Apps</router-link>      </li>
       <li class="active">{{app.name}}</li>
     </ol>
+    <br />
 
     <div class="pull-right">
       <button class="btn btn-default" @click="openAddRoute()"><i class="fa fa-plus"></i> Add Route</button>
@@ -13,7 +13,8 @@
     <h3>{{app.name}}</h3>
     <br />
 
-    <div class="table-responsive">
+    <!-- <div class="table-responsive"> -->
+    <div>
 
       <table class="table table-striped">
       <thead>
@@ -35,9 +36,25 @@
           <td>{{route.timeout}}</td>
           <td>
             <div class="toolbar">
-              <button class="btn btn-default" @click="openRunFunction(route)" title="Run Function"><i class="fa fa-play"></i></button>
-              <button class="btn btn-default" @click="openEditRoute(route)" title="Edit Route"><i class="fa fa-gear"></i></button>
-              <button class="btn btn-default" @click="deleteRoute(route)" title="Delete Route"><i class="fa fa-times"></i></button>
+
+              <div class="btn-group">
+                <button class="btn btn-default btn-sm" @click="openRunFunction(route)" title="Run Function"><i class="fa fa-play"></i> Run Function</button>
+                <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <span class="caret"></span>
+                  <span class="sr-only">Toggle Dropdown</span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-right">
+                  <li>
+                    <a href="#" @click="openEditRoute(route)" title="Edit Route">
+                      <i class="fa fa-gear"></i> Edit Route
+                    </a>
+                    <a href="#" @click="deleteRoute(route)"
+                    class="text-danger" title="Delete Route">
+                      <i class="fa fa-times"></i> Delete Route
+                    </a>
+                  </li>
+                </ul>
+              </div>
             </div>
           </td>
         </tr>
