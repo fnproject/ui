@@ -38,6 +38,9 @@
           <input type="number" class="form-control" placeholder="e.g. 60"  v-model="route.timeout">
         </div>
       </div>
+
+      <hr>
+
       <div class="form-group">
         <label class="col-sm-3 control-label">Config</label>
         <div class="col-sm-9">
@@ -52,9 +55,15 @@
               <button class="btn btn-default" @click.prevent="removeConfigLine(index)"><i class="fa fa-times"></i></button>
             </div>
           </div>
-          <a href="#" class="pull-right" @click.prevent="addConfigLine">Add line</a>
+          <div>
+            <a href="#" class="" @click.prevent="addConfigLine">
+              <i class="fa fa-plus"></i> Add line
+            </a>
+          </div>
         </div>
       </div>
+
+      <hr>
 
       <div class="form-group">
         <label class="col-sm-3 control-label">Headers</label>
@@ -70,7 +79,11 @@
               <button class="btn btn-default" @click.prevent="removeHeadersLine(index)"><i class="fa fa-times"></i></button>
             </div>
           </div>
-          <a href="#" class="pull-right" @click.prevent="addHeadersLine">Add line</a>
+          <div>
+            <a href="#" class="" @click.prevent="addHeadersLine">
+              <i class="fa fa-plus"></i> Add line
+            </a>
+          </div>
         </div>
       </div>
 
@@ -115,10 +128,10 @@ export default {
   },
   methods: {
     title: function(){
-      return this.edit ? 'Edit Route' : 'Add Route';
+      return this.edit ? 'Edit Route' : 'Add New Route';
     },
     okBtnName: function(){
-      return this.edit ? 'Save' : 'Create';
+      return this.edit ? 'Save Changes' : 'Add Route';
     },
     closed: function(){
       this.show = false;
@@ -195,5 +208,7 @@ export default {
 }
 .cfg-val {
   padding: 0 5px 5px 5px;
+  margin-right: -20px;
+  width: 50%;
 }
 </style>

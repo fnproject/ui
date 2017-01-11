@@ -1,10 +1,10 @@
 <template>
   <div>
-    <br />
     <ol class="breadcrumb">
       <li><router-link to="/">Apps</router-link>      </li>
       <li class="active">{{app.name}}</li>
     </ol>
+    <br />
 
     <div class="pull-right">
       <button class="btn btn-default" @click="openAddRoute()"><i class="fa fa-plus"></i> Add Route</button>
@@ -13,7 +13,10 @@
     <h3>{{app.name}}</h3>
     <br />
 
-    <table class="table">
+    <!-- <div class="table-responsive"> -->
+    <div class="row">
+      <div class="col-md-12 col-lg-10">
+        <table class="table table-striped">
       <thead>
         <th>Path</th>
         <th>Image</th>
@@ -33,9 +36,25 @@
           <td>{{route.timeout}}</td>
           <td>
             <div class="toolbar">
-              <button class="btn btn-default" @click="openRunFunction(route)" title="Run Function"><i class="fa fa-play"></i></button>
-              <button class="btn btn-default" @click="openEditRoute(route)" title="Edit Route"><i class="fa fa-gear"></i></button>
-              <button class="btn btn-default" @click="deleteRoute(route)" title="Delete Route"><i class="fa fa-times"></i></button>
+
+              <div class="btn-group">
+                <button class="btn btn-default btn-sm" @click.prevent="openRunFunction(route)" title="Run Function"><i class="fa fa-play"></i> Run Function</button>
+                <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <span class="caret"></span>
+                  <span class="sr-only">Toggle Dropdown</span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-right">
+                  <li>
+                    <a href="#" @click.prevent="openEditRoute(route)" title="Edit Route">
+                      <i class="fa fa-gear"></i> Edit Route
+                    </a>
+                    <a href="#" @click.prevent="deleteRoute(route)"
+                    class="text-danger" title="Delete Route">
+                      <i class="fa fa-times"></i> Delete Route
+                    </a>
+                  </li>
+                </ul>
+              </div>
             </div>
           </td>
         </tr>
@@ -44,8 +63,8 @@
         </tr>
       </tbody>
     </table>
-
-
+      </div>
+    </div>
 
     <fn-route-form :app="app"></fn-route-form>
     <fn-run-function :app="app"></fn-run-function>
@@ -113,22 +132,34 @@ export default {
     },
     setTitle: function(){
       document.title = this.app.name + " | Functions UI";
+    },
+    appLoaded: function(){
+      this.loadRoutes();
+      this.setTitle();
+      eventBus.$emit('AppOpened', this.app);
+    },
+    appSwitched: function(){
+      this.loadApp(this.$route.params.appname, () => { this.appLoaded(); });
     }
+  },
+  watch: {
+    '$route': 'appSwitched'
   },
   beforeRouteEnter (to, from, next) {
     // access to component instance via `vm`
     next(vm => {
       if (vm.apps){
         vm.app = _.find(vm.apps, (app) => {return app.name == to.params.appname});
-        vm.loadRoutes();
-        vm.setTitle();
+        vm.appLoaded();
       } else {
-        vm.loadApp(to.params.appname, () => { vm.loadRoutes();vm.setTitle(); });
+        vm.loadApp(to.params.appname, () => { vm.appLoaded(); });
       }
     })
   },
+  destroyed: function(){
+    eventBus.$emit('AppClosed');
+  },
   created:  function (){
-
     eventBus.$on('RouteAdded', (route) => {
       this.loadRoutes()
     });

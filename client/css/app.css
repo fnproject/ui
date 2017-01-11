@@ -1,8 +1,14 @@
 @charset "utf-8";
-@import "variables.css";
-@import "sidebar.css";
-@import "bootstrap/dist/css/bootstrap.min.css";
+@import "./variables.css";
+@import "normalize-css/normalize.css";
 @import "font-awesome/css/font-awesome.css";
+@import "bootstrap/dist/css/bootstrap.min.css";
+@import "./sidebar.css";
+@import "./main.css";
+
+body {
+  font-family: 'Open Sans', Helvetica, Arial, sans-serif;
+}
 
 .no-matches {
   text-align: center;
@@ -13,12 +19,4 @@
   color: #B8B8B8;
   margin: 40px 0;
   line-height: 1.5em;
-}
-
-.toolbar .btn {
-  border: none;
-}
-
-.toolbar .btn .fa {
-  font-size: 1.2em;
 }
