@@ -4,9 +4,6 @@
   & .page-header {
     margin-top: 0;
   }
-  & a {
-    /*color: #8A58E6;*/
-  }
 
   & .dropdown-menu {
     border-radius: 1px;
@@ -45,5 +42,15 @@
   .main {
     padding-right: 40px;
     padding-left: 40px;
+
+    & .modal .modal-title {
+      text-align: center;
+    }
+
+    & .modal-content {
+      box-shadow: 0 5px 10px rgba(0,0,0,.25);
+      border: none;
+      border-radius: 2px;
+    }
   }
 }

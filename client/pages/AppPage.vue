@@ -14,9 +14,9 @@
     <br />
 
     <!-- <div class="table-responsive"> -->
-    <div>
-
-      <table class="table table-striped">
+    <div class="row">
+      <div class="col-md-12 col-lg-10">
+        <table class="table table-striped">
       <thead>
         <th>Path</th>
         <th>Image</th>
@@ -63,7 +63,7 @@
         </tr>
       </tbody>
     </table>
-
+      </div>
     </div>
 
     <fn-route-form :app="app"></fn-route-form>

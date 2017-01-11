@@ -24,6 +24,14 @@
     border-bottom: 1px solid rgba(255,255,255,.1);
     padding-bottom: 20px;
   }
+
+  & .welcome-section .fa {
+    font-size: 30px;
+    vertical-align: middle;
+    margin-right: 10px;
+    width: 25px;
+    text-align: center;
+  }
 }
 
 @media (min-width: 768px) {
@@ -84,5 +92,15 @@
 @media (min-width: 768px) {
   .navbar-inverse {
     display: none;
+  }
+}
+
+#navbar .nav {
+  & .fa {
+    font-size: 30px;
+    vertical-align: middle;
+    margin-right: 10px;
+    width: 25px;
+    text-align: center;
   }
 }
