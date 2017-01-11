@@ -4,13 +4,13 @@
       <div class="form-group">
         <label class="col-sm-3 control-label">Path *</label>
         <div class="col-sm-9">
-          <input type="text" class="form-control" placeholder="e.g. /hello" v-model="route.path" :disabled="edit">
+          <input type="text" class="form-control" placeholder="e.g. /hello" v-model="route.path" :disabled="edit" @keydown.enter.prevent="">
         </div>
       </div>
       <div class="form-group">
         <label class="col-sm-3 control-label">Image *</label>
         <div class="col-sm-9">
-          <input type="text" class="form-control" placeholder="e.g. iron/hello"  v-model="route.image">
+          <input type="text" class="form-control" placeholder="e.g. iron/hello"  v-model="route.image" @keydown.enter.prevent="">
         </div>
       </div>
       <div class="form-group">
@@ -23,19 +23,19 @@
       <div class="form-group">
         <label class="col-sm-3 control-label">Memory, MB</label>
         <div class="col-sm-9">
-          <input type="number" class="form-control" placeholder="e.g. 128"  v-model="route.memory">
+          <input type="number" class="form-control" placeholder="e.g. 128"  v-model="route.memory" @keydown.enter.prevent="">
         </div>
       </div>
       <div class="form-group">
         <label class="col-sm-3 control-label">Max Concurrency</label>
         <div class="col-sm-9">
-          <input type="number" class="form-control" placeholder="e.g. 100"  v-model="route.max_concurrency">
+          <input type="number" class="form-control" placeholder="e.g. 100"  v-model="route.max_concurrency" @keydown.enter.prevent="">
         </div>
       </div>
       <div class="form-group">
         <label class="col-sm-3 control-label">Timeout, sec</label>
         <div class="col-sm-9">
-          <input type="number" class="form-control" placeholder="e.g. 60"  v-model="route.timeout">
+          <input type="number" class="form-control" placeholder="e.g. 60"  v-model="route.timeout" @keydown.enter.prevent="">
         </div>
       </div>
 
@@ -46,10 +46,10 @@
         <div class="col-sm-9">
           <div class="row" v-for="(line, index) in routeConfig">
             <div class="col-sm-5 cfg-key">
-              <input type="text" class="form-control" placeholder="Key" v-model="line.key">
+              <input type="text" class="form-control" placeholder="Key" v-model="line.key" @keydown.enter.prevent="">
             </div>
             <div class="col-sm-5 cfg-val">
-              <input type="text" class="form-control" placeholder="Value" v-model="line.value">
+              <input type="text" class="form-control" placeholder="Value" v-model="line.value" @keydown.enter.prevent="">
             </div>
             <div class="col-sm-1 toolbar">
               <button class="btn btn-default" @click.prevent="removeConfigLine(index)"><i class="fa fa-times"></i></button>
@@ -70,10 +70,10 @@
         <div class="col-sm-9">
           <div class="row" v-for="(line, index) in routeHeaders">
             <div class="col-sm-5 cfg-key">
-              <input type="text" class="form-control" placeholder="Key" v-model="line.key">
+              <input type="text" class="form-control" placeholder="Key" v-model="line.key" @keydown.enter.prevent="">
             </div>
             <div class="col-sm-5 cfg-val">
-              <input type="text" class="form-control" placeholder="Value" v-model="line.value">
+              <input type="text" class="form-control" placeholder="Value" v-model="line.value" @keydown.enter.prevent="">
             </div>
             <div class="col-sm-1 toolbar">
               <button class="btn btn-default" @click.prevent="removeHeadersLine(index)"><i class="fa fa-times"></i></button>

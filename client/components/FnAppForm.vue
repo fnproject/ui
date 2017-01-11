@@ -4,7 +4,7 @@
       <div class="form-group">
         <label class="col-sm-3 control-label">Name</label>
         <div class="col-sm-9">
-          <input type="text" class="form-control" placeholder="e.g. my-app" v-model="app.name" required :disabled="edit">
+          <input type="text" class="form-control" placeholder="e.g. my-app" v-model="app.name" required :disabled="edit" @keydown.enter.prevent="">
         </div>
       </div>
 
@@ -15,10 +15,10 @@
         <div class="col-sm-9">
           <div class="row" v-for="(line, index) in appConfig">
             <div class="col-sm-5 cfg-key">
-              <input type="text" class="form-control" placeholder="Key" v-model="line.key">
+              <input type="text" class="form-control" placeholder="Key" v-model="line.key" @keydown.enter.prevent="">
             </div>
             <div class="col-sm-5 cfg-val">
-              <input type="text" class="form-control" placeholder="Value" v-model="line.value">
+              <input type="text" class="form-control" placeholder="Value" v-model="line.value" @keydown.enter.prevent="">
             </div>
             <div class="col-sm-1 toolbar">
               <button class="btn btn-default" @click.prevent="removeConfigLine(index)"><i class="fa fa-times"></i></button>
