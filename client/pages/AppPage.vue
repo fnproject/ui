@@ -6,18 +6,22 @@
     </ol>
     <br />
 
-    <div class="pull-right">
-      <button class="btn btn-default" @click="openAddRoute()"><i class="fa fa-plus"></i> Add Route</button>
-    </div>
 
-    <h3>{{app.name}}</h3>
+    <h1 class="page-header">
+      {{app.name}}
+
+      <div class="pull-right">
+        <button class="btn btn-default" @click="openAddRoute()"><i class="fa fa-plus"></i> Add Route</button>
+      </div>
+    </h1>
+
     <br />
 
     <!-- <div class="table-responsive"> -->
     <div class="row">
       <div class="col-md-12 col-lg-10">
         <table class="table table-striped">
-      <thead>
+      <thead v-bind:class="{ transparent: routes.length == 0 }">
         <th>Path</th>
         <th>Image</th>
         <th>Type</th>
@@ -59,7 +63,11 @@
           </td>
         </tr>
         <tr v-if="routes && routes.length == 0">
-          <td colspan="99" class="no-matches"><div>No Routes</div></td>
+          <td colspan="99" class="no-matches">
+            <div>
+              No Routes yet. <button class="btn btn-default" @click="openAddRoute()">Add first one!</button>
+            </div>
+          </td>
         </tr>
       </tbody>
     </table>

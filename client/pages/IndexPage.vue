@@ -17,11 +17,11 @@
     </h1>
 
     <div class="row">
-      <div class="col-sm-12 col-md-8">
+      <div class="col-md-12 col-lg-10">
         <!-- <div class="table-responsive"> -->
         <div>
           <table class="table table-striped">
-            <thead>
+            <thead v-bind:class="{ transparent: !apps || apps.length == 0 }">
               <th>Name</th>
               <th width="120">Actions</th>
             </thead>
@@ -52,7 +52,10 @@
                 </td>
               </tr>
               <tr v-if="apps && apps.length == 0">
-                <td colspan="99" class="no-matches"><div>No Apps</div></td>
+                <td colspan="99" class="no-matches">
+                  <div>
+                    No Apps yet. <button class="btn btn-default" @click="openAddApp">Create first one!</button>
+                  </div></td>
               </tr>
             </tbody>
           </table>

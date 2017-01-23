@@ -10,14 +10,3 @@
 body {
   font-family: 'Open Sans', Helvetica, Arial, sans-serif;
 }
-
-.no-matches {
-  text-align: center;
-  width: 100%;
-  z-index: 1;
-  font-size: 30px;
-  opacity: 1;
-  color: #B8B8B8;
-  margin: 40px 0;
-  line-height: 1.5em;
-}
