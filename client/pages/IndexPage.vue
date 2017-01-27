@@ -53,9 +53,13 @@
               </tr>
               <tr v-if="apps && apps.length == 0">
                 <td colspan="99" class="no-matches">
-                  <div>
-                    No Apps yet. <button class="btn btn-default" @click="openAddApp">Create first one!</button>
-                  </div></td>
+                  <div>No Apps</div>
+                </td>
+              </tr>
+              <tr v-if="!apps">
+                <td colspan="99" class="no-matches">
+                  <div>Loading...</div>
+                </td>
               </tr>
             </tbody>
           </table>

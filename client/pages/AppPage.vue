@@ -21,56 +21,61 @@
     <div class="row">
       <div class="col-md-12 col-lg-10">
         <table class="table table-striped">
-      <thead v-bind:class="{ transparent: routes.length == 0 }">
-        <th>Path</th>
-        <th>Image</th>
-        <th>Type</th>
-        <th>Memory</th>
-        <th>MaxCC</th>
-        <th>Timeout</th>
-        <th width="140">Actions</th>
-      </thead>
-      <tbody>
-        <tr v-for="route in routes">
-          <td>{{route.path}}</td>
-          <td>{{route.image}}</td>
-          <td>{{route.type}}</td>
-          <td>{{route.memory}} MB</td>
-          <td>{{route.max_concurrency}}</td>
-          <td>{{route.timeout}}</td>
-          <td>
-            <div class="toolbar">
+          <thead v-bind:class="{ transparent: routes.length == 0 }">
+            <th>Path</th>
+            <th>Image</th>
+            <th>Type</th>
+            <th>Memory</th>
+            <th>MaxCC</th>
+            <th>Timeout</th>
+            <th width="140">Actions</th>
+          </thead>
+          <tbody>
+            <tr v-for="route in routes">
+              <td>{{route.path}}</td>
+              <td>{{route.image}}</td>
+              <td>{{route.type}}</td>
+              <td>{{route.memory}} MB</td>
+              <td>{{route.max_concurrency}}</td>
+              <td>{{route.timeout}}</td>
+              <td>
+                <div class="toolbar">
 
-              <div class="btn-group">
-                <button class="btn btn-default btn-sm" @click.prevent="openRunFunction(route)" title="Run Function"><i class="fa fa-play"></i> Run Function</button>
-                <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <span class="caret"></span>
-                  <span class="sr-only">Toggle Dropdown</span>
-                </button>
-                <ul class="dropdown-menu dropdown-menu-right">
-                  <li>
-                    <a href="#" @click.prevent="openEditRoute(route)" title="Edit Route">
-                      <i class="fa fa-gear"></i> Edit Route
-                    </a>
-                    <a href="#" @click.prevent="deleteRoute(route)"
-                    class="text-danger" title="Delete Route">
-                      <i class="fa fa-times"></i> Delete Route
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </td>
-        </tr>
-        <tr v-if="routes && routes.length == 0">
-          <td colspan="99" class="no-matches">
-            <div>
-              No Routes yet. <button class="btn btn-default" @click="openAddRoute()">Add first one!</button>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+                  <div class="btn-group">
+                    <button class="btn btn-default btn-sm" @click.prevent="openRunFunction(route)" title="Run Function"><i class="fa fa-play"></i> Run Function</button>
+                    <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <span class="caret"></span>
+                      <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-right">
+                      <li>
+                        <a href="#" @click.prevent="openEditRoute(route)" title="Edit Route">
+                          <i class="fa fa-gear"></i> Edit Route
+                        </a>
+                        <a href="#" @click.prevent="deleteRoute(route)"
+                        class="text-danger" title="Delete Route">
+                          <i class="fa fa-times"></i> Delete Route
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <tr v-if="routesLoaded && routes.length == 0">
+              <td colspan="99" class="no-matches">
+                <div>
+                  No Routes
+                </div>
+              </td>
+            </tr>
+            <tr v-if="!routesLoaded">
+              <td colspan="99" class="no-matches">
+                <div>Loading...</div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
 
@@ -91,7 +96,8 @@ export default {
   data: function(){
     return {
       app: {},
-      routes: []
+      routes: [],
+      routesLoaded: false
     }
   },
   components: {
@@ -113,7 +119,10 @@ export default {
       $.ajax({
         url: '/api/apps/' + encodeURIComponent(t.app.name) + '/routes',
         dataType: 'json',
-        success: (routes) => t.routes = routes,
+        success: function(routes){
+          t.routes = routes;
+          t.routesLoaded = true;
+        },
         error: defaultErrorHandler
       })
     },
@@ -142,6 +151,8 @@ export default {
       document.title = this.app.name + " | Functions UI";
     },
     appLoaded: function(){
+      this.routes = [];
+      this.routesLoaded = false;
       this.loadRoutes();
       this.setTitle();
       eventBus.$emit('AppOpened', this.app);
