@@ -2,14 +2,17 @@
 
 # Usage
 
-
-
-# Production
+Just run the container.
+`API_URL` is IronFunctions API URL
 
 ```
 docker run --rm -it --link functions:api -p 4000:4000 -e "API_URL=http://api:8080" iron/functions-ui
 ```
 
+# Screenshots
+
+![ScreenShot routes](https://raw.githubusercontent.com/iron-io/functions-ui/master/docs/screenshots/routes.png)
+![ScreenShot run command](https://raw.githubusercontent.com/iron-io/functions-ui/master/docs/screenshots/run.png)
 
 # Development
 
