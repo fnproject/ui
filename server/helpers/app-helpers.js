@@ -106,7 +106,11 @@ exports.requrestCbRaw = function (successcb, errorcb, error, response, body) {
 exports.standardErrorcb = function(res){
   return function(status, err){
     console.log("Error. Api responded with ", status, err);
-    res.status(400).json({msg: "Error: " + err});
+    var text = "Something went terribly wrong (Status Code: " + status + ") ";
+    if (err){
+      text = "Error: " + err;
+    }
+    res.status(400).json({msg: text});
   }
 }
 

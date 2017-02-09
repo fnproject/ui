@@ -3,7 +3,7 @@ import { eventBus } from '../client';
 
 
 export const defaultErrorHandler = function(jqXHR){
-  var text = "Error " + jqXHR.status + '. Can not complete action';
+  var text = "Something went terribly wrong (Status Code: " + jqXHR.status + ")"
   try {
     text = jqXHR.responseJSON.msg
   } catch (_err) {}
