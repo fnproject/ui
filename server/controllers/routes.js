@@ -3,7 +3,7 @@ var router = express.Router();
 var helpers = require('../helpers/app-helpers.js');
 
 router.get('/:app/routes', function(req, res) {
-  successcb = function(data){
+  var successcb = function(data){
     res.json(data.routes);
   }
 
@@ -12,7 +12,7 @@ router.get('/:app/routes', function(req, res) {
 
 // Create New Route
 router.post('/:app/routes', function(req, res) {
-  successcb = function(data){
+  var successcb = function(data){
     res.json(data);
   }
 
@@ -21,7 +21,7 @@ router.post('/:app/routes', function(req, res) {
 
 // Update Route
 router.patch('/:app/routes/:route', function(req, res) {
-  successcb = function(data){
+  var successcb = function(data){
     res.json(data);
   }
   var data = req.body;
@@ -32,7 +32,7 @@ router.patch('/:app/routes/:route', function(req, res) {
 
 // Delete Route
 router.delete('/:app/routes/:route', function(req, res) {
-  successcb = function(data){
+  var successcb = function(data){
     res.json(data);
   }
 
@@ -41,12 +41,29 @@ router.delete('/:app/routes/:route', function(req, res) {
 
 // Run Route
 router.post('/:app/routes/:route/run', function(req, res) {
-  successcb = function(data){
+  var successcb = function(data){
     res.json({output: data});
+  };
+  var errcb = function(status, err){
+    console.log("Error. Api responded with ", status, err);
+    var text = "Something went terribly wrong (Status Code: " + status + ") ";
+    if (err){
+      try {
+        var parsed = JSON.parse(err);
+        if (parsed && parsed.error && parsed.error.message){
+          text = parsed.error.message;
+        }
+        if (parsed.request_id){
+          text += "\n request_id: " + parsed.request_id;
+        };
+      } catch (e) {
+      }
+    }
+    res.status(400).json({msg: text});
   }
   var data = req.body.payload;
 
-  helpers.execApiEndpointRaw('POST', req,  "/r/" + encodeURIComponent(req.params.app)+ "/" + encodeURIComponent(req.params.route), {}, data, successcb, helpers.standardErrorcb(res));
+  helpers.execApiEndpointRaw('POST', req,  "/r/" + encodeURIComponent(req.params.app)+ "/" + encodeURIComponent(req.params.route), {}, data, successcb, errcb);
 });
 
 
