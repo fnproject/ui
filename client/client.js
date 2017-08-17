@@ -28,7 +28,8 @@ const router = new VueRouter({
 new Vue({
   router: router,
   data: {
-    apps: null
+    apps: null,
+    stats: null
   },
   components: {
     IndexPage,
@@ -44,18 +45,31 @@ new Vue({
         success: (apps) => t.apps = apps,
         error: defaultErrorHandler
       })
+    },
+    loadStats: function(){
+      var t = this;
+      $.ajax({
+        url: '/api/stats',
+        dataType: 'json',
+        success: (statistics) => t.stats = statistics,
+        error: defaultErrorHandler
+      })
     }
   },
   created: function(){
     this.loadApps();
+    this.loadStats();
     eventBus.$on('AppAdded', (app) => {
-      this.loadApps()
+      this.loadApps();
+      this.loadStats();
     });
     eventBus.$on('AppUpdated', (app) => {
-      this.loadApps()
+      this.loadApps();
+      this.loadStats();
     });
     eventBus.$on('AppDeleted', (app) => {
-      this.loadApps()
+      this.loadApps();
+      this.loadStats();
     });
   }
 }).$mount('#app')

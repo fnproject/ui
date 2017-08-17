@@ -16,6 +16,8 @@
       </div>
     </h1>
 
+    <h3 class="page-header">Applications</h3>
+
     <div class="row">
       <div class="col-md-12 col-lg-10">
         <!-- <div class="table-responsive"> -->
@@ -68,8 +70,50 @@
     </div>
 
 
-
-
+    <h3 class="page-header">Statistics</h3>
+    <div class="row">
+      <div class="col-md-3 col-lg-3">
+        <div>
+          <table class="table table-striped">
+            <tbody>
+              <tr>
+                <td>
+                  Queue
+                </td>
+                <td v-if="stats">
+                  {{stats.Queue}}
+                </td>
+                <td v-if="!stats">
+                  <div>Loading...</div>
+                </td>                
+              </tr>
+              <tr>
+                <td>
+                  Running
+                </td>
+                <td v-if="stats">
+                  {{stats.Running}}
+                </td>
+                <td v-if="!stats">
+                  <div>Loading...</div>
+                </td>                
+              </tr>
+              <tr>
+                <td>
+                  Complete
+                </td>
+                <td v-if="stats">
+                  {{stats.Complete}}
+                </td>
+                <td v-if="!stats">
+                  <div>Loading...</div>
+                </td>                
+              </tr>                            
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
 
     <fn-app-form></fn-app-form>
   </div>
@@ -82,7 +126,7 @@ import { defaultErrorHandler } from '../lib/helpers';
 import { eventBus } from '../client';
 
 export default {
-  props: ['apps'],
+  props: ['apps','stats'],
   components: {
     FnAppForm
   },
