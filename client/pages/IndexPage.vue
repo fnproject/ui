@@ -70,67 +70,49 @@
     </div>
 
 
-    <h3 class="page-header">Statistics</h3>
-    <div class="row">
-      <div class="col-md-3 col-lg-3">
-        <div>
-          <table class="table table-striped">
-            <tbody>
-              <tr>
-                <td>
-                  Queue
-                </td>
-                <td v-if="stats">
-                  {{stats.Queue}}
-                </td>
-                <td v-if="!stats">
-                  <div>Loading...</div>
-                </td>                
-              </tr>
-              <tr>
-                <td>
-                  Running
-                </td>
-                <td v-if="stats">
-                  {{stats.Running}}
-                </td>
-                <td v-if="!stats">
-                  <div>Loading...</div>
-                </td>                
-              </tr>
-              <tr>
-                <td>
-                  Complete
-                </td>
-                <td v-if="stats">
-                  {{stats.Complete}}
-                </td>
-                <td v-if="!stats">
-                  <div>Loading...</div>
-                </td>                
-              </tr>                            
-            </tbody>
-          </table>
-        </div>
+    <h3 class="page-header">
+      Statistics
+      <div class="pull-right">
+        <label class="btn btn-default checkbox-inline" style="padding-left:30px"><!-- TODO style this properly -->
+          <input type="checkbox" v-model="isChecked" @change="doalert">Auto refresh</label>
+        </label>
       </div>
-    </div>
-
+    </h3>
+            
+    <stats-chart :stats="stats" :statshistory="statshistory"></stats-chart>
+    
     <fn-app-form></fn-app-form>
   </div>
 </template>
 
 <script>
 import FnAppForm from '../components/FnAppForm';
+import LineExample from '../components/LineChart.js'
+import StatsChart from '../components/StatsChart'
 
 import { defaultErrorHandler } from '../lib/helpers';
 import { eventBus } from '../client';
 
 export default {
-  props: ['apps','stats'],
+  props: ['apps','stats','statshistory'],
+  data () {
+    return {
+      isChecked: true,
+    }
+  },
   components: {
-    FnAppForm
+    FnAppForm,
+    LineExample,
+    StatsChart
   },
   methods: {
+    doalert: function(checkboxElem) {
+      if (checkboxElem.currentTarget.checked) {
+        eventBus.$emit('startAutoRefreshStats');
+      } else {
+        eventBus.$emit('stopAutoRefreshStats');
+      }
+    }, 
     openAddApp: function(){
       eventBus.$emit('openAddApp');
     },
@@ -149,9 +131,12 @@ export default {
         })
       }
     }
-  },
+  }, 
   created: function (){
-    document.title = "Functions UI"
+    document.title = "Functions UI";
+    if (this.isChecked) {
+      eventBus.$emit('startAutoRefreshStats');
+    }
   }
 }
 </script>

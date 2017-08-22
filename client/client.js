@@ -29,7 +29,8 @@ new Vue({
   router: router,
   data: {
     apps: null,
-    stats: null
+    stats: null,
+    statshistory: null
   },
   components: {
     IndexPage,
@@ -46,19 +47,57 @@ new Vue({
         error: defaultErrorHandler
       })
     },
+    initialiseStatshistory: function(){
+      this.statshistory = [];
+      for (var i = 0; i < 50; i++) {
+      	this.statshistory.push(
+      	  {
+      	    Queue: 0,
+      	    Runnning: 0,
+      	    Complete: 0
+      	  }      	  
+      	)
+      } 
+    },    
     loadStats: function(){
       var t = this;
       $.ajax({
         url: '/api/stats',
         dataType: 'json',
-        success: (statistics) => t.stats = statistics,
+        success: (statistics) => {
+          t.stats = statistics;
+          if (t.statshistory==null){
+            t.statshistory = [statistics];
+          } else {
+            t.statshistory.push(statistics);
+            if (t.statshistory.length > 50){
+              t.statshistory.shift();
+            }
+          }
+          // we have new stats: notify any graphs to update themselves 
+          eventBus.$emit('statsRefreshed');
+        },
         error: defaultErrorHandler
       })
     }
   },
   created: function(){
+    var timer;
+    this.initialiseStatshistory();
     this.loadApps();
     this.loadStats();
+    // handle "refresh button pressed"
+    eventBus.$on('refreshStats', (app) => {
+      this.loadStats();
+    });    
+    eventBus.$on('startAutoRefreshStats', (app) => {
+      timer = setInterval(function () {
+        this.loadStats();
+      }.bind(this), 1000); 
+    });  
+    eventBus.$on('stopAutoRefreshStats', (app) => {
+      clearInterval(timer);
+    });      
     eventBus.$on('AppAdded', (app) => {
       this.loadApps();
       this.loadStats();
