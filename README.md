@@ -6,7 +6,7 @@ Just run the container.
 `API_URL` is Fn API URL
 
 ```
-docker run --rm -it --link functions:api -p 4000:4000 -e "API_URL=http://api:8080" fnproject/fn-ui
+docker run --rm -it --link functions:api -p 4000:4000 -e "API_URL=http://api:8080" fnproject/ui
 ```
 
 # Screenshots
