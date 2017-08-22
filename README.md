@@ -30,7 +30,6 @@ sudo apt-get install -y nodejs
 
 ```
 sudo apt install npm
-
 ```
 
 3) Install yarn 
@@ -47,14 +46,15 @@ sudo apt-get update && sudo apt-get install yarn
 sudo npm install -g webpack
 ```
 
-5) Build  
-
-Install *locally* the dependencies of the current package (as defined by `./package.json`) (locally means in `./node_modules`):
+5) Install *locally* the dependencies of the current package (as defined by `./package.json`) (locally means in `./node_modules`):
 
 ```
 sudo npm install  
 
 ```
+
+6) Install `chart.js` and `vue-chartjs`
+
 
 ```
 sudo yarn install
@@ -62,15 +62,17 @@ sudo yarn add vue-chartjs -Snode
 sudo yarn add chart.js
 ```
 
+7) Run `webpack`
+
 ```
 webpack
 ```
 
-6) Start Functions API
+8) Start the Fn server and API
 
-See the fn build instructions for how to do this, either using docker or directly from source.
+* See the [fn instructions](https://github.com/fnproject/ui/blob/master/README.md) for how to do this, either using docker or directly from source.
 
-7) Start the UI server
+9) Start the UI server
 
 ```
 PORT=4000 API_URL=http://localhost:8080 npm start
@@ -79,10 +81,11 @@ PORT=4000 API_URL=http://localhost:8080 npm start
 * `PORT` - port to run UI on. Optional, 4000 by default
 * `API_URL` - Functions API URL. Required
 
-8) Launch automatic asset recompilation (if required)
+10) Launch automatic asset recompilation (if required)
+
 ```
 webpack --watch
 ```
 
-9) Open [http://localhost:4000/](http://localhost:4000/) in browser
+11) Open [http://localhost:4000/](http://localhost:4000/) in browser
 
