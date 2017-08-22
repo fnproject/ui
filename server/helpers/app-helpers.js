@@ -23,7 +23,11 @@ exports.getApiEndpoint = function(req, path, params, successcb, errorcb) {
 
   console.log("GET " + url + ", params: ", params);
 
-  request({url: url, qs: params}, function(error, response, body){exports.requrestCb(successcb, errorcb, error, response, body)});
+  options = {url: url, qs: params}
+
+  options = exports.addAuth(options, req)
+
+  request(options, function(error, response, body){exports.requestCB(successcb, errorcb, error, response, body)});
 }
 
 exports.postApiEndpoint = function(req, path, params, postfields, successcb, errorcb) {
@@ -37,25 +41,38 @@ exports.execApiEndpoint = function(method, req, path, params, postfields, succes
     json: postfields
   };
 
-  console.log(options.method + " " + options.uri + ", params: ", options.json);
+  console.log(options.method + " " + options.uri + ", params: ", options.body);
 
-  request(options, function(error, response, body){exports.requrestCb(successcb, errorcb, error, response, body)});
+  options = exports.addAuth(options, req)
+
+  request(options, function(error, response, body){exports.requestCB(successcb, errorcb, error, response, body)});
 }
 
 exports.execApiEndpointRaw = function(method, req, path, params, postfields, successcb, errorcb) {
   var options = {
     uri: exports.apiFullUrl(req, path),
     method: method,
-    body: postfields
+    json: postfields
   };
 
   console.log(options.method + " " + options.uri + ", params: ", options.body);
 
-  request(options, function(error, response, body){exports.requrestCbRaw(successcb, errorcb, error, response, body)});
+  options = exports.addAuth(options, req)
+
+  request(options, function(error, response, body){exports.requestCBRaw(successcb, errorcb, error, response, body)});
+}
+
+exports.addAuth = function(options, req) {
+  if (req.get('Authorization') !== undefined) {
+      options.headers = {
+        'Authorization': req.get('Authorization')
+      }
+  }
+  return options
 }
 
 // expects response as json
-exports.requrestCb = function (successcb, errorcb, error, response, body) {
+exports.requestCB = function (successcb, errorcb, error, response, body) {
   var parsed;
   if (!error && response.statusCode >= 200 && response.statusCode < 300) {
     try {
@@ -94,7 +111,7 @@ exports.requrestCb = function (successcb, errorcb, error, response, body) {
 }
 
 // expects response as plain text
-exports.requrestCbRaw = function (successcb, errorcb, error, response, body) {
+exports.requestCBRaw = function (successcb, errorcb, error, response, body) {
   if (!error && response.statusCode >= 200 && response.statusCode < 300) {
     successcb(body);
   } else {
@@ -113,6 +130,3 @@ exports.standardErrorcb = function(res){
     res.status(400).json({msg: text});
   }
 }
-
-
-

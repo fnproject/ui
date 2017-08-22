@@ -89,7 +89,7 @@
 import FnRouteForm from '../components/FnRouteForm';
 import FnRunFunction from '../components/FnRunFunction';
 import { eventBus } from '../client';
-import { defaultErrorHandler } from '../lib/helpers';
+import { defaultErrorHandler, getAuthToken } from '../lib/helpers';
 
 export default {
   props: ['apps'],
@@ -117,6 +117,7 @@ export default {
     loadRoutes: function(){
       var t = this;
       $.ajax({
+        headers: {'Authorization': getAuthToken()},
         url: '/api/apps/' + encodeURIComponent(t.app.name) + '/routes',
         dataType: 'json',
         success: function(routes){
@@ -129,6 +130,7 @@ export default {
     loadApp: function(name, cb){
       var t = this;
       $.ajax({
+        headers: {'Authorization': getAuthToken()},
         url: '/api/apps/' + encodeURIComponent(name),
         dataType: 'json',
         success: (app) => {t.app = app; if (cb) {cb()} },
@@ -139,6 +141,7 @@ export default {
       if (confirm('Are you sure you want to delete route ' + route.path + '?')) {
         var t = this;
         $.ajax({
+          headers: {'Authorization': getAuthToken()},
           url: '/api/apps/' + encodeURIComponent(t.app.name) + '/routes/' + encodeURIComponent(route.path),
           method: 'DELETE',
           dataType: 'json',

@@ -43,7 +43,7 @@
 <script>
 import Modal from '../lib/VueBootstrapModal.vue';
 import { eventBus } from '../client';
-import { defaultErrorHandler, configToLines, linesToConfig } from '../lib/helpers';
+import { defaultErrorHandler, configToLines, linesToConfig, getAuthToken } from '../lib/helpers';
 
 export default {
   props: [],
@@ -84,6 +84,7 @@ export default {
         var url = '/api/apps';
       };
       $.ajax({
+        headers: {'Authorization': getAuthToken()},
         url: url,
         method: this.edit ? 'PATCH' : 'POST',
         data: JSON.stringify(this.app),
