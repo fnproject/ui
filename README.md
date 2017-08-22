@@ -1,13 +1,14 @@
-# UI for [IronFunctions](https://github.com/iron-io/functions)
+# UI for [Fn](https://github.com/fnproject/fn)
 
 # Usage
 
-Just run the container.
-`API_URL` is IronFunctions API URL
+Run the UI server using Docker:
 
 ```
 docker run --rm -it --link functions:api -p 4000:4000 -e "API_URL=http://api:8080" iron/functions-ui
 ```
+
+`API_URL` is the Fn API URL
 
 # Screenshots
 
@@ -16,17 +17,61 @@ docker run --rm -it --link functions:api -p 4000:4000 -e "API_URL=http://api:808
 
 # Development
 
-1) Install dependencies:
+(These instructions are for Ubuntu and so use the `apt` package manager)
+
+1) Install node 
+
 ```
-npm install && npm install -g webpack
+curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+sudo apt-get install -y nodejs
+```
+ 
+2) Install npm, the Javascript package manager
+
+```
+sudo apt install npm
+
 ```
 
-2) Start Functions API
+3) Install yarn 
+
 ```
-docker run --rm -it --name functions --privileged -v $PWD/data:/app/data -p 8080:8080 iron/functions
+curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+sudo apt-get update && sudo apt-get install yarn
 ```
 
-3) Start web server:
+4) Install webpack globally  
+
+```
+sudo npm install -g webpack
+```
+
+5) Build  
+
+Install *locally* the dependencies of the current package (as defined by `./package.json`) (locally means in `./node_modules`):
+
+```
+sudo npm install  
+
+```
+
+```
+sudo yarn install
+sudo yarn add vue-chartjs -Snode
+sudo yarn add chart.js
+```
+
+```
+webpack
+```
+
+6) Start Functions API
+
+See the fn build instructions for how to do this, either using docker or directly from source.
+
+7) Start the UI server
+
 ```
 PORT=4000 API_URL=http://localhost:8080 npm start
 ```
@@ -34,22 +79,10 @@ PORT=4000 API_URL=http://localhost:8080 npm start
 * `PORT` - port to run UI on. Optional, 4000 by default
 * `API_URL` - Functions API URL. Required
 
-4) Launch automatic asset recompilation:
+8) Launch automatic asset recompilation (if required)
 ```
 webpack --watch
 ```
 
-Example:
-```
-# Launch Functions API
-docker run --rm -it --name functions --privileged -v $PWD/data:/app/data -p 8080:8080 iron/functions
-
-# Launch FunctionsUI (use `docker-machine ip` instead of localhost if needed - mac only)
-API_URL=http://localhost:8080 npm start
-
-# Launch launch automatic asset recompilation:
-webpack --watch
-
-# Open http://localhost:4000/ in browser
-```
+9) Open [http://localhost:4000/](http://localhost:4000/) in browser
 
