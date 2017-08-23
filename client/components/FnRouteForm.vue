@@ -10,7 +10,7 @@
       <div class="form-group">
         <label class="col-sm-3 control-label">Image *</label>
         <div class="col-sm-9">
-          <input type="text" class="form-control" placeholder="e.g. iron/hello"  v-model="route.image" @keydown.enter.prevent="">
+          <input type="text" class="form-control" placeholder="e.g. fnproject/hello"  v-model="route.image" @keydown.enter.prevent="">
         </div>
       </div>
       <div class="form-group">
@@ -100,7 +100,7 @@
 <script>
 import Modal from '../lib/VueBootstrapModal.vue';
 import { eventBus } from '../client';
-import { defaultErrorHandler, configToLines, linesToConfig, headersToLines, linesToHeaders } from '../lib/helpers';
+import { defaultErrorHandler, configToLines, linesToConfig, headersToLines, linesToHeaders, getAuthToken } from '../lib/helpers';
 
 var defaultRoute = function(){
   return jQuery.extend(true, {}, {
@@ -162,6 +162,7 @@ export default {
         var url = '/api/apps/' + encodeURIComponent(this.app.name) + '/routes'
       }
       $.ajax({
+        headers: {'Authorization': getAuthToken()},
         url: url,
         method: this.edit ? 'PATCH' : 'POST',
         data: JSON.stringify(this.route),

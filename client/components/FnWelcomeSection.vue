@@ -11,31 +11,31 @@
     <br>
     <ul class="nav nav-sidebar">
       <li>
-        <a href="https://github.com/iron-io/functions#quickstart" target="_blank">
+        <a href="https://github.com/fnproject/fn#quickstart" target="_blank">
           <i class="fa fa-bolt"></i> Quick Start
         </a>
       </li>
-      <li><a href="http://petstore.swagger.io/?url=https://raw.githubusercontent.com/iron-io/functions/master/docs/swagger.yml" target="_blank">
-        <i class="fa fa-file-text-o"></i> IronFunctions API</a>
+      <li><a href="http://petstore.swagger.io/?url=https://raw.githubusercontent.com/fnproject/fn/master/docs/swagger.yml" target="_blank">
+        <i class="fa fa-file-text-o"></i> Fn API</a>
       </li>
       <li>
-        <a href="https://github.com/iron-io/functions" target="_blank">
-          <i class="fa fa-github"></i> IronFunctions Github
+        <a href="https://github.com/fnproject/fn" target="_blank">
+          <i class="fa fa-github"></i> Fn Github
         </a>
       </li>
-      <li>
-        <a href="https://github.com/iron-io/functions_ui" target="_blank">
-          <i class="fa fa-github"></i> IronFunctionsUI Github
+      <!-- <li>
+        <a href="https://github.com/fnproject/fn-ui" target="_blank">
+          <i class="fa fa-github"></i> FnUI Github
         </a>
-      </li>
-      <li>
+      </li> -->
+      <!-- <li>
         <br>
-        <a href="http://get.iron.io/open-slack" target="_blank">
+        <a href="http://get.fnservice.io/open-slack" target="_blank">
           Join our community:<br />
           <br>
-          <img src="https://open-iron.herokuapp.com/badge.svg" alt="">
+          <img src="https://open-fnservice.herokuapp.com/badge.svg" alt="">
         </a>
-      </li>
+      </li> -->
     </ul>
   </div>
 </template>

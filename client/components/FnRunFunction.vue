@@ -39,7 +39,7 @@
 <script>
 import Modal from '../lib/VueBootstrapModal.vue';
 import { eventBus } from '../client';
-import { defaultErrorHandler, getApiUrl } from '../lib/helpers';
+import { defaultErrorHandler, getApiUrl, getAuthToken } from '../lib/helpers';
 
 export default {
   props: ['app'],
@@ -67,6 +67,7 @@ export default {
       this.submitting = true;
 
       $.ajax({
+        headers: {'Authorization': getAuthToken()},
         url: '/api/apps/' + encodeURIComponent(this.app.name) + '/routes/' + encodeURIComponent(this.route.path) + '/run',
         method: 'POST',
         data: JSON.stringify({payload: this.payload}),

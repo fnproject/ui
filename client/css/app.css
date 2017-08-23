@@ -10,3 +10,10 @@
 body {
   font-family: 'Open Sans', Helvetica, Arial, sans-serif;
 }
+
+.fn-logo {
+  color: red;
+  text-decoration: none;
+  font-style: italic;
+  font-size: 2em;
+}
