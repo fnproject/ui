@@ -66,6 +66,7 @@ export const linesToHeaders = function(lines){
 export const getApiUrl = function(cb, errCb){
   var errCb = errCb || null;
   $.ajax({
+		headers: {'Authorization': getAuthToken()},
     url: '/api/info/api-url',
     method: 'GET',
     contentType: "application/json",
@@ -77,4 +78,8 @@ export const getApiUrl = function(cb, errCb){
       if (errCb){errCb(jqXHR, textStatus, errorThrown)}
     }
   })
+}
+
+export const getAuthToken = function(){
+    return window.localStorage['FN_TOKEN']
 }

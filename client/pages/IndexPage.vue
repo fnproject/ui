@@ -123,6 +123,7 @@ export default {
       if (confirm('Are you sure you want to delete app ' + app.name + '?')) {
         var t = this;
         $.ajax({
+          headers: {'Authorization': getAuthToken()},
           url: '/api/apps/' + encodeURIComponent(app.name),
           method: 'DELETE',
           dataType: 'json',

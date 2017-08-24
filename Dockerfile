@@ -1,5 +1,5 @@
 FROM mhart/alpine-node:6.3
-MAINTAINER iron.io
+MAINTAINER fnservice.io
 
 RUN mkdir /app
 WORKDIR /app

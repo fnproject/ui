@@ -14,7 +14,7 @@ import AppPage from './pages/AppPage.vue';
 
 import FnSidebar from './components/FnSidebar.vue';
 import FnNotification from './components/FnNotification.vue';
-import { defaultErrorHandler } from './lib/helpers';
+import { defaultErrorHandler, getAuthToken } from './lib/helpers';
 
 export const eventBus = new Vue();
 
@@ -41,6 +41,7 @@ new Vue({
     loadApps: function(){
       var t = this;
       $.ajax({
+        headers: {'Authorization': getAuthToken()},
         url: '/api/apps',
         dataType: 'json',
         success: (apps) => t.apps = apps,
@@ -109,6 +110,9 @@ new Vue({
     eventBus.$on('AppDeleted', (app) => {
       this.loadApps();
       this.loadStats();
+    });
+    eventBus.$on('LoggedIn', () => {
+      this.loadApps()
     });
   }
 }).$mount('#app')
