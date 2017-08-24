@@ -1,6 +1,22 @@
 <template >
-  <line-chart :chart-data="datacollection"></line-chart>
-  <!-- line-chart :chart-data="datacollection" :statshistory="statshistory"></line-chart -->
+  <line-chart 
+    :chart-data="datacollection"
+    :options="{
+      animation: {
+        duration:0 // turn off annoying bouncing animation
+      },
+      scales: {
+        yAxes: [{
+          stacked: false, // this is the default, change to true to make stacked
+          ticks: {
+            suggestedMax: 10
+          }
+        }]
+      }
+        
+    }"
+    >
+  </line-chart>
 
 </template>
 
