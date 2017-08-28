@@ -16,14 +16,14 @@ docker run --rm -it --link functions:api -p 4000:4000 -e "API_URL=http://api:808
 
 # Development
 
-1) Install dependencies:
+1) Install dependencies
 ```
 npm install && npm install -g webpack
 ```
 
-2) Start Functions API
+2) Start Functions API (see github.com/fnproject/fn)
 ```
-docker run --rm -it --name functions --privileged -v $PWD/data:/app/data -p 8080:8080 fnproject/fn
+fn start
 ```
 
 3) Start web server:
@@ -42,7 +42,7 @@ webpack --watch
 Example:
 ```
 # Launch Functions API
-docker run --rm -it --name functions --privileged -v $PWD/data:/app/data -p 8080:8080 fnproject/fn
+fn start
 
 # Launch FunctionsUI (use `docker-machine ip` instead of localhost if needed - mac only)
 API_URL=http://localhost:8080 npm start
