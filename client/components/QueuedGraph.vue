@@ -2,28 +2,32 @@
   <line-chart 
     :chart-data="datacollection"
     :options="{
+      title: {
+        display: true,
+        text: 'Queued'
+      },
       animation: {
         duration:0 // turn off annoying bouncing animation
       },
       scales: {
         yAxes: [{
-          stacked: false, // this is the default, change to true to make stacked
+          stacked: true, 
           ticks: {
             suggestedMax: 10
           }
         }]
-      }
-        
+      }     
     }"
     >
   </line-chart>
-
+  </line-chart>
 </template>
 
 <script>
   
  import LineChart from './LineChart.js';
  import { eventBus } from '../client';
+ import { getBackgroundColorFor, getBorderColorFor } from '../client'; 
  
   export default {
     components: {
@@ -44,25 +48,24 @@
     methods: {
       updateChart () {
         if (this.statshistory && this.stats){
-          this.datacollection = {
-            labels: this.statshistory.map(eachStatistic => "" ),
-            datasets: [
-              {
-                label: 'Queued: ' + this.stats.Queue,
-                backgroundColor: 'pink',
-                data: this.statshistory.map(eachStatistic => eachStatistic.Queue )
-              }, {
-                label: 'Running: ' + this.stats.Running,
-                backgroundColor: 'lightblue',
-                data: this.statshistory.map(eachStatistic => eachStatistic.Running )
-              }
-            ]
+          this.datacollection = {};
+          this.datacollection["labels"]= this.statshistory.map(eachStatistic => "" );
+          this.datacollection["datasets"]=[];
+          for (var thisPath in this.stats.FunctionStatsMap){
+            var dataSetForPath = {
+              label: thisPath + ": "+ this.stats.FunctionStatsMap[thisPath].Queue,
+              backgroundColor: getBackgroundColorFor(thisPath),
+              borderColor: getBorderColorFor(thisPath),
+              data: this.statshistory.map(eachStatistic => eachStatistic.FunctionStatsMap[thisPath].Queue)
+            };
+            this.datacollection["datasets"].push(dataSetForPath);
+             
           }
         }
       }
     },
     created: function(){
-      // handle "stats and statshistory have been refreshed"
+      // handle "stats have been refreshed"
       eventBus.$on('statsRefreshed', (app) => {
         this.updateChart();
       });    
