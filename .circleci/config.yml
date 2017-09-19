@@ -19,7 +19,7 @@ jobs:
       # - run: ./test.sh
       - deploy:
           command: |
-            if [ "${CIRCLE_BRANCH}" == "circle" ]; then
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
               docker login -u $DOCKER_USER -p $DOCKER_PASS
               git config --global user.email "ci@fnproject.com"
               git config --global user.name "CI"
