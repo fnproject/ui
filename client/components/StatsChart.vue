@@ -1,7 +1,10 @@
 <template >
   <div class="row">
     <div class="col-lg-4 col-md-6 col-sm-12">
-      <queued-running-graph :stats="stats" :statshistory="statshistory"></queued-running-graph>
+      <queued-graph :stats="stats" :statshistory="statshistory"></queued-graph>
+    </div>
+    <div class="col-lg-4 col-md-6 col-sm-12">
+      <running-graph :stats="stats" :statshistory="statshistory"></running-graph>
     </div>
     <div class="col-lg-4 col-md-6 col-sm-12">
       <completed-graph :stats="stats" :statshistory="statshistory"></completed-graph>
@@ -11,12 +14,14 @@
 
 <script>
   import { eventBus } from '../client';
+  import QueuedGraph from '../components/QueuedGraph';
   import CompletedGraph from '../components/CompletedGraph';
-  import QueuedRunningGraph from '../components/QueuedRunningGraph';
+  import RunningGraph from '../components/RunningGraph';
  
   export default {
     components: {
-      QueuedRunningGraph,
+      QueuedGraph,
+      RunningGraph,
       CompletedGraph
     },
     props: [

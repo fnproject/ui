@@ -4,7 +4,7 @@
     :options="{
       title: {
         display: true,
-        text: 'Completed'
+        text: 'Running'
       },
       animation: {
         duration:0 // turn off annoying bouncing animation
@@ -53,10 +53,10 @@
           this.datacollection["datasets"]=[];
           for (var thisPath in this.stats.FunctionStatsMap){
             var dataSetForPath = {
-              label: thisPath + ": "+ this.stats.FunctionStatsMap[thisPath].Complete,
+              label: thisPath + ": "+ this.stats.FunctionStatsMap[thisPath].Running,
               backgroundColor: getBackgroundColorFor(thisPath),
               borderColor: getBorderColorFor(thisPath),
-              data: this.statshistory.map(eachStatistic => eachStatistic.FunctionStatsMap[thisPath].Complete)
+              data: this.statshistory.map(eachStatistic => eachStatistic.FunctionStatsMap[thisPath].Running)
             };
             this.datacollection["datasets"].push(dataSetForPath);
              
