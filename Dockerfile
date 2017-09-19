@@ -5,6 +5,8 @@ RUN mkdir /app
 WORKDIR /app
 
 # Install app dependencies
+ENV NPM_CONFIG_LOGLEVEL warn
+ENV NPM_CONFIG_PREFIX=/root/.npm-global
 RUN npm install webpack -g
 COPY package.json /app
 RUN npm install
