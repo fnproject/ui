@@ -2,16 +2,22 @@
   <line-chart 
     :chart-data="datacollection"
     :options="{
+      responsive: true, 
+      maintainAspectRatio: false,
       title: {
-        display: true,
+        display: false,
         text: 'Running'
       },
+      legend: {
+        display: true,
+        position: 'left'
+      },  
       animation: {
         duration:0 // turn off annoying bouncing animation
       },
       scales: {
         yAxes: [{
-          stacked: true, 
+          stacked: false, // RunningGraph is not stacked
           ticks: {
             suggestedMax: 10
           }
@@ -20,15 +26,15 @@
     }"
     >
   </line-chart>
-  </line-chart>
 </template>
 
 <script>
   
  import LineChart from './LineChart.js';
  import { eventBus } from '../client';
- import { getBackgroundColorFor, getBorderColorFor } from '../client'; 
- 
+ import { getBackgroundColorFor, getBorderColorFor, lineWidthInPixels, pointRadiusInPixels} from '../client'; 
+ import { truncate} from '../pages/utilities.js'; 
+  
   export default {
     components: {
       LineChart,
@@ -53,9 +59,12 @@
           this.datacollection["datasets"]=[];
           for (var thisPath in this.stats.FunctionStatsMap){
             var dataSetForPath = {
-              label: thisPath + ": "+ this.stats.FunctionStatsMap[thisPath].Running,
-              backgroundColor: getBackgroundColorFor(thisPath),
+              label: truncate(thisPath,15) + ": "+ this.stats.FunctionStatsMap[thisPath].Running,
+              fill: false, // Only use fill if chart is stacked
+              backgroundColor: 'white', // needed if fill is false to set fill color in legend
               borderColor: getBorderColorFor(thisPath),
+              borderWidth: lineWidthInPixels,
+              radius:pointRadiusInPixels,
               data: this.statshistory.map(eachStatistic => eachStatistic.FunctionStatsMap[thisPath].Running)
             };
             this.datacollection["datasets"].push(dataSetForPath);
@@ -75,7 +84,4 @@
 </script>
 
 <style>
-  .small {
-    max-width: 600px;
-  }
 </style>
