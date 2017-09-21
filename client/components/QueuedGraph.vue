@@ -60,7 +60,8 @@
           for (var thisPath in this.stats.FunctionStatsMap){
             var dataSetForPath = {
               label: truncate(thisPath,15) + ": "+ this.stats.FunctionStatsMap[thisPath].Queue,
-              backgroundColor: 'white', // Only use fill color if chart is stacked
+              fill: false, // Only use fill if chart is stacked
+              backgroundColor: 'white', // needed if fill is false to set fill color in legend
               borderColor: getBorderColorFor(thisPath),
               borderWidth: lineWidthInPixels,
               radius:pointRadiusInPixels,
