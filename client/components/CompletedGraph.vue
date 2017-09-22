@@ -17,7 +17,7 @@
       },
       scales: {
         yAxes: [{
-          stacked: true, // CompletedGraph is not stacked
+          stacked: true, // CompletedGraph is stacked
           ticks: {
             suggestedMax: 10
           }
