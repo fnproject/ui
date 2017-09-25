@@ -30,7 +30,6 @@ const router = new VueRouter({
 // Utility functions
 
 // factory for background colors; simply iterate round these arrays of colors
-//const backgroundColors = ['pink','lightgreen','yellow'];
 const backgroundColors = ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(255, 206, 86, 0.2)', 
                           'rgba(75, 192, 192, 0.2)', 'rgba(153, 102, 255, 0.2)', 'rgba(255, 159, 64, 0.2)' ];
 const borderColors = ['rgba(255,99,132,1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)', 
@@ -115,7 +114,7 @@ new Vue({
               var newFunction = nowKnownFunctions[j];
               // we have a new function: backfill all the earlier stats with zero values for this function
               for (var k = 0; k < t.statshistory.length-1; k++){
-                t.statshistory[k].FunctionStatsMap[newFunction]={Queue:0, Running:0, Complete:0};
+                t.statshistory[k].FunctionStatsMap[newFunction]={Queue:0, Running:0, Complete:0, Failed:0};
               }
             }
           }
@@ -132,11 +131,7 @@ new Vue({
     var timer;
     this.initialiseStatshistory();
     this.loadApps();
-    this.loadStats();
-    // handle "refresh button pressed"
-    eventBus.$on('refreshStats', (app) => {
-      this.loadStats();
-    });    
+    this.loadStats(); 
     eventBus.$on('startAutoRefreshStats', (app) => {
       timer = setInterval(function () {
         this.loadStats();

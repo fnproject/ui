@@ -6,7 +6,7 @@
       maintainAspectRatio: false,
       title: {
         display: false,
-        text: 'Completed'
+        text: 'Failed'
       },
       legend: {
         display: true,
@@ -17,7 +17,7 @@
       },
       scales: {
         yAxes: [{
-          stacked: true, // CompletedGraph is stacked
+          stacked: true, // FailedGraph is stacked
           ticks: {
             suggestedMax: 10
           }
@@ -59,12 +59,12 @@
           this.datacollection["datasets"]=[];
           for (var thisPath in this.stats.FunctionStatsMap){
             var dataSetForPath = {
-              label: truncate(thisPath,15) + ": "+ this.stats.FunctionStatsMap[thisPath].Complete,
+              label: truncate(thisPath,15) + ": "+ this.stats.FunctionStatsMap[thisPath].Failed,
               backgroundColor: getBackgroundColorFor(thisPath),
               borderColor: getBorderColorFor(thisPath),
               borderWidth: lineWidthInPixels,
               radius:pointRadiusInPixels,
-              data: this.statshistory.map(eachStatistic => eachStatistic.FunctionStatsMap[thisPath].Complete)
+              data: this.statshistory.map(eachStatistic => eachStatistic.FunctionStatsMap[thisPath].Failed)
             };
             this.datacollection["datasets"].push(dataSetForPath);
              
