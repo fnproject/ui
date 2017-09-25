@@ -1,4 +1,4 @@
-# UI for [Fn](https://github.com/fnproject/fn)
+# UI for [Fn](https://github.com/fnproject/fn) [![CircleCI](https://circleci.com/gh/fnproject/ui.svg?style=svg)](https://circleci.com/gh/fnproject/ui)
 
 ## Usage
 
@@ -51,4 +51,3 @@ webpack --watch
 ### 5) View in browser
 
 [http://localhost:4000/](http://localhost:4000/)
-
