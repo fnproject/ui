@@ -2,6 +2,7 @@
   <div>
 
     <a class="fn-logo navbar-brand" href="#">
+        <!-- See also banner for small devices in index.html -->
         <div class="fn-logo">FN</div>
     </a>
     <div>

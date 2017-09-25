@@ -17,3 +17,11 @@ body {
   font-style: italic;
   font-size: 2em;
 }
+
+.fn-logo-topbar {
+  color: red;
+  text-decoration: none;
+  font-style: italic;
+  font-size: 36px;
+  padding-left:10px;
+}
