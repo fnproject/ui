@@ -87,7 +87,6 @@
 
 <script>
 import FnAppForm from '../components/FnAppForm';
-import LineExample from '../components/LineChart.js'
 import StatsChart from '../components/StatsChart'
 
 import { defaultErrorHandler } from '../lib/helpers';
@@ -102,7 +101,6 @@ export default {
   },
   components: {
     FnAppForm,
-    LineExample,
     StatsChart
   },
   methods: {
