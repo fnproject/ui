@@ -7,12 +7,12 @@
     </a>
     <div>
     <div v-if="!loggedIn">
-        <button type="button" class="btn" @click='login' :disabled="loggingin">
+        <button type="button" class="btn btn-default" @click='login' :disabled="loggingin">
             Login
         </button>
-        <input type="text" placeholder="FN_TOKEN" v-model="fn_token"></input>
+        <input style="color:grey;" type="text" placeholder="FN_TOKEN" v-model="fn_token"></input>
     </div>
-    <button type="button" class="btn" v-if="loggedIn" @click='logout'>
+    <button type="button" class="btn btn-default" v-if="loggedIn" @click='logout'>
         Logout
     </button>
 </div>
