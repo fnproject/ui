@@ -23,19 +23,11 @@
           <i class="fa fa-github"></i> Fn Github
         </a>
       </li>
-      <!-- <li>
-        <a href="https://github.com/fnproject/fn-ui" target="_blank">
-          <i class="fa fa-github"></i> FnUI Github
+      <li>
+        <a href="https://github.com/fnproject/ui" target="_blank">
+        <i class="fa fa-github"></i> Fn UI Github
         </a>
-      </li> -->
-      <!-- <li>
-        <br>
-        <a href="http://get.fnservice.io/open-slack" target="_blank">
-          Join our community:<br />
-          <br>
-          <img src="https://open-fnservice.herokuapp.com/badge.svg" alt="">
-        </a>
-      </li> -->
+      </li>
     </ul>
   </div>
 </template>
