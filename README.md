@@ -16,8 +16,13 @@ docker run --rm -it --link functions:api -p 4000:4000 -e "API_URL=http://api:808
 
 ## Screenshots
 
-![ScreenShot routes](https://raw.githubusercontent.com/fnproject/ui/master/docs/screenshots/routes.png)
-![ScreenShot run command](https://raw.githubusercontent.com/fnproject/ui/master/docs/screenshots/run.png)
+All apps view:
+
+<img src="https://raw.githubusercontent.com/fnproject/ui/master/docs/screenshots/apps.png" width="800">
+
+All functions in an app:
+
+<img src="https://raw.githubusercontent.com/fnproject/ui/master/docs/screenshots/routes.png" width="800">
 
 ## Development
 
