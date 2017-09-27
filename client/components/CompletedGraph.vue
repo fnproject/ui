@@ -16,7 +16,7 @@
       },
       scales: {
         yAxes: [{
-          stacked: true, // CompletedGraph is stacked
+          stacked: true, // CompletedGraph is stacked (also set fill:true below)
           ticks: {
             suggestedMax: 10
           }
@@ -59,8 +59,8 @@
           for (var thisPath in this.stats.FunctionStatsMap){
             var dataSetForPath = {
               label: thisPath + ": "+ this.stats.FunctionStatsMap[thisPath].Complete,
-              fill: false, // Only use fill if chart is stacked
-              backgroundColor: 'white', // needed if fill is false to set fill color in legend
+              fill: true,                                       // Set to true because chart is stacked
+              backgroundColor: getBackgroundColorFor(thisPath), // Set color because chart is stacked
               borderColor: getBorderColorFor(thisPath),
               borderWidth: lineWidthInPixels,
               radius:pointRadiusInPixels,
