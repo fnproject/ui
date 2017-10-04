@@ -33,7 +33,7 @@ npm install
 sudo npm install -g webpack
 ```
 
-### 2) Start Functions API (see [Fn on Github](http://github.com/fnproject/fn))
+### 2) Start Functions API (see [Fn on GitHub](http://github.com/fnproject/fn))
 
 ```sh
 fn start
