@@ -29,13 +29,20 @@ All functions in an app:
 ### 1) Install dependencies
 
 ```sh
-npm install && npm install -g webpack
+npm install
+sudo npm install -g webpack
 ```
 
 ### 2) Start Functions API (see [Fn on Github](http://github.com/fnproject/fn))
 
 ```sh
 fn start
+```
+
+### 4) Compile assets
+
+```sh
+webpack
 ```
 
 ### 3) Start web server
@@ -46,12 +53,6 @@ PORT=4000 API_URL=http://localhost:8080 npm start
 
 * `PORT` - port to run UI on. Optional, 4000 by default
 * `API_URL` - Functions API URL. Required
-
-### 4) Launch automatic asset recompilation
-
-```sh
-webpack --watch
-```
 
 ### 5) View in browser
 
