@@ -8,10 +8,11 @@
     float: none;
     display: block;
     padding: 0;
-    margin-bottom: 30px;
-    & svg {
-      width: 100%;
-    }
+    margin-bottom: 20px;
+  }
+  
+  & img.navbar-brand {
+      height: 50px;
   }
 
   & h4 {
@@ -86,12 +87,13 @@
   display: block;
 
   & .navbar-brand {
-    padding: 13px 0 0 23px;
-
-    & svg {
-      width: 100px;
-    }
+    padding: 5px 0 5px 15px;
   }
+  
+  & img.navbar-brand {
+      height: 50px;
+  } 
+  
 }
 
 @media (min-width: 768px) {
