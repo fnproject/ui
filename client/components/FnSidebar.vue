@@ -1,9 +1,9 @@
 <template>
   <div>
 
-    <a class="fn-logo navbar-brand" href="#">
+    <a class="navbar-brand" href="#">
         <!-- See also banner for small devices in index.html -->
-        <div class="fn-logo">FN</div>
+        <img class="navbar-brand" src="/images/icons/fn_transparent.png">
     </a>
     <div>
     <div v-if="!loggedIn">
