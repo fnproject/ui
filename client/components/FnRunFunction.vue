@@ -21,7 +21,7 @@
       </div>
       <div>
         <h5>cURL command</h5>
-        <pre>curl -X POST -d '{{payload}}' {{apiUrl}}r/{{encodeURIComponent(this.app.name)}}/{{encodeURIComponent(this.route.path)}}</pre>
+        <pre>curl -X POST -d '{{payload}}' {{apiUrl}}r/{{encodeURIComponent(this.app.name)}}/{{encodeURIComponent(this.route.path.replace(/^\//,''))}}</pre>
       </div>
 
       <div v-show="output">
