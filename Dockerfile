@@ -1,4 +1,4 @@
-FROM mhart/alpine-node:6.3
+FROM mhart/alpine-node:8.8.1
 MAINTAINER fnservice.io
 
 RUN mkdir /app
