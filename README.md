@@ -11,7 +11,7 @@ fn start
 Start the UI:
 
 ```sh
-docker run --rm -it --link functions:api -p 4000:4000 -e "API_URL=http://api:8080" fnproject/ui
+docker run --rm -it --link fnserver:api -p 4000:4000 -e "API_URL=http://api:8080" fnproject/ui
 ```
 
 ## Screenshots
