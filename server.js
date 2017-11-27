@@ -8,9 +8,9 @@ var helpers = require('./server/helpers/app-helpers.js');
 var app = express();
 
 var isProduction = process.env.NODE_ENV === 'production';
-var apiUrl = url.parse(process.env.API_URL);
+var apiUrl = url.parse(process.env.FN_API_URL);
 if (!apiUrl || !apiUrl.hostname) {
-  console.log("API URL not set. Please specify Functions API URL via environment variable, e.g. API_URL=http://localhost:8080 npm start");
+  console.log("API URL not set. Please specify Functions API URL via environment variable, e.g. FN_API_URL=http://localhost:8080 npm start");
   process.exit(1);
 }
 
