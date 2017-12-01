@@ -11,7 +11,7 @@ fn start
 Start the UI:
 
 ```sh
-docker run --rm -it --link functions:api -p 4000:4000 -e "API_URL=http://api:8080" fnproject/ui
+docker run --rm -it --link functions:api -p 4000:4000 -e "FN_API_URL=http://api:8080" fnproject/ui
 ```
 
 ## Screenshots
@@ -48,11 +48,11 @@ webpack
 ### 3) Start web server
 
 ```sh
-PORT=4000 API_URL=http://localhost:8080 npm start
+PORT=4000 FN_API_URL=http://localhost:8080 npm start
 ```
 
 * `PORT` - port to run UI on. Optional, 4000 by default
-* `API_URL` - Functions API URL. Required
+* `FN_API_URL` - Functions API URL. Required
 
 ### 5) View in browser
 
