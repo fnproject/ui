@@ -52,7 +52,7 @@ PORT=4000 FN_API_URL=http://localhost:8080 npm start
 ```
 
 * `PORT` - port to run UI on. Optional, 4000 by default
-* `FN_PI_URL` - Functions API URL. Required
+* `FN_API_URL` - Functions API URL. Required
 
 ### 5) View in browser
 
