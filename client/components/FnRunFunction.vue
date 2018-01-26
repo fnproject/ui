@@ -21,7 +21,7 @@
       </div>
       <div>
         <h5>cURL command</h5>
-        <pre>curl -X POST -d '{{payload}}' {{apiUrl}}r/{{encodeURIComponent(this.app.name)}}/{{encodeURIComponent(this.route.path.replace(/^\//,''))}}</pre>
+        <pre>curl -X POST -d '{{payload}}' {{apiUrl}}r/{{apiUrlSuffix}}</pre>
       </div>
 
       <div v-show="output">
@@ -53,7 +53,8 @@ export default {
       submitting: false,
       payload: '{}',
       output: null,
-      apiUrl: ''
+      apiUrl: '',
+      apiUrlSuffix: ''
     }
   },
   methods: {
@@ -93,6 +94,8 @@ export default {
       this.payload = '{}';
       this.output = null;
       this.show = true;
+      this.apiUrlSuffix = encodeURIComponent(this.app.name) + '/' + encodeURIComponent(this.route.path.replace(/^\//,''));
+
     });
     getApiUrl( url => t.apiUrl = url );
   }

@@ -1,25 +1,9 @@
 <template >
   <div class="row">
-    <div class="singleChart">
-      <h4 class="chart-title">Queued: {{this.stats.Queue}}</h4>
-      <div id="queuedGraphLegend"></div>
-      <queued-graph :stats="stats" :statshistory="statshistory"></queued-graph>
-    </div>
-    <div class="singleChart">
-      <h4 class="chart-title">Running: {{this.stats.Running}}</h4>
-      <div id="runningGraphLegend"></div>
-      <running-graph :stats="stats" :statshistory="statshistory"></running-graph>
-    </div>       
-    <div class="singleChart">
-      <h4 class="chart-title">Completed: {{this.stats.Complete}}</h4>
-      <div id="completedGraphLegend"></div>
-      <completed-graph :stats="stats" :statshistory="statshistory"></completed-graph>
-    </div>
-    <div class="singleChart">
-      <h4 class="chart-title">Failed: {{this.stats.Failed}}</h4>
-      <div id="failedGraphLegend"></div>
-      <failed-graph :stats="stats" :statshistory="statshistory"></failed-graph>
-    </div> 
+    <queued-graph :routes="routes" :stats="stats" :statshistory="statshistory"></queued-graph>
+    <running-graph :routes="routes" :stats="stats" :statshistory="statshistory"></running-graph>
+    <completed-graph :routes="routes" :stats="stats" :statshistory="statshistory"></completed-graph>
+    <failed-graph :routes="routes" :stats="stats" :statshistory="statshistory"></failed-graph>
   </div>
 </template>
 
@@ -38,6 +22,7 @@
       FailedGraph
     },
     props: [
+      'routes',
       'completedLegendMarkup',
       'stats',
       'statshistory'

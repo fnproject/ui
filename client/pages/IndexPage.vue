@@ -74,13 +74,14 @@
       Statistics
       <div class="pull-right">
         <label class="btn btn-default checkbox-inline" style="padding-left:30px"><!-- TODO style this properly -->
-          <input type="checkbox" v-model="isChecked" @change="doalert">Auto refresh</label>
+          <input type="checkbox" v-model="isChecked" @change="indexPageAutoRefreshButtonClicked">Auto refresh</label>
         </label>
       </div>
     </h3>
             
     <stats-chart :stats="stats" :statshistory="statshistory"></stats-chart>
     
+    <!-- Define the "Create New App" modal -->
     <fn-app-form></fn-app-form>
   </div>
 </template>
@@ -104,7 +105,7 @@ export default {
     StatsChart
   },
   methods: {
-    doalert: function(checkboxElem) {
+    indexPageAutoRefreshButtonClicked: function(checkboxElem) {
       if (checkboxElem.currentTarget.checked) {
         eventBus.$emit('startAutoRefreshStats');
       } else {

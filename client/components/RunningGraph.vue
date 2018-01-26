@@ -1,30 +1,34 @@
 <template >
-  <line-chart 
-    :chart-data="datacollection"
-    :options="{
-      responsive: true, 
-      maintainAspectRatio: true,
-      title: {
-        display: false,
-        text: 'Running'
-      },
-      legend: {
-        display: false,
-      },
-      animation: {
-        duration:0 // turn off annoying bouncing animation
-      },
-      scales: {
-        yAxes: [{
-          stacked: false, // RunningGraph is not stacked
-          ticks: {
-            suggestedMax: 10
-          }
-        }]
-      }     
-    }"
-    >
-  </line-chart>
+  <div class="singleChart">
+    <h4 class="chart-title">Running: {{this.total}}</h4>
+    <div id="runningGraphLegend"></div>
+    <line-chart 
+      :chart-data="datacollection"
+      :options="{
+        responsive: true, 
+        maintainAspectRatio: true,
+        title: {
+          display: false,
+          text: 'Running'
+        },
+        legend: {
+          display: false,
+        },
+        animation: {
+          duration:0 // turn off annoying bouncing animation
+        },
+        scales: {
+          yAxes: [{
+            stacked: false, // RunningGraph is not stacked
+            ticks: {
+              suggestedMax: 10
+            }
+          }]
+        }     
+      }"
+      >
+    </line-chart>
+  </div>
 </template>
 
 <script>
@@ -33,18 +37,21 @@
  import { eventBus } from '../client';
  import { getBackgroundColorFor, getBorderColorFor, lineWidthInPixels, pointRadiusInPixels} from '../client'; 
  import { truncate} from '../pages/utilities.js'; 
+ import { isPathIn} from '../pages/utilities.js'; 
 
   export default {
     components: {
       LineChart,
     },
     props: [
+      'routes',
       'stats',
       'statshistory'
     ],
     data () {
       return {
         datacollection: null,
+        total: 0
       }
     },
     mounted () {
@@ -52,23 +59,28 @@
     },
     methods: {
       updateChart () {
+        // update the chart to display data for the routes in "routes", or for all routes if "routes" is not set 
+        var totalCount = 0; 
         if (this.statshistory && this.stats){
           this.datacollection = {};
           this.datacollection["labels"]= this.statshistory.map(eachStatistic => "" );
           this.datacollection["datasets"]=[];
           for (var thisPath in this.stats.FunctionStatsMap){
-            var dataSetForPath = {
-              label: thisPath + ": "+ this.stats.FunctionStatsMap[thisPath].Running,
-              fill: false, // Only use fill if chart is stacked
-              backgroundColor: 'white', // needed if fill is false to set fill color in legend
-              borderColor: getBorderColorFor(thisPath),
-              borderWidth: lineWidthInPixels,
-              radius:pointRadiusInPixels,
-              data: this.statshistory.map(eachStatistic => eachStatistic.FunctionStatsMap[thisPath].Running)
-            };
-            this.datacollection["datasets"].push(dataSetForPath);
-             
+            if (this.routes==null || isPathIn(thisPath,this.routes)){
+              totalCount = totalCount + this.stats.FunctionStatsMap[thisPath].Running;          
+              var dataSetForPath = {
+                label: thisPath + ": "+ this.stats.FunctionStatsMap[thisPath].Running,
+                fill: false, // Only use fill if chart is stacked
+                backgroundColor: 'white', // needed if fill is false to set fill color in legend
+                borderColor: getBorderColorFor(thisPath),
+                borderWidth: lineWidthInPixels,
+                radius:pointRadiusInPixels,
+                data: this.statshistory.map(eachStatistic => eachStatistic.FunctionStatsMap[thisPath].Running)
+              };
+              this.datacollection["datasets"].push(dataSetForPath);
+            }
           }
+          this.total = totalCount;
           var legs = document.getElementById("runningGraphLegend");
         
           // legend  
@@ -87,7 +99,9 @@
 			text.push('</li>');
 		  }
 		  text.push('</ul>');
+      if (legs!=null){
           legs.innerHTML  = text.join(''); 
+      }
           // end of legend   
         }
       }
