@@ -1,9 +1,9 @@
 <template >
   <div class="row">
-    <queued-graph :routes="routes" :stats="stats" :statshistory="statshistory"></queued-graph>
-    <running-graph :routes="routes" :stats="stats" :statshistory="statshistory"></running-graph>
-    <completed-graph :routes="routes" :stats="stats" :statshistory="statshistory"></completed-graph>
-    <failed-graph :routes="routes" :stats="stats" :statshistory="statshistory"></failed-graph>
+    <queued-graph :routes="routes" :stats="stats" :statshistory="statshistory" :appname="appname"></queued-graph>
+    <running-graph :routes="routes" :stats="stats" :statshistory="statshistory" :appname="appname"></running-graph>
+    <completed-graph :routes="routes" :stats="stats" :statshistory="statshistory" :appname="appname"></completed-graph>
+    <failed-graph :routes="routes" :stats="stats" :statshistory="statshistory" :appname="appname"></failed-graph>
   </div>
 </template>
 
@@ -25,7 +25,8 @@
       'routes',
       'completedLegendMarkup',
       'stats',
-      'statshistory'
+      'statshistory',
+      'appname'
     ]
   }
 </script>

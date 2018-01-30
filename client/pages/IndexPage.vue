@@ -7,7 +7,7 @@
     <br>
     <h1 class="page-header">
       Dashboard
-
+   
       <div class="pull-right">
         <button class="btn btn-default" @click="openAddApp">
           <i class="fa fa-plus"></i>&nbsp;
@@ -80,7 +80,7 @@
     </h3>
             
     <stats-chart :stats="stats" :statshistory="statshistory"></stats-chart>
-    
+
     <!-- Define the "Create New App" modal -->
     <fn-app-form></fn-app-form>
   </div>
@@ -94,8 +94,8 @@ import { defaultErrorHandler } from '../lib/helpers';
 import { eventBus } from '../client';
 
 export default {
-  props: ['apps','stats','statshistory'],
-  data () {
+  props: ['apps','stats','statshistory','autorefresh'],
+    data () {
     return {
       isChecked: true,
     }
@@ -134,7 +134,8 @@ export default {
   }, 
   created: function (){
     document.title = "Functions UI";
-    if (this.isChecked) {
+    this.isChecked=this.autorefresh;
+    if (this.autorefresh) {
       eventBus.$emit('startAutoRefreshStats');
     }
   }

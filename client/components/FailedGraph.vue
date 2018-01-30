@@ -46,7 +46,8 @@
     props: [
       'routes',
       'stats',
-      'statshistory'
+      'statshistory',
+      'appname'
     ],
     data () {
       return {
@@ -81,27 +82,27 @@
             }   
           }
           this.total = totalCount;
-          var legs = document.getElementById("failedGraphLegend");
-        
+
           // legend  
+          var legs = document.getElementById("failedGraphLegend");
           var text = [];
           text.push('<ul class=\'' + 'chartLegend\'>');
           var chartDataDatasets = this.datacollection["datasets"];
           var chartDataDatasetsLength = chartDataDatasets.length;
-		  for (var i = 0; i < chartDataDatasets.length; i++) {
-			text.push('<li><span class=\'chartLabelEmblem\' style=\'' +
-			  'background-color:' + chartDataDatasets[i].backgroundColor + '; ' +
-		      'border-color:' + chartDataDatasets[i].borderColor + ';' +
-			  '\'></span>');
-			if (chartDataDatasets[i].label) {
-			  text.push('<span class=\'chartLabelText\'>'+chartDataDatasets[i].label+'</span>');
-			}
-			text.push('</li>');
-		  }
-		  text.push('</ul>');
-      if (legs!=null){
-          legs.innerHTML  = text.join(''); 
-      }
+          for (var i = 0; i < chartDataDatasets.length; i++) {
+            text.push('<li><span class=\'chartLabelEmblem\' style=\'' +
+              'background-color:' + chartDataDatasets[i].backgroundColor + '; ' +
+              'border-color:' + chartDataDatasets[i].borderColor + ';' +
+              '\'></span>');
+            if (chartDataDatasets[i].label) {
+              text.push('<span class=\'chartLabelText\'>'+chartDataDatasets[i].label+'</span>');
+            }
+            text.push('</li>');
+          }
+          text.push('</ul>');
+          if (legs!=null){
+              legs.innerHTML  = text.join(''); 
+          }
           // end of legend   
         }
       }
