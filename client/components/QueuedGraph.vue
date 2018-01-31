@@ -36,7 +36,6 @@
  import LineChart from './LineChart.js';
  import { eventBus } from '../client';
  import { updateChart, graphType} from './graphUtilities'; 
- import { truncate, isPathIn} from '../pages/utilities'; 
 
   export default {
     components: {

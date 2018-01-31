@@ -35,7 +35,6 @@
   
  import LineChart from './LineChart.js';
  import { eventBus } from '../client';
- import { truncate, isPathIn} from '../pages/utilities'; 
  import { updateChart, graphType} from './graphUtilities'; 
 
   export default {

@@ -74,6 +74,18 @@ export function updateChart (chart,graphTypeArg,isStacked) {
 
 }
 
+// return whether any of the specified routes has the specified path
+// thisPath - string
+// routes - an array of route objects
+export function isPathIn(path,routes){
+  var result = false; 
+  for (var k= 0; k < routes.length; k++){
+       if (path==routes[k].path){
+       return true;
+      }
+  }
+};
+
 export var graphType = {
   QUEUED: 0,
   RUNNING: 1,
