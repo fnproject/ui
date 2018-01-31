@@ -10,11 +10,11 @@ export function updateChart (chart,graphTypeArg,isStacked) {
   switch(graphTypeArg){
     case graphType.QUEUED:
       graphLegendDivName="queuedGraphLegend";
-      dataGetter=aStat => aStat.FunctionStatsMap[thisPath].Queued;
+      dataGetter=aStat => aStat.FunctionStatsMap[thisPath].Queue;
       break;
     case graphType.RUNNING:
       graphLegendDivName="runningGraphLegend";
-      dataGetter=aStat => aStat.FunctionStatsMap[thisPath].Complete;
+      dataGetter=aStat => aStat.FunctionStatsMap[thisPath].Running;
       break;
     case graphType.COMPLETED:
       graphLegendDivName="completedGraphLegend";
@@ -34,9 +34,9 @@ export function updateChart (chart,graphTypeArg,isStacked) {
       chart.datacollection["datasets"]=[];
     for (var thisPath in chart.stats.FunctionStatsMap){
       if (chart.routes==null || isPathIn(thisPath,chart.routes)){
-        totalCount = totalCount + chart.stats.FunctionStatsMap[thisPath].Complete;
+        totalCount = totalCount + dataGetter(chart.stats);
         var dataSetForPath = {
-          label: thisPath + ": "+ chart.stats.FunctionStatsMap[thisPath].Complete,
+          label: thisPath + ": "+ dataGetter(chart.stats),
           fill: isStacked, // Use fill for stacked charts to distingush them from non-stacked charts
           backgroundColor: isStacked ? getBackgroundColorFor(thisPath) : 'white', // Set fill color for stacked charts
           borderColor: getBorderColorFor(thisPath),
