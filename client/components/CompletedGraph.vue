@@ -35,9 +35,8 @@
   
  import LineChart from './LineChart.js';
  import { eventBus } from '../client';
- import { getBackgroundColorFor, getBorderColorFor, lineWidthInPixels, pointRadiusInPixels} from '../client'; 
- import { truncate} from '../pages/utilities.js'; 
- import { isPathIn} from '../pages/utilities.js'; 
+ import { truncate, isPathIn} from '../pages/utilities'; 
+ import { updateChart, graphType} from './graphUtilities'; 
 
   export default {
     components: {
@@ -56,61 +55,14 @@
       }
     },
     mounted () {
-      //this.updateChart();
     },
     methods: {
-      updateChart () {
-        // update the chart to display data for the routes in "routes", or for all routes if "routes" is not set 
-        var totalCount = 0; 
-        if (this.statshistory && this.stats){
-          this.datacollection = {};
-          this.datacollection["labels"]= this.statshistory.map(eachStatistic => "" );
-          this.datacollection["datasets"]=[];
-          for (var thisPath in this.stats.FunctionStatsMap){
-            if (this.routes==null || isPathIn(thisPath,this.routes)){
-              totalCount = totalCount + this.stats.FunctionStatsMap[thisPath].Complete;
-              var dataSetForPath = {
-                label: thisPath + ": "+ this.stats.FunctionStatsMap[thisPath].Complete,
-                fill: true,                                       // Set to true because chart is stacked
-                backgroundColor: getBackgroundColorFor(thisPath), // Set color because chart is stacked
-                borderColor: getBorderColorFor(thisPath),
-                borderWidth: lineWidthInPixels,
-                radius:pointRadiusInPixels,
-                data: this.statshistory.map(eachStatistic => eachStatistic.FunctionStatsMap[thisPath].Complete)
-              };
-              this.datacollection["datasets"].push(dataSetForPath);
-            }
-          }
-          this.total = totalCount;
-          
-          // legend  
-          var legs = document.getElementById("completedGraphLegend");
-          var text = [];
-          text.push('<ul class=\'' + 'chartLegend\'>');
-          var chartDataDatasets = this.datacollection["datasets"];
-          var chartDataDatasetsLength = chartDataDatasets.length;
-          for (var i = 0; i < chartDataDatasets.length; i++) {
-			      text.push('<li><span class=\'chartLabelEmblem\' style=\'' +
-			        'background-color:' + chartDataDatasets[i].backgroundColor + '; ' +
-		          'border-color:' + chartDataDatasets[i].borderColor + ';' +
-			        '\'></span>');
-			      if (chartDataDatasets[i].label) {
-			        text.push('<span class=\'chartLabelText\'>'+chartDataDatasets[i].label+'</span>');
-			      }
-			      text.push('</li>');
-		      }
-          text.push('</ul>');
-          if (legs!=null){
-            legs.innerHTML  = text.join(''); 
-          }
-          // end of legend   
-        }
-      }
     },
     created: function(){
       // handle "stats have been refreshed"
       eventBus.$on('statsRefreshed', (app) => {
-        this.updateChart();
+        var isStacked = true;
+        updateChart(this,graphType.COMPLETED,isStacked);
       });    
     }
   }
@@ -118,8 +70,6 @@
 </script>
 
 <style>
-.chartLegend{
-}
 .chartLabelEmblem {
   float:left;
   width:40px;

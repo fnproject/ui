@@ -27,33 +27,6 @@ const router = new VueRouter({
   ]
 });
 
-// Utility functions
-
-// factory for background colors; simply iterate round these arrays of colors
-const backgroundColors = ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(255, 206, 86, 0.2)', 
-                          'rgba(75, 192, 192, 0.2)', 'rgba(153, 102, 255, 0.2)', 'rgba(255, 159, 64, 0.2)' ];
-const borderColors = ['rgba(255,99,132,1)',    'rgba(54, 162, 235, 1)',  'rgba(255, 206, 86, 1)', 
-                      'rgba(75, 192, 192, 1)', 'rgba(153, 102, 255, 1)', 'rgba(255, 159, 64, 1)'];
-export const lineWidthInPixels = 1;
-export const pointRadiusInPixels = 0.5;
-var backgroundColorMap = {}
-var borderColorMap = {}
-
-export function getBackgroundColorFor(path){
-  if (!backgroundColorMap[path]){
-     backgroundColorMap[path]=backgroundColors[(Object.keys(backgroundColorMap).length) % (backgroundColors.length)];
-  }
-  return backgroundColorMap[path];
-}
-export function getBorderColorFor(path){
-  if (!borderColorMap[path]){
-     borderColorMap[path]=borderColors[(Object.keys(borderColorMap).length) % (borderColors.length)];
-  }
-  return borderColorMap[path];
-}
-
-// End of utility functions
-
 new Vue({
   router: router,
   data: {
@@ -94,39 +67,11 @@ new Vue({
       }
     },    
     loadStats: function(){
-      var t = this;
       if (this.autorefresh) {
         $.ajax({
           url: '/api/stats',
           dataType: 'json',
-          success: (statistics) => {
-            t.stats = statistics;
-            if (t.statshistory==null){
-              t.statshistory = [statistics];
-            } else {
-              t.statshistory.push(statistics);
-              if (t.statshistory.length > numXValues){
-                t.statshistory.shift();
-              }
-            }        
-            
-            // do the stats contain a new function?
-            var previousKnownFunctions = Object.keys(t.statshistory[t.statshistory.length-2].FunctionStatsMap);
-            var nowKnownFunctions = Object.keys(t.statshistory[t.statshistory.length-1].FunctionStatsMap);
-            for (var j = 0; j < nowKnownFunctions.length; j++){
-              if (previousKnownFunctions.indexOf(nowKnownFunctions[j])==-1){
-                var newFunction = nowKnownFunctions[j];
-                // we have a new function: backfill all the earlier stats with zero values for this function
-                for (var k = 0; k < t.statshistory.length-1; k++){
-                  t.statshistory[k].FunctionStatsMap[newFunction]={Queue:0, Running:0, Complete:0, Failed:0};
-                }
-              }
-            }
-    
-            
-            // we have new stats: notify any graphs to update themselves 
-            eventBus.$emit('statsRefreshed');
-          },
+          success: this.handleStats,
           error: defaultErrorHandler
         })
       } else {
@@ -134,6 +79,34 @@ new Vue({
         eventBus.$emit('statsRefreshed');
       }
     },
+    handleStats: function(statistics) {
+      this.stats = statistics;
+      if (this.statshistory==null){
+        this.statshistory = [statistics];
+      } else {
+        this.statshistory.push(statistics);
+        if (this.statshistory.length > numXValues){
+          this.statshistory.shift();
+        }
+      }        
+      
+      // do the stats contain a new function?
+      // create an array containing the paths in the penultimate FunctionStatsMap
+      var previousKnownFunctions = Object.keys(this.statshistory[this.statshistory.length-2].FunctionStatsMap);
+      // create an array containing the paths in the last FunctionStatsMap
+      var nowKnownFunctions = Object.keys(this.statshistory[this.statshistory.length-1].FunctionStatsMap);
+      for (var j = 0; j < nowKnownFunctions.length; j++){
+        if (previousKnownFunctions.indexOf(nowKnownFunctions[j])==-1){
+          var newFunction = nowKnownFunctions[j];
+          // we have a new function: backfill all the earlier stats with zero values for this function
+          for (var k = 0; k < this.statshistory.length-1; k++){
+            this.statshistory[k].FunctionStatsMap[newFunction]={Queue:0, Running:0, Complete:0, Failed:0};
+          }
+        }
+      }     
+      // we have new stats: notify any graphs to update themselves 
+      eventBus.$emit('statsRefreshed');
+    }
   },
   created: function(){
     var timer;
