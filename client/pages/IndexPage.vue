@@ -7,7 +7,7 @@
     <br>
     <h1 class="page-header">
       Dashboard
-
+   
       <div class="pull-right">
         <button class="btn btn-default" @click="openAddApp">
           <i class="fa fa-plus"></i>&nbsp;
@@ -74,13 +74,14 @@
       Statistics
       <div class="pull-right">
         <label class="btn btn-default checkbox-inline" style="padding-left:30px"><!-- TODO style this properly -->
-          <input type="checkbox" v-model="isChecked" @change="doalert">Auto refresh</label>
+          <input type="checkbox" v-model="isChecked" @change="indexPageAutoRefreshButtonClicked">Auto refresh</label>
         </label>
       </div>
     </h3>
             
     <stats-chart :stats="stats" :statshistory="statshistory"></stats-chart>
-    
+
+    <!-- Define the "Create New App" modal -->
     <fn-app-form></fn-app-form>
   </div>
 </template>
@@ -93,8 +94,8 @@ import { defaultErrorHandler } from '../lib/helpers';
 import { eventBus } from '../client';
 
 export default {
-  props: ['apps','stats','statshistory'],
-  data () {
+  props: ['apps','stats','statshistory','autorefresh'],
+    data () {
     return {
       isChecked: true,
     }
@@ -104,7 +105,7 @@ export default {
     StatsChart
   },
   methods: {
-    doalert: function(checkboxElem) {
+    indexPageAutoRefreshButtonClicked: function(checkboxElem) {
       if (checkboxElem.currentTarget.checked) {
         eventBus.$emit('startAutoRefreshStats');
       } else {
@@ -133,7 +134,8 @@ export default {
   }, 
   created: function (){
     document.title = "Functions UI";
-    if (this.isChecked) {
+    this.isChecked=this.autorefresh;
+    if (this.autorefresh) {
       eventBus.$emit('startAutoRefreshStats');
     }
   }

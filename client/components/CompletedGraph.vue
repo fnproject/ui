@@ -1,101 +1,67 @@
 <template >
-  <line-chart 
-    :chart-data="datacollection"
-    :options="{
-      responsive: true, 
-      maintainAspectRatio: true,
-      title: {
-        display: false,
-        text: 'Completed'
-      },
-      legend: {
-        display: false,
-      },
-      animation: {
-        duration:0 // turn off annoying bouncing animation
-      },
-      scales: {
-        yAxes: [{
-          stacked: true, // CompletedGraph is stacked (also set fill:true below)
-          ticks: {
-            suggestedMax: 10
-          }
-        }]
-      }     
-    }"
-    >
-  </line-chart>
-</template>
+  <div class="singleChart">
+    <h4 class="chart-title">Completed: {{this.total}}</h4>
+    <div id="completedGraphLegend"></div>
+      <line-chart 
+        :chart-data="datacollection"
+        :options="{
+          responsive: true, 
+          maintainAspectRatio: true,
+          title: {
+            display: false,
+            text: 'Completed'
+          },
+          legend: {
+            display: false, 
+          },
+          animation: {
+            duration:0 // turn off annoying bouncing animation
+          },
+          scales: {
+            yAxes: [{
+              stacked: true, // CompletedGraph is stacked (also set fill:true below)
+              ticks: {
+                suggestedMax: 10
+              }
+            }]
+          }     
+        }"
+      >
+      </line-chart>
+    </div>
+  </template>
 
 <script>
   
  import LineChart from './LineChart.js';
  import { eventBus } from '../client';
- import { getBackgroundColorFor, getBorderColorFor, lineWidthInPixels, pointRadiusInPixels} from '../client'; 
- import { truncate} from '../pages/utilities.js'; 
+ import { updateChart, graphType} from './graphUtilities'; 
 
   export default {
     components: {
       LineChart,
     },
     props: [
+      'routes',
       'stats',
-      'statshistory'
+      'statshistory',
+      'appname'
     ],
     data () {
       return {
         datacollection: null,
+        total: 0
       }
     },
     mounted () {
-      //this.updateChart();
     },
     methods: {
-      updateChart () {
-        if (this.statshistory && this.stats){
-          this.datacollection = {};
-          this.datacollection["labels"]= this.statshistory.map(eachStatistic => "" );
-          this.datacollection["datasets"]=[];
-          for (var thisPath in this.stats.FunctionStatsMap){
-            var dataSetForPath = {
-              label: thisPath + ": "+ this.stats.FunctionStatsMap[thisPath].Complete,
-              fill: true,                                       // Set to true because chart is stacked
-              backgroundColor: getBackgroundColorFor(thisPath), // Set color because chart is stacked
-              borderColor: getBorderColorFor(thisPath),
-              borderWidth: lineWidthInPixels,
-              radius:pointRadiusInPixels,
-              data: this.statshistory.map(eachStatistic => eachStatistic.FunctionStatsMap[thisPath].Complete)
-            };
-            this.datacollection["datasets"].push(dataSetForPath);
-             
-          }
-          var legs = document.getElementById("completedGraphLegend");
-        
-          // legend  
-          var text = [];
-          text.push('<ul class=\'' + 'chartLegend\'>');
-          var chartDataDatasets = this.datacollection["datasets"];
-          var chartDataDatasetsLength = chartDataDatasets.length;
-		  for (var i = 0; i < chartDataDatasets.length; i++) {
-			text.push('<li><span class=\'chartLabelEmblem\' style=\'' +
-			  'background-color:' + chartDataDatasets[i].backgroundColor + '; ' +
-		      'border-color:' + chartDataDatasets[i].borderColor + ';' +
-			  '\'></span>');
-			if (chartDataDatasets[i].label) {
-			  text.push('<span class=\'chartLabelText\'>'+chartDataDatasets[i].label+'</span>');
-			}
-			text.push('</li>');
-		  }
-		  text.push('</ul>');
-          legs.innerHTML  = text.join(''); 
-          // end of legend   
-        }
-      }
     },
     created: function(){
       // handle "stats have been refreshed"
       eventBus.$on('statsRefreshed', (app) => {
-        this.updateChart();
+        var isStacked = true;
+        updateChart(this,graphType.COMPLETED,isStacked);
       });    
     }
   }
@@ -103,8 +69,6 @@
 </script>
 
 <style>
-.chartLegend{
-}
 .chartLabelEmblem {
   float:left;
   width:40px;

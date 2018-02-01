@@ -79,6 +79,18 @@
       </div>
     </div>
 
+
+    <h3 class="page-header">
+      Statistics
+      <div class="pull-right">
+        <label class="btn btn-default checkbox-inline" style="padding-left:30px"><!-- TODO style this properly -->
+          <input type="checkbox" v-model="isChecked" @change="appPageAutoRefreshButtonClicked">Auto refresh</label>
+        </label>
+      </div>
+    </h3>
+            
+    <stats-chart :routes="routes" :stats="stats" :statshistory="statshistory" :appname="appname"></stats-chart>
+
     <fn-route-form :app="app"></fn-route-form>
     <fn-run-function :app="app"></fn-run-function>
   </div>
@@ -88,23 +100,34 @@
 //import Modal from '../lib/vue-bootstrap-modal.vue';
 import FnRouteForm from '../components/FnRouteForm';
 import FnRunFunction from '../components/FnRunFunction';
+import StatsChart from '../components/StatsChart'
 import { eventBus } from '../client';
 import { defaultErrorHandler, getAuthToken } from '../lib/helpers';
 
 export default {
-  props: ['apps'],
+  props: ['apps','stats','statshistory','autorefresh'],
   data: function(){
     return {
       app: {},
       routes: [],
-      routesLoaded: false
+      routesLoaded: false,
+      isChecked: true,
+      appname: "",
     }
   },
   components: {
     FnRouteForm,
+    StatsChart,
     FnRunFunction
   },
   methods: {
+    appPageAutoRefreshButtonClicked: function(checkboxElem) {
+      if (checkboxElem.currentTarget.checked) {
+        eventBus.$emit('startAutoRefreshStats');
+      } else {
+        eventBus.$emit('stopAutoRefreshStats');
+      }
+    }, 
     openAddRoute: function(){
       eventBus.$emit('openAddRoute');
     },
@@ -154,6 +177,7 @@ export default {
       document.title = this.app.name + " | Functions UI";
     },
     appLoaded: function(){
+      this.appname=this.app.name;
       this.routes = [];
       this.routesLoaded = false;
       this.loadRoutes();
@@ -188,6 +212,10 @@ export default {
     eventBus.$on('RouteUpdated', (route) => {
       this.loadRoutes()
     });
+    this.isChecked=this.autorefresh;
+    if (this.autorefresh) {
+      eventBus.$emit('startAutoRefreshStats');
+    }
   }
 }
 </script>
