@@ -45,7 +45,7 @@
       'routes',
       'stats',
       'statshistory',
-      'appname'
+      'appname' // this will be unset if this graph is for all apps
     ],
     data () {
       return {

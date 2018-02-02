@@ -55,17 +55,10 @@ new Vue({
       if (this.statshistory==null){
         this.statshistory = [];
         for (var i = 0; i < numXValues; i++) {
-          this.statshistory.push(
-            {
-              Queue: 0,
-              Running: 0,
-              Complete: 0,
-              FunctionStatsMap: {}
-            }      	  
-          )
+          this.statshistory.push({Apps:{}})
         } 
       }
-    },    
+    },     
     loadStats: function(){
       if (this.autorefresh) {
         $.ajax({
@@ -89,21 +82,6 @@ new Vue({
           this.statshistory.shift();
         }
       }        
-      
-      // do the stats contain a new function?
-      // create an array containing the paths in the penultimate FunctionStatsMap
-      var previousKnownFunctions = Object.keys(this.statshistory[this.statshistory.length-2].FunctionStatsMap);
-      // create an array containing the paths in the last FunctionStatsMap
-      var nowKnownFunctions = Object.keys(this.statshistory[this.statshistory.length-1].FunctionStatsMap);
-      for (var j = 0; j < nowKnownFunctions.length; j++){
-        if (previousKnownFunctions.indexOf(nowKnownFunctions[j])==-1){
-          var newFunction = nowKnownFunctions[j];
-          // we have a new function: backfill all the earlier stats with zero values for this function
-          for (var k = 0; k < this.statshistory.length-1; k++){
-            this.statshistory[k].FunctionStatsMap[newFunction]={Queue:0, Running:0, Complete:0, Failed:0};
-          }
-        }
-      }     
       // we have new stats: notify any graphs to update themselves 
       eventBus.$emit('statsRefreshed');
     }
