@@ -1,0 +1,7 @@
+{
+  "fnApiOptions": {
+    "pool": {
+      "maxSockets": "Infinity"
+    }
+  }
+}

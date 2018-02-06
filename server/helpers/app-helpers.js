@@ -1,6 +1,7 @@
 var http = require('http');
 var url = require('url');
 var request = require('request');
+var config = require('config');
 
 exports.extend = function(target) {
     var sources = [].slice.call(arguments, 1);
@@ -24,11 +25,30 @@ exports.getApiEndpoint = function(req, path, params, successcb, errorcb) {
   console.log("GET " + url + ", params: ", params);
 
   options = {url: url, qs: params}
-
+  options = config.util.extendDeep({},options,config.fnApiOptions)
   options = exports.addAuth(options, req)
+  exports.dumpOptions(options);
 
   request(options, function(error, response, body){exports.requestCB(successcb, errorcb, error, response, body)});
 }
+
+exports.dumpOptions = function(options){
+  console.log("Dumping options.......");
+  for (var key1 in options) {
+    if (options.hasOwnProperty(key1)) {
+      var value1 = options[key1];
+      console.log(key1 + " -> " + value1);
+      if (key1!="url"){
+        for (var key2 in value1) {
+          if (value1.hasOwnProperty(key2)) {
+            var value2 = value1[key2];
+            console.log("    "+key2 + " -> " + value2);
+          }
+        }
+      }
+    }
+  }
+} 
 
 exports.postApiEndpoint = function(req, path, params, postfields, successcb, errorcb) {
   exports.execApiEndpoint('POST', req, path, params, postfields, successcb, errorcb);
