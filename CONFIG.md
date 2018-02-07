@@ -26,7 +26,7 @@ Here is `config/default.json`:
 
 The following configuration option may be specified this way:
 
-`fnApiOptions` is used to specify options that are passed to the [request](https://www.npmjs.com/package/request) function when polling the Fn server for statistics. You can specify any valid request option (not just `maxSockets`). [Here is a complete list](https://www.npmjs.com/package/request#requestoptions-callback)
+* `fnApiOptions` is used to specify options that are passed to the [request](https://www.npmjs.com/package/request) function when polling the Fn server for statistics. You can specify any valid request option (not just `maxSockets`). [Here is a complete list](https://www.npmjs.com/package/request#requestoptions-callback)
 
 Here is an example which uses the `NODE_CONFIG` environment variable to set the `pool` option's `maxSockets` property to `1` prior to starting the UI server:
 ```
