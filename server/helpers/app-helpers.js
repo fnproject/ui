@@ -1,6 +1,7 @@
 var http = require('http');
 var url = require('url');
 var request = require('request');
+var logger = require('config-logger');
 
 exports.extend = function(target) {
     var sources = [].slice.call(arguments, 1);
@@ -21,7 +22,7 @@ exports.apiFullUrl = function(req, path) {
 exports.getApiEndpoint = function(req, path, params, successcb, errorcb) {
   var url = exports.apiFullUrl(req, path);
 
-  console.log("GET " + url + ", params: ", params);
+  logger.debug("GET " + url + ", params: ", params);
 
   options = {url: url, qs: params}
 
@@ -41,7 +42,7 @@ exports.execApiEndpoint = function(method, req, path, params, postfields, succes
     json: postfields
   };
 
-  console.log(options.method + " " + options.uri + ", params: ", options.body);
+  logger.debug(options.method + " " + options.uri + ", params: ", options.body);
 
   options = exports.addAuth(options, req)
 
@@ -55,7 +56,7 @@ exports.execApiEndpointRaw = function(method, req, path, params, postfields, suc
     json: postfields
   };
 
-  console.log(options.method + " " + options.uri + ", params: ", options.body);
+  logger.debug(options.method + " " + options.uri + ", params: ", options.body);
 
   options = exports.addAuth(options, req)
 
@@ -122,7 +123,7 @@ exports.requestCBRaw = function (successcb, errorcb, error, response, body) {
 
 exports.standardErrorcb = function(res){
   return function(status, err){
-    console.log("Error. Api responded with ", status, err);
+    logger.error("Error. Api responded with ", status, err);
     var text = "Something went terribly wrong (Status Code: " + status + ") ";
     if (err){
       text = "Error: " + err;

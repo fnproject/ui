@@ -57,3 +57,12 @@ PORT=4000 FN_API_URL=http://localhost:8080 npm start
 ### 5) View in browser
 
 [http://localhost:4000/](http://localhost:4000/)
+
+### Configuring log levels
+
+UI uses [console-logging](https://www.npmjs.com/package/config-logger) for server-side logging. 
+This supports log levels of `debug`, `verbose`, `info`, `warn` and `error`. By default the log level is `info` (this is configured in `config/default.json`). To set a log level of `debug`, use
+```
+NODE_CONFIG='{"logLevel":"debug"}' PORT=4000 FN_API_URL=http://localhost:8080 npm start
+
+```

@@ -1,3 +1,5 @@
+var logger = require('config-logger');
+
 var express = require('express');
 var path = require('path');
 var url = require('url');
@@ -10,7 +12,7 @@ var app = express();
 var isProduction = process.env.NODE_ENV === 'production';
 var apiUrl = url.parse(process.env.FN_API_URL);
 if (!apiUrl || !apiUrl.hostname) {
-  console.log("API URL not set. Please specify Functions API URL via environment variable, e.g. FN_API_URL=http://localhost:8080 npm start");
+  logger.error("API URL not set. Please specify Functions API URL via environment variable, e.g. FN_API_URL=http://localhost:8080 npm start");
   process.exit(1);
 }
 
@@ -26,6 +28,6 @@ app.use(require('./server/router.js'));
 app.disable('etag');
 
 app.listen(port, function () {
-  console.log('Using API url: ' + apiUrl.host);
-  console.log('Server running on port ' + port);
+  logger.info('Using API url: ' + apiUrl.host);
+  logger.info('Server running on port ' + port);
 });
