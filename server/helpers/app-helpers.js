@@ -31,6 +31,18 @@ exports.getApiEndpoint = function(req, path, params, successcb, errorcb) {
   request(options, function(error, response, body){exports.requestCB(successcb, errorcb, error, response, body)});
 }
 
+exports.getApiEndpointRaw = function(req, path, params, successcb, errorcb) {
+  var url = exports.apiFullUrl(req, path);
+
+  logger.debug("GET " + url + ", params: ", params);
+
+  options = {url: url, qs: params}
+
+  options = exports.addAuth(options, req)
+
+  request(options, function(error, response, body){exports.requestCBRaw(successcb, errorcb, error, response, body)});
+}
+
 exports.postApiEndpoint = function(req, path, params, postfields, successcb, errorcb) {
   exports.execApiEndpoint('POST', req, path, params, postfields, successcb, errorcb);
 }
