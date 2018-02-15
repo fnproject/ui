@@ -89,9 +89,8 @@
 <script>
 import FnAppForm from '../components/FnAppForm';
 import StatsChart from '../components/StatsChart'
-
-import { defaultErrorHandler } from '../lib/helpers';
 import { eventBus } from '../client';
+import { defaultErrorHandler, getAuthToken } from '../lib/helpers';
 
 export default {
   props: ['apps','stats','statshistory','autorefresh'],
