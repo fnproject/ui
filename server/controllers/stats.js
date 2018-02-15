@@ -33,9 +33,9 @@ router.get('/', function(req, res) {
     var valueRE = '(\\d+)'             
     
     // allMetricsRE is the complete RE (allowing for more than two labels)
-    var allMetricsRE    = metricNameRE+   '{'+labelRE+'(?:,'+labelRE+')+}'+spacesRE+valueRE;
+    var allMetricsRE    = '^' + metricNameRE + '{'+labelRE+'(?:,'+labelRE+')+}'+spacesRE+valueRE;
 
-    var regex = RegExp(allMetricsRE,'g');
+    var regex = RegExp(allMetricsRE,'gm');
 
     // metricData contains the data extracted from a single line of /metrics data
     var metricData; 
