@@ -1,3 +1,5 @@
+# WARNING: this repo has gone stale and the UI is currently broken. It is not intended to be left for dead forever, feel free to fix it up, this has become a lower priority item at the moment however for the fn team. 
+
 # UI for [Fn](https://github.com/fnproject/fn) [![CircleCI](https://circleci.com/gh/fnproject/ui.svg?style=svg)](https://circleci.com/gh/fnproject/ui)
 
 ## Usage
