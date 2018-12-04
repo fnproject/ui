@@ -1,4 +1,4 @@
-FROM mhart/alpine-node:8.8.1
+FROM node:8.12-alpine
 MAINTAINER fnservice.io
 
 RUN mkdir /app
@@ -6,7 +6,7 @@ WORKDIR /app
 
 # Install app dependencies
 ENV NPM_CONFIG_LOGLEVEL warn
-RUN npm install webpack -g
+RUN npm install -g webpack@1.15.0
 COPY package.json /app
 RUN npm install
 

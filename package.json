@@ -55,6 +55,7 @@
     "stylelint-loader": "^6.2.0",
     "vue-loader": "^10.0.2",
     "vue-template-compiler": "^2.0.0",
-    "webpack": "^1.14.0"
+    "webpack": "1.15.0",
+    "webpack-cli": "^3.1.2"
   }
 }

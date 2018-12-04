@@ -30,7 +30,7 @@
             <tbody>
               <tr v-for="app in apps">
                 <td>
-                  <router-link :to="'/app/' + encodeURIComponent(app.name)">{{app.name}}</router-link>
+                  <router-link :to="'/app/' + encodeURIComponent(app.id)">{{app.name}}</router-link>
                 </td>
                 <td>
                   <div class="toolbar">

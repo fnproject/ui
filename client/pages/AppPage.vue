@@ -21,7 +21,7 @@
     <div class="row">
       <div class="col-md-12 col-lg-10">
         <table class="table table-striped">
-          <thead v-bind:class="{ transparent: routes.length == 0 }">
+          <thead v-bind:class="{ transparent: fns.length == 0 }">
             <th>Path</th>
             <th>Image</th>
             <th>Type</th>
@@ -31,13 +31,13 @@
             <th width="140">Actions</th>
           </thead>
           <tbody>
-            <tr v-for="route in routes">
-              <td>{{route.path}}</td>
-              <td>{{route.image}}</td>
-              <td>{{route.type}}</td>
-              <td>{{route.memory}} MB</td>
-              <td>{{route.max_concurrency}}</td>
-              <td>{{route.timeout}}</td>
+            <tr v-for="fn in fns">
+              <td>{{fn.path}}</td>
+              <td>{{fn.image}}</td>
+              <td>{{fn.type}}</td>
+              <td>{{fn.memory}} MB</td>
+              <td>{{fn.max_concurrency}}</td>
+              <td>{{fn.timeout}}</td>
               <td>
                 <div class="toolbar">
 
@@ -62,14 +62,14 @@
                 </div>
               </td>
             </tr>
-            <tr v-if="routesLoaded && routes.length == 0">
+            <tr v-if="fnsLoaded && fns.length == 0">
               <td colspan="99" class="no-matches">
                 <div>
-                  No Routes
+                  No Functions
                 </div>
               </td>
             </tr>
-            <tr v-if="!routesLoaded">
+            <tr v-if="!fnsLoaded">
               <td colspan="99" class="no-matches">
                 <div>Loading...</div>
               </td>
@@ -89,7 +89,7 @@
       </div>
     </h3>
             
-    <stats-chart :routes="routes" :stats="stats" :statshistory="statshistory" :appname="appname"></stats-chart>
+    <stats-chart :fns="fns" :stats="stats" :statshistory="statshistory" :appname="appname"></stats-chart>
 
     <fn-route-form :app="app"></fn-route-form>
     <fn-run-function :app="app"></fn-run-function>
@@ -109,8 +109,9 @@ export default {
   data: function(){
     return {
       app: {},
-      routes: [],
-      routesLoaded: false,
+      id: "",
+      fns: [],
+      fnsLoaded: false,
       isChecked: true,
       appname: "",
     }
@@ -137,24 +138,24 @@ export default {
     openRunFunction: function(route){
       eventBus.$emit('openRunFunction', route);
     },
-    loadRoutes: function(){
+    loadFns: function(){
       var t = this;
       $.ajax({
         headers: {'Authorization': getAuthToken()},
-        url: '/api/apps/' + encodeURIComponent(t.app.name) + '/routes',
+        url: '/api/fns?app_id=' + encodeURIComponent(t.app.id),
         dataType: 'json',
-        success: function(routes){
-          t.routes = routes;
-          t.routesLoaded = true;
+        success: function(fns){
+          t.fns = fns;
+          t.fnsLoaded = true;
         },
         error: defaultErrorHandler
       })
     },
-    loadApp: function(name, cb){
+    loadApp: function(appID, cb){
       var t = this;
       $.ajax({
         headers: {'Authorization': getAuthToken()},
-        url: '/api/apps/' + encodeURIComponent(name),
+        url: '/api/apps/' + encodeURIComponent(appID),
         dataType: 'json',
         success: (app) => {t.app = app; if (cb) {cb()} },
         error: defaultErrorHandler
@@ -168,7 +169,7 @@ export default {
           url: '/api/apps/' + encodeURIComponent(t.app.name) + '/routes/' + encodeURIComponent(route.path),
           method: 'DELETE',
           dataType: 'json',
-          success: (app) => { t.loadRoutes() },
+          success: (app) => { t.loadFns() },
           error: defaultErrorHandler
         })
       }
@@ -178,9 +179,10 @@ export default {
     },
     appLoaded: function(){
       this.appname=this.app.name;
-      this.routes = [];
-      this.routesLoaded = false;
-      this.loadRoutes();
+      this.id=this.app.id;
+      this.fns = [];
+      this.fnsLoaded = false;
+      this.loadFns();
       this.setTitle();
       eventBus.$emit('AppOpened', this.app);
     },
@@ -207,10 +209,10 @@ export default {
   },
   created:  function (){
     eventBus.$on('RouteAdded', (route) => {
-      this.loadRoutes()
+      this.loadFns()
     });
     eventBus.$on('RouteUpdated', (route) => {
-      this.loadRoutes()
+      this.loadFns()
     });
     this.isChecked=this.autorefresh;
     if (this.autorefresh) {

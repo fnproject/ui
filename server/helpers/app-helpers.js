@@ -116,9 +116,9 @@ exports.requestCB = function (successcb, errorcb, error, response, body) {
     } catch (e) {
       message = "Can not parse api response";
     }
-    message = message || "An error ocurred."
+    message = message || "An error occurred."
     var status = response ? response.statusCode : error.code;
-    console.warn("[ERR] " + status + " | "  + message);
+    console.log("[ERR] " + status + " | "  + message);
     errorcb(status, message);
   }
 }
@@ -135,6 +135,7 @@ exports.requestCBRaw = function (successcb, errorcb, error, response, body) {
 
 exports.standardErrorcb = function(res){
   return function(status, err){
+    console.log("Error!", status, err)
     logger.error("Error. Api responded with ", status, err);
     var text = "Something went terribly wrong (Status Code: " + status + ") ";
     if (err){
