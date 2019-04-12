@@ -30,7 +30,7 @@
             <tbody>
               <tr v-for="app in apps">
                 <td>
-                  <router-link :to="'/app/' + encodeURIComponent(app.name)">{{app.name}}</router-link>
+                  <router-link :to="'/app/' + encodeURIComponent(app.id)">{{app.name}}</router-link>
                 </td>
                 <td>
                   <div class="toolbar">
@@ -122,7 +122,7 @@ export default {
         var t = this;
         $.ajax({
           headers: {'Authorization': getAuthToken()},
-          url: '/api/apps/' + encodeURIComponent(app.name),
+          url: '/api/apps/' + encodeURIComponent(app.id),
           method: 'DELETE',
           dataType: 'json',
           success: (app) => { eventBus.$emit('AppDeleted', app) },

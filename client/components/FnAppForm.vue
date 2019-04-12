@@ -79,14 +79,14 @@ export default {
       eventBus.$emit('NotificationClear');
       this.app.config = linesToConfig(this.appConfig);
       if (this.edit) {
-        var url = '/api/apps/' + encodeURIComponent(this.app.name);
+        var url = '/api/apps/' + encodeURIComponent(this.app.id);
       } else {
         var url = '/api/apps';
       };
       $.ajax({
         headers: {'Authorization': getAuthToken()},
         url: url,
-        method: this.edit ? 'PATCH' : 'POST',
+        method: this.edit ? 'PUT' : 'POST',
         data: JSON.stringify(this.app),
         contentType: "application/json",
         dataType: 'json',
