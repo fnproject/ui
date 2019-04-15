@@ -11,7 +11,7 @@
       {{app.name}}
 
       <div class="pull-right">
-        <button class="btn btn-default" @click="openAddRoute()"><i class="fa fa-plus"></i> Add Route</button>
+        <button class="btn btn-default" @click="openAddFn()"><i class="fa fa-plus"></i> Add Function</button>
       </div>
     </h1>
 
@@ -21,40 +21,38 @@
     <div class="row">
       <div class="col-md-12 col-lg-10">
         <table class="table table-striped">
-          <thead v-bind:class="{ transparent: routes.length == 0 }">
-            <th>Path</th>
+          <thead v-bind:class="{ transparent: fns.length == 0 }">
+            <th>Name</th>
             <th>Image</th>
-            <th>Type</th>
             <th>Memory</th>
-            <th>MaxCC</th>
             <th>Timeout</th>
+            <th>Idle Timeout</th>
             <th width="140">Actions</th>
           </thead>
           <tbody>
-            <tr v-for="route in routes">
-              <td>{{route.path}}</td>
-              <td>{{route.image}}</td>
-              <td>{{route.type}}</td>
-              <td>{{route.memory}} MB</td>
-              <td>{{route.max_concurrency}}</td>
-              <td>{{route.timeout}}</td>
+            <tr v-for="fn in fns">
+              <td>{{fn.name}}</td>
+              <td>{{fn.image}}</td>
+              <td>{{fn.memory}} MB</td>
+              <td>{{fn.timeout}}</td>
+              <td>{{fn.idle_timeout}}</td>
               <td>
                 <div class="toolbar">
 
                   <div class="btn-group">
-                    <button class="btn btn-default btn-sm" @click.prevent="openRunFunction(route)" title="Run Function"><i class="fa fa-play"></i> Run Function</button>
+                    <button class="btn btn-default btn-sm" @click.prevent="openRunFn(fn)" title="Run Function"><i class="fa fa-play"></i> Run Function</button>
                     <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                       <span class="caret"></span>
                       <span class="sr-only">Toggle Dropdown</span>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-right">
                       <li>
-                        <a href="#" @click.prevent="openEditRoute(route)" title="Edit Route">
-                          <i class="fa fa-gear"></i> Edit Route
+                        <a href="#" @click.prevent="openEditFn(fn)" title="Edit Function">
+                          <i class="fa fa-gear"></i> Edit Function
                         </a>
-                        <a href="#" @click.prevent="deleteRoute(route)"
-                        class="text-danger" title="Delete Route">
-                          <i class="fa fa-times"></i> Delete Route
+                        <a href="#" @click.prevent="deleteFn(fn)"
+                        class="text-danger" title="Delete Function">
+                          <i class="fa fa-times"></i> Delete Function
                         </a>
                       </li>
                     </ul>
@@ -62,14 +60,14 @@
                 </div>
               </td>
             </tr>
-            <tr v-if="routesLoaded && routes.length == 0">
+            <tr v-if="fnsLoaded && fns.length == 0">
               <td colspan="99" class="no-matches">
                 <div>
-                  No Routes
+                  No Functions
                 </div>
               </td>
             </tr>
-            <tr v-if="!routesLoaded">
+            <tr v-if="!fnsLoaded">
               <td colspan="99" class="no-matches">
                 <div>Loading...</div>
               </td>
@@ -89,16 +87,16 @@
       </div>
     </h3>
             
-    <stats-chart :routes="routes" :stats="stats" :statshistory="statshistory" :appname="appname"></stats-chart>
+    <stats-chart :fns="fns" :stats="stats" :statshistory="statshistory" :appname="appname"></stats-chart>
 
-    <fn-route-form :app="app"></fn-route-form>
+    <fn-function-form :app="app"></fn-function-form>
     <fn-run-function :app="app"></fn-run-function>
   </div>
 </template>
 
 <script>
 //import Modal from '../lib/vue-bootstrap-modal.vue';
-import FnRouteForm from '../components/FnRouteForm';
+import FnFunctionForm from '../components/FnFunctionForm';
 import FnRunFunction from '../components/FnRunFunction';
 import StatsChart from '../components/StatsChart'
 import { eventBus } from '../client';
@@ -109,14 +107,13 @@ export default {
   data: function(){
     return {
       app: {},
-      routes: [],
-      routesLoaded: false,
+      fns: [],
+      fnsLoaded: false,
       isChecked: true,
-      appname: "",
     }
   },
   components: {
-    FnRouteForm,
+    FnFunctionForm,
     StatsChart,
     FnRunFunction
   },
@@ -128,47 +125,47 @@ export default {
         eventBus.$emit('stopAutoRefreshStats');
       }
     }, 
-    openAddRoute: function(){
-      eventBus.$emit('openAddRoute');
+    openAddFn: function(){
+      eventBus.$emit('openAddFn');
     },
-    openEditRoute: function(route){
-      eventBus.$emit('openEditRoute', route);
+    openEditFn: function(fn){
+      eventBus.$emit('openEditFn', fn);
     },
-    openRunFunction: function(route){
-      eventBus.$emit('openRunFunction', route);
+    openRunFn: function(fn){
+      eventBus.$emit('openRunFn', fn);
     },
-    loadRoutes: function(){
+    loadFns: function(){
       var t = this;
       $.ajax({
         headers: {'Authorization': getAuthToken()},
-        url: '/api/apps/' + encodeURIComponent(t.app.name) + '/routes',
+        url: '/api/fns/?app_id=' + encodeURIComponent(t.app.id),
         dataType: 'json',
-        success: function(routes){
-          t.routes = routes;
-          t.routesLoaded = true;
+        success: function(fns){
+          t.fns = fns;
+          t.fnsLoaded = true;
         },
         error: defaultErrorHandler
       })
     },
-    loadApp: function(name, cb){
+    loadApp: function(appID, cb){
       var t = this;
       $.ajax({
         headers: {'Authorization': getAuthToken()},
-        url: '/api/apps/' + encodeURIComponent(name),
+        url: '/api/apps/' + encodeURIComponent(appID),
         dataType: 'json',
         success: (app) => {t.app = app; if (cb) {cb()} },
         error: defaultErrorHandler
       })
     },
-    deleteRoute: function(route){
-      if (confirm('Are you sure you want to delete route ' + route.path + '?')) {
+    deleteFn: function(fn){
+      if (confirm('Are you sure you want to delete function ' + fn.name + '?')) {
         var t = this;
         $.ajax({
           headers: {'Authorization': getAuthToken()},
-          url: '/api/apps/' + encodeURIComponent(t.app.name) + '/routes/' + encodeURIComponent(route.path),
+          url: '/api/fns/' + encodeURIComponent(fn.id),
           method: 'DELETE',
           dataType: 'json',
-          success: (app) => { t.loadRoutes() },
+          success: (app) => { t.loadFns() },
           error: defaultErrorHandler
         })
       }
@@ -177,10 +174,9 @@ export default {
       document.title = this.app.name + " | Functions UI";
     },
     appLoaded: function(){
-      this.appname=this.app.name;
-      this.routes = [];
-      this.routesLoaded = false;
-      this.loadRoutes();
+      this.fns = [];
+      this.fnsLoaded = false;
+      this.loadFns();
       this.setTitle();
       eventBus.$emit('AppOpened', this.app);
     },
@@ -206,11 +202,11 @@ export default {
     eventBus.$emit('AppClosed');
   },
   created:  function (){
-    eventBus.$on('RouteAdded', (route) => {
-      this.loadRoutes()
+    eventBus.$on('FnAdded', (fn) => {
+      this.loadFns()
     });
-    eventBus.$on('RouteUpdated', (route) => {
-      this.loadRoutes()
+    eventBus.$on('FnUpdated', (fn) => {
+      this.loadFns()
     });
     this.isChecked=this.autorefresh;
     if (this.autorefresh) {

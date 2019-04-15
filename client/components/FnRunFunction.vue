@@ -8,9 +8,9 @@
         </div>
       </div>
       <div class="form-group">
-        <label class="col-sm-3 control-label">Route</label>
+        <label class="col-sm-3 control-label">Function Name</label>
         <div class="col-sm-9">
-          <input type="text" class="form-control" v-model="route.path" disabled>
+          <input type="text" class="form-control" v-model="fn.name" disabled>
         </div>
       </div>
       <div class="form-group">
@@ -21,7 +21,7 @@
       </div>
       <div>
         <h5>cURL command</h5>
-        <pre>curl -X POST -d '{{payload}}' {{apiUrl}}r/{{apiUrlSuffix}}</pre>
+        <pre>curl -X POST -d '{{payload}}' {{apiUrl}}invoke/{{fn.id}}</pre>
       </div>
 
       <div v-show="output">
@@ -48,13 +48,12 @@ export default {
   },
   data: function(){
     return {
-      route: {},
+      fn: {},
       show: false,
       submitting: false,
       payload: '{}',
       output: null,
       apiUrl: '',
-      apiUrlSuffix: ''
     }
   },
   methods: {
@@ -69,7 +68,7 @@ export default {
 
       $.ajax({
         headers: {'Authorization': getAuthToken()},
-        url: '/api/apps/' + encodeURIComponent(this.app.name) + '/routes/' + encodeURIComponent(this.route.path) + '/run',
+        url: '/api/fns/invoke/' + encodeURIComponent(this.fn.id),
         method: 'POST',
         data: JSON.stringify({payload: this.payload}),
         contentType: "application/json",
@@ -89,13 +88,11 @@ export default {
   },
   created:  function (){
     var t = this;
-    eventBus.$on('openRunFunction', (route) => {
-      this.route = route;
+    eventBus.$on('openRunFn', (fn) => {
+      this.fn = fn;
       this.payload = '{}';
       this.output = null;
       this.show = true;
-      this.apiUrlSuffix = encodeURIComponent(this.app.name) + '/' + encodeURIComponent(this.route.path.replace(/^\//,''));
-
     });
     getApiUrl( url => t.apiUrl = url );
   }

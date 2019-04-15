@@ -21,7 +21,7 @@
       <li :class="{active: app && app.id == a.id}"  v-for="a in apps">
         <router-link :to="'/app/' + encodeURIComponent(a.id)">
           {{a.name}}
-          <span class="sr-only" v-if="app && app.id== a.id">(current)</span>
+          <span class="sr-only" v-if="app && app.id == a.id">(current)</span>
         </router-link>
       </li>
     </ul>
