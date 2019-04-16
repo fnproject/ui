@@ -55,7 +55,7 @@ new Vue({
       if (this.statshistory==null){
         this.statshistory = [];
         for (var i = 0; i < numXValues; i++) {
-          this.statshistory.push({Apps:{}})
+          this.statshistory.push({})
         } 
       }
     },     

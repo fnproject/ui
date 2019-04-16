@@ -42,10 +42,8 @@
       LineChart,
     },
     props: [
-      'routes',
       'stats',
       'statshistory',
-      'appname' // this will be unset if this graph is for all apps
     ],
     data () {
       return {

@@ -77,18 +77,6 @@
       </div>
     </div>
 
-
-    <h3 class="page-header">
-      Statistics
-      <div class="pull-right">
-        <label class="btn btn-default checkbox-inline" style="padding-left:30px"><!-- TODO style this properly -->
-          <input type="checkbox" v-model="isChecked" @change="appPageAutoRefreshButtonClicked">Auto refresh</label>
-        </label>
-      </div>
-    </h3>
-            
-    <stats-chart :fns="fns" :stats="stats" :statshistory="statshistory" :appname="appname"></stats-chart>
-
     <fn-function-form :app="app"></fn-function-form>
     <fn-run-function :app="app"></fn-run-function>
   </div>
@@ -98,12 +86,11 @@
 //import Modal from '../lib/vue-bootstrap-modal.vue';
 import FnFunctionForm from '../components/FnFunctionForm';
 import FnRunFunction from '../components/FnRunFunction';
-import StatsChart from '../components/StatsChart'
 import { eventBus } from '../client';
 import { defaultErrorHandler, getAuthToken } from '../lib/helpers';
 
 export default {
-  props: ['apps','stats','statshistory','autorefresh'],
+  props: ['apps'],
   data: function(){
     return {
       app: {},
@@ -114,17 +101,9 @@ export default {
   },
   components: {
     FnFunctionForm,
-    StatsChart,
     FnRunFunction
   },
   methods: {
-    appPageAutoRefreshButtonClicked: function(checkboxElem) {
-      if (checkboxElem.currentTarget.checked) {
-        eventBus.$emit('startAutoRefreshStats');
-      } else {
-        eventBus.$emit('stopAutoRefreshStats');
-      }
-    }, 
     openAddFn: function(){
       eventBus.$emit('openAddFn');
     },
@@ -208,10 +187,6 @@ export default {
     eventBus.$on('FnUpdated', (fn) => {
       this.loadFns()
     });
-    this.isChecked=this.autorefresh;
-    if (this.autorefresh) {
-      eventBus.$emit('startAutoRefreshStats');
-    }
   }
 }
 </script>

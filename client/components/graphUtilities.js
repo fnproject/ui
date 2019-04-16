@@ -1,4 +1,4 @@
-// Utility functions used by the graph components QueuedGraph, RunningGraph, CompletedGraph and FailedGraph
+// Utility functions used by the graph components QueuedGraph, RunningGraph, and CompletedGraph
 
 // Update the graph and legend for the specified chart using the data in chart.stats and chart.statshistory 
 export function updateChart (chart,graphTypeArg,isStacked) {
@@ -10,119 +10,61 @@ export function updateChart (chart,graphTypeArg,isStacked) {
   switch(graphTypeArg){
     case graphType.QUEUED:
       graphLegendDivName="queuedGraphLegend";
-      metricGetter=aRoute => aRoute.Queue;
+      metricGetter=results => results.Queue;
       break;
     case graphType.RUNNING:
       graphLegendDivName="runningGraphLegend";
-      metricGetter=aRoute => aRoute.Running;
+      metricGetter=results => results.Running;
       break;
     case graphType.COMPLETED:
       graphLegendDivName="completedGraphLegend";
-      metricGetter=aRoute => aRoute.Complete;
-      break;
-    case graphType.FAILED:
-      graphLegendDivName="failedGraphLegend";
-      metricGetter=aRoute => aRoute.Failed;
+      metricGetter=results => results.Complete;
       break;
   }
 
-  // update the chart to display data for the routes in "routes", or for all routes if "routes" is not set 
   if (chart.statshistory && chart.stats){
     chart.datacollection = {};
     chart.datacollection["labels"]= chart.statshistory.map(eachStatistic => "" );
     chart.datacollection["datasets"]=[];
 
-    // update the graph 
-    // and also calculate and display the total count
-    var totalCount = 0; 
-    if (chart.appname==null){
-      // display all routes for all apps
-      for (var thisAppName in chart.stats.Apps){
-        var thisApp = chart.stats.Apps[thisAppName];
-        for (var thisPath in thisApp.Routes){
-          totalCount += displayRoute(chart,thisAppName,thisPath,metricGetter,isStacked);
-        }
-      }
-    } else {
-      // display routes for a specific app
-      var thisApp = chart.stats.Apps[chart.appname];
-      if (thisApp!=null){
-        for (var thisPath in thisApp.Routes){
-          totalCount += displayRoute(chart,chart.appname,thisPath,metricGetter,isStacked);
-        }      
-      } else {
-        // we're displaying an app, but there's no data about it in the stats returned by Fn server
-        // this means that no route in this app was called since the server was started
-        // since these graphs currently follow the convention that they only display lines for routes that have been actually used,
-        // we display nothing here. https://github.com/fnproject/ui/issues/18  proposes this be changed, but that's a wider issue.
-      }
-    }
-    chart.total = totalCount;
-    
-    // now examine the data that the graph is displaying and use it to construct the legend  
-    var legs = document.getElementById(graphLegendDivName);
-    var text = [];
-    text.push('<ul class=\'' + 'chartLegend\'>');
-    var chartDataDatasets = chart.datacollection["datasets"];
-    var chartDataDatasetsLength = chartDataDatasets.length;
-    for (var i = 0; i < chartDataDatasets.length; i++) {
-      text.push('<li><span class=\'chartLabelEmblem\' style=\'' +
-        'background-color:' + chartDataDatasets[i].backgroundColor + '; ' +
-        'border-color:' + chartDataDatasets[i].borderColor + ';' +
-        '\'></span>');
-      if (chartDataDatasets[i].label) {
-        text.push('<span class=\'chartLabelText\'>'+chartDataDatasets[i].label+'</span>');
-      }
-      text.push('</li>');
-    }
-    text.push('</ul>');
-    if (legs!=null){
-      legs.innerHTML  = text.join(''); 
-    }
+    // update the graph
+    chart.total = displayMetric(chart,metricGetter,isStacked);
   }
 }
 
-// for the specified appName and path, display a single line on the specified chart, showing historical values of the metric 
-// in addition, return the current value of the metric 
-function displayRoute(chart,appName,path,metricGetter,isStacked) {
-  var thisApp = chart.stats.Apps[appName];
-  var value = getMetricFor(chart.stats,appName,path,metricGetter)
+// /display a single line on the specified chart, showing historical values of
+// the metric in addition, return the current value of the metric
+function displayMetric(chart,metricGetter,isStacked) {
+  var value = getMetricFor(chart.stats,metricGetter);
+
   // assemble an array containing historical values of the metric that this graph is displaying
-  var routeHistory = [];  
+  var plotHistory = [];
   for (var i = 0; i < chart.statshistory.length; i++) {
-    routeHistory.push(getMetricFor(chart.statshistory[i],appName,path,metricGetter));
+    plotHistory.push(getMetricFor(chart.statshistory[i],metricGetter));
   }
-  var dataSetForPath = {
-    label: path + ": "+ value,
+
+  var dataSet = {
+    label: 'Amount: ',
     fill: isStacked, // Use fill for stacked charts to distingush them from non-stacked charts
-    backgroundColor: isStacked ? getBackgroundColorFor(path) : 'white', // Use a fill color for stacked charts
-    borderColor: getBorderColorFor(path),
+    backgroundColor: isStacked ? getBackgroundColorFor('/') : 'white', // Use a fill color for stacked charts
+    borderColor: getBorderColorFor('/'),
     borderWidth: lineWidthInPixels,
     radius:pointRadiusInPixels,
-    data: routeHistory
+    data: plotHistory
   };
-  chart.datacollection["datasets"].push(dataSetForPath);
+  chart.datacollection["datasets"].push(dataSet);
   return value;
 }
 
-// return the metric value from the specified stats object for the specified appName and path
+// return the metric value from the specified stats object for the specified ppName and path
 // if either the appName or path are not found then zero is returned
-function getMetricFor(aStats,appName,path,metricGetter){
-  var app = aStats.Apps[appName];
-  if (app==null){
+function getMetricFor(stats,metricGetter){
+  if (stats==null){
     // we didn't have any information about this app at the time this historical stat was added
     // either we have a partially-initialised statshistory or the app has not been created yet
     return 0;
   } else {
-    var route = app.Routes[path];
-    if (route==null){
-      // although we had information about this app at the time this historical stat was added
-      // we didn't have any information about the routre
-      // this means the route has not been created yet
-      return 0;
-    } else {
-      return metricGetter(route);
-    }
+    return metricGetter(stats);
   }
 }
 
@@ -130,7 +72,6 @@ export var graphType = {
   QUEUED: 0,
   RUNNING: 1,
   COMPLETED: 2,
-  FAILED: 3,
 };
 
 // factory for background colors; simply iterate round these arrays of colors

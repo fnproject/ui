@@ -1,9 +1,8 @@
 <template >
   <div class="row">
-    <queued-graph :routes="routes" :stats="stats" :statshistory="statshistory" :appname="appname"></queued-graph>
-    <running-graph :routes="routes" :stats="stats" :statshistory="statshistory" :appname="appname"></running-graph>
-    <completed-graph :routes="routes" :stats="stats" :statshistory="statshistory" :appname="appname"></completed-graph>
-    <failed-graph :routes="routes" :stats="stats" :statshistory="statshistory" :appname="appname"></failed-graph>
+    <queued-graph :stats="stats" :statshistory="statshistory"></queued-graph>
+    <running-graph :stats="stats" :statshistory="statshistory"></running-graph>
+    <completed-graph :stats="stats" :statshistory="statshistory"></completed-graph>
   </div>
 </template>
 
@@ -12,21 +11,17 @@
   import RunningGraph from '../components/RunningGraph';
   import QueuedGraph from '../components/QueuedGraph';
   import CompletedGraph from '../components/CompletedGraph';
-  import FailedGraph from '../components/FailedGraph';
  
   export default {
     components: {
       QueuedGraph,
       RunningGraph,
       CompletedGraph,
-      FailedGraph
     },
     props: [
-      'routes',
       'completedLegendMarkup',
       'stats',
       'statshistory',
-      'appname'
     ]
   }
 </script>
