@@ -1,4 +1,4 @@
-// Utility functions used by the graph components QueuedGraph, RunningGraph, and CompletedGraph
+// Utility functions used by the graph components
 
 // Update the graph and legend for the specified chart using the data in chart.stats and chart.statshistory 
 export function updateChart (chart,graphTypeArg,isStacked) {
@@ -20,6 +20,10 @@ export function updateChart (chart,graphTypeArg,isStacked) {
       graphLegendDivName="completedGraphLegend";
       metricGetter=results => results.Complete;
       break;
+    case graphType.BUSY:
+      graphLegendDivName="busyGraphLegend";
+      metricGetter=results => results.Busy;
+      break;
   }
 
   if (chart.statshistory && chart.stats){
@@ -27,15 +31,52 @@ export function updateChart (chart,graphTypeArg,isStacked) {
     chart.datacollection["labels"]= chart.statshistory.map(eachStatistic => "" );
     chart.datacollection["datasets"]=[];
 
-    // update the graph
-    chart.total = displayMetric(chart,metricGetter,isStacked);
+    var totalCount = 0;
+
+    if (chart.appid == null) {
+      totalCount = displayGeneralMetric(chart, metricGetter, isStacked);
+    } else {
+      // display metrics for a specific app
+
+      var thisApp = chart.stats.Apps[chart.appid];
+      totalCount = processAppMetrics(chart, metricGetter, isStacked, thisApp);
+    }
+
+    chart.total = totalCount;
   }
 }
 
-// /display a single line on the specified chart, showing historical values of
+// extract app and fn details and display metrics for them accordingly
+function processAppMetrics(chart, metricGetter, isStacked, app) {
+  if (app === undefined) {
+    // There are no stats for this app e.g. if none of the functions
+    // have been run since the server started
+    return 0;
+  }
+
+  var totalCount = 0;
+
+  for (var fnId in app.Functions) {
+    var thisFn = app.Functions[fnId];
+
+    for (var imageName in thisFn.Images) {
+      var appDetails = {
+        'appId' : chart.appid,
+        'fnId' : fnId,
+        'imageName' : imageName,
+      };
+
+      totalCount += displayAppMetric(chart, metricGetter, isStacked, appDetails);
+    }
+  }
+
+  return totalCount;
+}
+
+// display a single line on the specified chart, showing historical values of
 // the metric in addition, return the current value of the metric
-function displayMetric(chart,metricGetter,isStacked) {
-  var value = getMetricFor(chart.stats,metricGetter);
+function displayGeneralMetric(chart, metricGetter, isStacked) {
+  var value = getMetricFor(chart.stats, metricGetter);
 
   // assemble an array containing historical values of the metric that this graph is displaying
   var plotHistory = [];
@@ -43,23 +84,88 @@ function displayMetric(chart,metricGetter,isStacked) {
     plotHistory.push(getMetricFor(chart.statshistory[i],metricGetter));
   }
 
-  var dataSet = {
-    label: 'Amount: ',
-    fill: isStacked, // Use fill for stacked charts to distingush them from non-stacked charts
-    backgroundColor: isStacked ? getBackgroundColorFor('/') : 'white', // Use a fill color for stacked charts
-    borderColor: getBorderColorFor('/'),
-    borderWidth: lineWidthInPixels,
-    radius:pointRadiusInPixels,
-    data: plotHistory
-  };
+  // The identifier is just used to map what colour this series should be
+  // listed as. As general metrics only have one series we don't need to
+  // use a unique identifier
+  var identifier = 'generalMetric';
+
+  var dataSet = generateDataSet(
+    'Amount',
+    isStacked,
+    getBackgroundColorFor(identifier),
+    getBorderColorFor(identifier),
+    plotHistory
+  );
+
   chart.datacollection["datasets"].push(dataSet);
+
   return value;
 }
 
-// return the metric value from the specified stats object for the specified ppName and path
-// if either the appName or path are not found then zero is returned
-function getMetricFor(stats,metricGetter){
-  if (stats==null){
+// display a single line on a chart detailing app metrics. In addition, return
+// the current value of the metric
+function displayAppMetric(chart, metricGetter, isStacked, appDetails) {
+  var appStats = getFnStatsFromApp(chart.stats, appDetails);
+  var value = getMetricFor(appStats, metricGetter);
+
+  var plotHistory = [];
+  for (var i = 0; i < chart.statshistory.length; i++) {
+    var historicStat = getFnStatsFromApp(chart.statshistory[i], appDetails);
+    var statsHistory = getMetricFor(historicStat, metricGetter);
+
+    plotHistory.push(statsHistory);
+  }
+
+  // Create a unique identifier for this metric
+  var identifier = Object.values(appDetails).join('-');
+
+  var dataSet = generateDataSet(
+    appDetails.imageName,
+    isStacked,
+    getBackgroundColorFor(identifier),
+    getBorderColorFor(identifier),
+    plotHistory
+  );
+
+  chart.datacollection["datasets"].push(dataSet);
+
+  return value;
+}
+
+// get stats object for Fn using the passed in appDetails
+function getFnStatsFromApp(stats, appDetails) {
+  try {
+    return stats.Apps[appDetails.appId].Functions[appDetails.fnId].Images[appDetails.imageName];
+  } catch (e) {
+    // The keys in the stats history won't exist to start with so just return
+    // null rather than crashing in this case
+    if(e instanceof TypeError) {
+      return null;
+    } else {
+      throw e;
+    }
+  }
+}
+
+// generate the Dataset that the Vue chart will use
+function generateDataSet(valueName, isStacked, backgroundColor, borderColor, statHistory) {
+  return {
+    label: valueName,
+    // Use a fill color to distingusih stacked and non-stacked charts
+    fill: isStacked,
+    // Use a fill color for stacked charts
+    backgroundColor: isStacked ? backgroundColor : 'white',
+    borderColor: borderColor,
+    borderWidth: lineWidthInPixels,
+    radius:pointRadiusInPixels,
+    data: statHistory
+  };
+}
+
+// return the metric value from the specified stats object. If the stats
+// object doesn't exist then zero is returned
+function getMetricFor(stats, metricGetter){
+  if (stats == null){
     // we didn't have any information about this app at the time this historical stat was added
     // either we have a partially-initialised statshistory or the app has not been created yet
     return 0;
@@ -72,6 +178,7 @@ export var graphType = {
   QUEUED: 0,
   RUNNING: 1,
   COMPLETED: 2,
+  BUSY: 3,
 };
 
 // factory for background colors; simply iterate round these arrays of colors

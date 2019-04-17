@@ -7,74 +7,13 @@ router.get('/', function(req, res) {
   successcb = function(data){
     // convert the raw Prometheus data to JSON in a form usable by the client
 
-    var queuedLabel = 'fn_queued';
-    var runningLabel = 'fn_running';
-    var completedlabel = "fn_completed";
+    var generalStatsParser = new GeneralStatsParser();
+    var appStatsParser = new AppStatsParser();
 
-    // Construct a RE to extract data from the raw Prometheus metrics data, which will include lines like
-    // "fn_completed 21"
+    var jsonData = generalStatsParser.parse(data);
+    var appData = appStatsParser.parse(data);
 
-    // metricNameRE matches any of the required metric names, and saves the metric name
-    var metricNameRE = '('+queuedLabel+'|'+runningLabel+'|'+completedlabel+')';
-
-    // labelNameRE matches a label name, which is anything that's not a = (equals sign), and saves the label name
-    var labelNameRE = '([^=]+)';   
-    // labelValueRE matches a label value, which is anything that's not a " (double quote), and save the label value
-    var labelValueRE = '\"([^\"]*)\"'; 
-    // labelRE is a combined label name/value pair
-    var labelRE = labelNameRE+'='+labelValueRE;
-
-    // spacesRE matches one or more spaces
-    var spacesRE = '\\s+';            
-    //  valueRE matches one or more numeric digits, and saves the metric value
-    var valueRE = '(\\d+)'             
-    
-    // allMetricsRE is the complete RE (allowing for more than two labels)
-    var allMetricsRE    = '^' + metricNameRE + spacesRE + valueRE;
-
-    var regex = RegExp(allMetricsRE,'gm');
-
-    // metricData contains the data extracted from a single line of /metrics data
-    var metricData;
-
-    //metricData[0] = the whole line (only used in error messages)
-    //metricData[1] = metric name (one of fn_queued|fn_running|fn_completed)
-    //metricData[2] = metric value (integer)
-    const WHOLE_MATCH = 0;
-    const METRIC_NAME = 1;
-    const METRIC_VALUE = 2;
-
-    // jsonData is an object representation of the JSON data that will be returned to the client
-    var jsonData = {"Queue":0, "Running":0, "Complete":0}
-
-    while ((metricData = regex.exec(data)) !== null) {
-      // we have found a single metric value
-
-      if (metricData.length < 3){
-        logger.error("Unexpected metrics data: " + metricData[WHOLE_MATCH]);
-        continue;
-      }
-
-      logger.debug("Processing " + metricData[WHOLE_MATCH]);
-
-      // get metric name
-      var metricName = metricData[METRIC_NAME];
-
-      // get metric value
-      var metricValue = parseInt(metricData[METRIC_VALUE]);
-
-      switch (metricName){
-        case queuedLabel:
-        jsonData.Queue=metricValue;
-        break;
-        case runningLabel:
-        jsonData.Running=metricValue;
-        break;
-        case completedlabel:
-        jsonData.Complete=metricValue;
-        break;
-      }
-    }
+    jsonData['Apps'] = appData;
 
     res.json(jsonData);
   }
@@ -84,5 +23,213 @@ router.get('/', function(req, res) {
 
 });
 
+/**
+ * The Stats Parser class provides base functionality that individual stats
+ * parsers can reuse. It's designed for individual parsers to inherit from.
+ */
+class StatsParser {
+    constructor() {
+      // Captures the key in a Javascript Object Literal (i.e. everything before the equals sign)
+      var labelNameRE = '([^=]+)';
+
+      // Captures the value in a Javascript Object Literal (i.e. anything between the double quotes)
+      var labelValueRE = '\"([^\"]*)\"';
+
+      // Matches the key/value pair in a Javascript Object Literal
+      this._labelRE = labelNameRE + '=' + labelValueRE;
+
+      this._spacesRE = '\\s+';
+      this._valueRE = '(\\d+)';
+    }
+}
+
+/**
+ * This parser is used to parse the fn_queue, fn_running and fn_complete data
+ * from the Fn server's metrics API. This data isn't app specific, but is for
+ * the whole system.
+ */
+class GeneralStatsParser extends StatsParser {
+  constructor() {
+    super();
+
+    this._metricNames = {
+      'fn_queued': 'Queue',
+      'fn_running': 'Running',
+      'fn_completed': 'Complete',
+    };
+
+    var metricNameRE = '(' + Object.keys(this._metricNames).join('|') + ')';
+    var metricsRE = '^' + metricNameRE + this._spacesRE + this._valueRE;
+
+    this._regex = RegExp(metricsRE, 'gm');
+
+    //regexMatch[0] = the whole match
+    //regexMatch[1] = metric name (e.g. fn_completed)
+    //regexMatch[2] = metric value (integer)
+    this._WHOLE_MATCH = 0;
+    this._METRIC_NAME = 1;
+    this._METRIC_VALUE = 2;
+  }
+
+  /*
+   * Parse the Fn server stats data and return an object containing the
+   * results.
+   *
+   * Example data structure for object being returned:
+   * Complete: 3
+   * Queue: 0
+   * Running: 1
+   *
+   * @param {String} data   the data to parse.
+   *
+   * @return {Object}       an object representing the parsed data as per the
+   *                        documentation above.
+   */
+  parse(data) {
+    var jsonData = {};
+
+    var metricData;
+    while((metricData = this._regex.exec(data)) !== null) {
+        logger.debug(
+          "Processing General Stat: " + metricData[this._WHOLE_MATCH]
+        );
+
+        var metricsName = metricData[this._METRIC_NAME];
+        var metricsHumanName = this._metricNames[metricsName];
+        var metricsValue = parseInt(metricData[this._METRIC_VALUE]);
+
+        jsonData[metricsHumanName] = metricsValue;
+    }
+
+    return jsonData;
+  }
+}
+
+/**
+ * This class is used to parse app specific stats from the Fn server's metrics
+ * API.
+ */
+class AppStatsParser extends StatsParser {
+  constructor() {
+    super();
+
+    this._metricNames = {
+      'fn_container_start_total': 'Starting',
+      'fn_container_busy_total': 'Busy',
+      'fn_container_idle_total': 'Idling',
+      'fn_container_paused_total': 'Paused',
+      'fn_container_wait_total': 'Waiting',
+    };
+
+    var metricNameRE = '(' + Object.keys(this._metricNames).join('|') + ')';
+
+    // unfortunately we cannot use ((?:, labelRE)+) as it won't capture the
+    // middle key-value pair
+    var metricsRE = '^' + metricNameRE + '{' + this._labelRE + ',' + this._labelRE + ',' + this._labelRE + '}' + this._spacesRE + this._valueRE;
+
+    this._regex = RegExp(metricsRE, 'gm');
+
+    //regexMatch[0] = the whole match
+    //regexMatch[1] = metric name (e.g. fn_container_busy_total)
+    //regexMatch[2-7] = keys and values for fn data (e.g. app_id, $app_id, fn_id, $fn_id, image_name, $image_name)
+    //regexMatch[8] = metric value (integer)
+    this._WHOLE_MATCH = 0;
+    this._METRIC_NAME = 1;
+    this._FN_DATA_START = 2;
+    this._FN_DATA_END = 8;
+    this._METRIC_VALUE = this._FN_DATA_END;
+  }
+
+  /*
+   * Parse the stats data and return an object containing the app specific
+   * stats.
+   *
+   * Example data structure for object being returned:
+   * 01D8JQSKDENG8G00GZJ000000B
+   *  Functions
+   *    01D8JQSQ2VNG8G00GZJ000000C
+   *      Images
+   *        fndemouser/myimage:0.0.2
+   *          Busy: 1
+   *          Idling: 0
+   *          Paused: 0
+   *          Starting: 0
+   *          Waiting: 0
+   *        fndemouser/myimage:0.0.3
+   *          Busy: 0
+   *          Idling: 0
+   *          Paused: 0
+   *          Starting: 0
+   *          Waiting: 1
+   *
+   * @param {String} data   the data to parse.
+   *
+   * @return {Object}       an object representing the parsed data as per the
+   *                        documentation above.
+   */
+  parse(data) {
+    var jsonData = {};
+
+    var metricData;
+    while((metricData = this._regex.exec(data)) !== null) {
+      logger.debug("Processing App Stat: " + metricData[0]);
+
+      var metricsName = metricData[this._METRIC_NAME];
+      var metricsHumanName = this._metricNames[metricsName];
+      var metricsValue = parseInt(metricData[this._METRIC_VALUE]);
+
+      // The FN data is parsed as a list with the key in the first index and
+      // the value in the next e.g. [key1, value1, key2, value2...].
+      // Iterate over this list extracting the key-value pairs and put them
+      // into a better data structure.
+      var fnDataList = metricData.slice(this._FN_DATA_START, this._FN_DATA_END);
+      var fnData = {};
+      for(var i = 1; i < fnDataList.length; i += 2) {
+        var key = fnDataList[i-1];
+        var value = fnDataList[i];
+        fnData[key] = value;
+      }
+
+      jsonData = this._addData(jsonData, fnData.app_id, fnData.fn_id,
+        fnData.image_name, metricsHumanName, metricsValue
+      );
+    }
+
+    return jsonData;
+  }
+
+  _fnData(fnDataList) {
+  }
+
+  /**
+   * Adds App Data to the object that we're going to return.
+   *
+   * @param {Object} data   the object to append the data to.
+   * @param {String} appId  the ID of the Fn App which this data belongs to.
+   * @param {String} fnId   the ID of the Fn function which this data belongs to.
+   * @param {String} imageName  the image name for the Fn function this data belongs to.
+   * @param {String} metricsHumanName   the human readable name of the metric being recorded.
+   * @param {Int} metricsValue  the value of the metric that was parsed.
+   *
+   * @return {Object}   the data object with the app data added.
+   */
+  _addData(data, appId, fnId, imageName, metricsHumanName, metricsValue) {
+    if(data[appId] === undefined) {
+      data[appId] = {'Functions': {}};
+    }
+
+    if(data[appId].Functions[fnId] === undefined) {
+      data[appId].Functions[fnId] = {'Images': {}};
+    }
+
+    if(data[appId].Functions[fnId].Images[imageName] === undefined) {
+      data[appId].Functions[fnId].Images[imageName] = {};
+    }
+
+    data[appId].Functions[fnId].Images[imageName][metricsHumanName] = metricsValue;
+
+    return data;
+  }
+}
 
 module.exports = router;
