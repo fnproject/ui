@@ -1,30 +1,13 @@
 // Utility functions used by the graph components
 
 // Update the graph and legend for the specified chart using the data in chart.stats and chart.statshistory 
-export function updateChart (chart,graphTypeArg,isStacked) {
+export function updateChart (chart) {
 
-  // work out the name of the div that contains the legend: this must exist in the corresponding *Graph.vue file
   // work out the function to extract the required metric from a stats object from JSON
-  var graphLegendDivName
-  var metricGetter;
-  switch(graphTypeArg){
-    case graphType.QUEUED:
-      graphLegendDivName="queuedGraphLegend";
-      metricGetter=results => results.Queue;
-      break;
-    case graphType.RUNNING:
-      graphLegendDivName="runningGraphLegend";
-      metricGetter=results => results.Running;
-      break;
-    case graphType.COMPLETED:
-      graphLegendDivName="completedGraphLegend";
-      metricGetter=results => results.Complete;
-      break;
-    case graphType.BUSY:
-      graphLegendDivName="busyGraphLegend";
-      metricGetter=results => results.Busy;
-      break;
-  }
+  var metricGetter = chart.chartConfig.METRIC_GETTER;
+
+  var chartLegendDivName = chart.chartConfig.LEGEND_DIV_NAME;
+  var isStacked = chart.chartConfig.isStacked;
 
   if (chart.statshistory && chart.stats){
     chart.datacollection = {};
@@ -78,7 +61,7 @@ function processAppMetrics(chart, metricGetter, isStacked, app) {
 function displayGeneralMetric(chart, metricGetter, isStacked) {
   var value = getMetricFor(chart.stats, metricGetter);
 
-  // assemble an array containing historical values of the metric that this graph is displaying
+  // assemble an array containing historical values of the metric that this chart is displaying
   var plotHistory = [];
   for (var i = 0; i < chart.statshistory.length; i++) {
     plotHistory.push(getMetricFor(chart.statshistory[i],metricGetter));
@@ -174,12 +157,32 @@ function getMetricFor(stats, metricGetter){
   }
 }
 
-export var graphType = {
-  QUEUED: 0,
-  RUNNING: 1,
-  COMPLETED: 2,
-  BUSY: 3,
-};
+export var chartConfig = {
+  QUEUED: {
+    NAME: 'Queued',
+    LEGEND_DIV_NAME: 'queuedChartLegend',
+    METRIC_GETTER: results => results.Queue,
+    IS_STACKED: false,
+  },
+  RUNNING: {
+    NAME: 'Running',
+    LEGEND_DIV_NAME: 'runningChartLegend',
+    METRIC_GETTER: results => results.Running,
+    IS_STACKED: false,
+  },
+  COMPLETED: {
+    NAME: 'Completed',
+    LEGEND_DIV_NAME: 'completedChartLegend',
+    METRIC_GETTER: results => results.Complete,
+    IS_STACKED: true,
+  },
+  BUSY: {
+    NAME: 'Busy',
+    LEGEND_DIV_NAME: 'busyChartLegend',
+    METRIC_GETTER: results => results.Busy,
+    IS_STACKED: false,
+  },
+}
 
 // factory for background colors; simply iterate round these arrays of colors
 const backgroundColors = ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(255, 206, 86, 0.2)', 'rgba(75, 192, 192, 0.2)', 'rgba(153, 102, 255, 0.2)', 'rgba(255, 159, 64, 0.2)' ];

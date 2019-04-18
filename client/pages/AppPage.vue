@@ -85,7 +85,7 @@
         </label>
       </div>
     </h3>
-    <app-stats-chart :fns="fns" :stats="stats" :statshistory="statshistory" :appid="appid"></app-stats-chart>
+    <stats-charts :showAppCharts=true :stats="stats" :statshistory="statshistory" :appid="appid"></stats-charts>
 
     <fn-function-form :app="app"></fn-function-form>
     <fn-run-function :app="app"></fn-run-function>
@@ -94,7 +94,7 @@
 
 <script>
 //import Modal from '../lib/vue-bootstrap-modal.vue';
-import AppStatsChart from '../components/AppStatsChart'
+import StatsCharts from '../components/StatsCharts'
 import FnFunctionForm from '../components/FnFunctionForm';
 import FnRunFunction from '../components/FnRunFunction';
 import { eventBus } from '../client';
@@ -112,7 +112,7 @@ export default {
     }
   },
   components: {
-    AppStatsChart,
+    StatsCharts,
     FnFunctionForm,
     FnRunFunction
   },

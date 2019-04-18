@@ -79,7 +79,7 @@
       </div>
     </h3>
             
-    <stats-chart :stats="stats" :statshistory="statshistory"></stats-chart>
+    <stats-charts :showGeneralCharts=true :stats="stats" :statshistory="statshistory"></stats-charts>
 
     <!-- Define the "Create New App" modal -->
     <fn-app-form></fn-app-form>
@@ -88,7 +88,7 @@
 
 <script>
 import FnAppForm from '../components/FnAppForm';
-import StatsChart from '../components/StatsChart'
+import StatsCharts from '../components/StatsCharts'
 import { eventBus } from '../client';
 import { defaultErrorHandler, getAuthToken } from '../lib/helpers';
 
@@ -101,7 +101,7 @@ export default {
   },
   components: {
     FnAppForm,
-    StatsChart
+    StatsCharts
   },
   methods: {
     indexPageAutoRefreshButtonClicked: function(checkboxElem) {
