@@ -26,6 +26,51 @@ export function updateChart (chart) {
     }
 
     chart.total = totalCount;
+
+    if(chart.chartConfig.SHOW_LEGEND) {
+      updateLegend(chart, chartLegendDivName);
+    }
+  }
+}
+
+// now examine the data that the graph is displaying and use it to construct the legend
+function updateLegend(chart, chartLegendDivName) {
+  var legendElement = document.getElementById(chartLegendDivName);
+
+  var html = [];
+  html.push("<ul class='chartLegend'>");
+
+  var chartDataDatasets = chart.datacollection["datasets"];
+  var chartDataDatasetsLength = chartDataDatasets.length;
+
+  for (var i = 0; i < chartDataDatasets.length; i++) {
+    var bgColor = chartDataDatasets[i].backgroundColor;
+    var borderColor = chartDataDatasets[i].borderColor;
+
+    html.push(`
+      <li>
+        <span
+          class='chartLabelEmblem'
+          style='background-color:${bgColor};border-color:${borderColor};'
+        ></span>`
+    );
+
+    if (chartDataDatasets[i].label) {
+      var currentValue = chartDataDatasets[i].data.slice(-1);
+      html.push(`
+        <span class='chartLabelText'>
+          ${chartDataDatasets[i].label}: ${currentValue}
+        </span>`
+      );
+    }
+
+    html.push('</li>');
+  }
+
+  html.push('</ul>');
+
+  if (legendElement != null){
+    legendElement.innerHTML = html.join('');
   }
 }
 
@@ -168,24 +213,28 @@ export var chartConfig = {
     LEGEND_DIV_NAME: 'queuedChartLegend',
     METRIC_GETTER: results => results.Queue,
     IS_STACKED: false,
+    SHOW_LEGEND: false,
   },
   RUNNING: {
     NAME: 'Running',
     LEGEND_DIV_NAME: 'runningChartLegend',
     METRIC_GETTER: results => results.Running,
     IS_STACKED: false,
+    SHOW_LEGEND: false,
   },
   COMPLETED: {
     NAME: 'Completed',
     LEGEND_DIV_NAME: 'completedChartLegend',
     METRIC_GETTER: results => results.Complete,
     IS_STACKED: true,
+    SHOW_LEGEND: false,
   },
   BUSY: {
     NAME: 'Busy',
     LEGEND_DIV_NAME: 'busyChartLegend',
     METRIC_GETTER: results => results.Busy,
     IS_STACKED: false,
+    SHOW_LEGEND: true,
   },
 }
 
