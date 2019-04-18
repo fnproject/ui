@@ -6,7 +6,7 @@
         <individual-stats-chart :chartConfig="completedChartConfig" :stats="stats" :statshistory="statshistory"></individual-stats-chart>
     </template>
     <template v-if="showAppCharts">
-        <individual-stats-chart :chartConfig="busyChartConfig" :stats="stats" :statshistory="statshistory" :appid="appid"></individual-stats-chart>
+        <individual-stats-chart :chartConfig="busyChartConfig" :stats="stats" :statshistory="statshistory" :appid="appid" :fns="fns"></individual-stats-chart>
     </template>
   </div>
 </template>
@@ -25,6 +25,7 @@
       'stats',
       'statshistory',
       'appid',
+      'fns',
       'showGeneralCharts',
       'showAppCharts',
     ],

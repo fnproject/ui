@@ -148,19 +148,17 @@ class AppStatsParser extends StatsParser {
    * 01D8JQSKDENG8G00GZJ000000B
    *  Functions
    *    01D8JQSQ2VNG8G00GZJ000000C
-   *      Images
-   *        fndemouser/myimage:0.0.2
-   *          Busy: 1
-   *          Idling: 0
-   *          Paused: 0
-   *          Starting: 0
-   *          Waiting: 0
-   *        fndemouser/myimage:0.0.3
-   *          Busy: 0
-   *          Idling: 0
-   *          Paused: 0
-   *          Starting: 0
-   *          Waiting: 1
+   *      Busy: 1
+   *      Idling: 0
+   *      Paused: 0
+   *      Starting: 0
+   *      Waiting: 0
+   *    01D8JQSQ2VNG8G00GZJ000000D
+   *      Busy: 0
+   *      Idling: 0
+   *      Paused: 0
+   *      Starting: 0
+   *      Waiting: 1
    *
    * @param {String} data   the data to parse.
    *
@@ -191,7 +189,7 @@ class AppStatsParser extends StatsParser {
       }
 
       jsonData = this._addData(jsonData, fnData.app_id, fnData.fn_id,
-        fnData.image_name, metricsHumanName, metricsValue
+        metricsHumanName, metricsValue
       );
     }
 
@@ -207,26 +205,26 @@ class AppStatsParser extends StatsParser {
    * @param {Object} data   the object to append the data to.
    * @param {String} appId  the ID of the Fn App which this data belongs to.
    * @param {String} fnId   the ID of the Fn function which this data belongs to.
-   * @param {String} imageName  the image name for the Fn function this data belongs to.
    * @param {String} metricsHumanName   the human readable name of the metric being recorded.
    * @param {Int} metricsValue  the value of the metric that was parsed.
    *
    * @return {Object}   the data object with the app data added.
    */
-  _addData(data, appId, fnId, imageName, metricsHumanName, metricsValue) {
+  _addData(data, appId, fnId, metricsHumanName, metricsValue) {
     if(data[appId] === undefined) {
       data[appId] = {'Functions': {}};
     }
 
     if(data[appId].Functions[fnId] === undefined) {
-      data[appId].Functions[fnId] = {'Images': {}};
+      data[appId].Functions[fnId] = {};
     }
 
-    if(data[appId].Functions[fnId].Images[imageName] === undefined) {
-      data[appId].Functions[fnId].Images[imageName] = {};
+    // Aggregate data for all fn images
+    if(metricsHumanName in data[appId].Functions[fnId]) {
+      data[appId].Functions[fnId][metricsHumanName] += metricsValue;
+    } else {
+      data[appId].Functions[fnId][metricsHumanName] = metricsValue;
     }
-
-    data[appId].Functions[fnId].Images[imageName][metricsHumanName] = metricsValue;
 
     return data;
   }

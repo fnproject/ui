@@ -85,7 +85,7 @@
         </label>
       </div>
     </h3>
-    <stats-charts :showAppCharts=true :stats="stats" :statshistory="statshistory" :appid="appid"></stats-charts>
+    <stats-charts :showAppCharts=true :stats="stats" :statshistory="statshistory" :appid="appid" :fns="fns"></stats-charts>
 
     <fn-function-form :app="app"></fn-function-form>
     <fn-run-function :app="app"></fn-run-function>

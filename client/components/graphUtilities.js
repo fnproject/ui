@@ -39,18 +39,23 @@ function processAppMetrics(chart, metricGetter, isStacked, app) {
 
   var totalCount = 0;
 
+  // Create a cache mapping of fnId to fnName so we don't need to keep
+  // iterating over the array trying to find the correct name for an id
+  var fnsCache = {};
+  chart.fns.forEach(function(fn) {
+    fnsCache[fn.id] = fn.name;
+  });
+
   for (var fnId in app.Functions) {
     var thisFn = app.Functions[fnId];
 
-    for (var imageName in thisFn.Images) {
-      var appDetails = {
-        'appId' : chart.appid,
-        'fnId' : fnId,
-        'imageName' : imageName,
-      };
+    var appDetails = {
+      'appId' : chart.appid,
+      'fnId' : fnId,
+      'fnName' : fnsCache[fnId],
+    };
 
-      totalCount += displayAppMetric(chart, metricGetter, isStacked, appDetails);
-    }
+    totalCount += displayAppMetric(chart, metricGetter, isStacked, appDetails);
   }
 
   return totalCount;
@@ -103,7 +108,7 @@ function displayAppMetric(chart, metricGetter, isStacked, appDetails) {
   var identifier = Object.values(appDetails).join('-');
 
   var dataSet = generateDataSet(
-    appDetails.imageName,
+    appDetails.fnName,
     isStacked,
     getBackgroundColorFor(identifier),
     getBorderColorFor(identifier),
@@ -118,7 +123,7 @@ function displayAppMetric(chart, metricGetter, isStacked, appDetails) {
 // get stats object for Fn using the passed in appDetails
 function getFnStatsFromApp(stats, appDetails) {
   try {
-    return stats.Apps[appDetails.appId].Functions[appDetails.fnId].Images[appDetails.imageName];
+    return stats.Apps[appDetails.appId].Functions[appDetails.fnId];
   } catch (e) {
     // The keys in the stats history won't exist to start with so just return
     // null rather than crashing in this case

@@ -45,7 +45,8 @@
       'stats',
       'statshistory',
       'chartConfig',
-      'appid' // this will be unset if this chart is for all apps
+      'appid', // this will be unset if this chart is for all apps
+      'fns', // this will be unset if this chart is for all apps
     ],
     data () {
       return {
