@@ -208,6 +208,8 @@ function getMetricFor(stats, metricGetter){
 }
 
 export var chartConfig = {
+
+  // General charts
   QUEUED: {
     NAME: 'Queued',
     LEGEND_DIV_NAME: 'queuedChartLegend',
@@ -229,10 +231,40 @@ export var chartConfig = {
     IS_STACKED: true,
     SHOW_LEGEND: false,
   },
+
+  // Charts for app data
   BUSY: {
     NAME: 'Busy',
     LEGEND_DIV_NAME: 'busyChartLegend',
     METRIC_GETTER: results => results.Busy,
+    IS_STACKED: false,
+    SHOW_LEGEND: true,
+  },
+  IDLING: {
+    NAME: 'Idling',
+    LEGEND_DIV_NAME: 'idlingChartLegend',
+    METRIC_GETTER: results => results.Idling,
+    IS_STACKED: false,
+    SHOW_LEGEND: true,
+  },
+  PAUSED: {
+    NAME: 'Paused',
+    LEGEND_DIV_NAME: 'pausedChartLegend',
+    METRIC_GETTER: results => results.Paused,
+    IS_STACKED: false,
+    SHOW_LEGEND: true,
+  },
+  STARTING: {
+    NAME: 'Starting',
+    LEGEND_DIV_NAME: 'startingChartLegend',
+    METRIC_GETTER: results => results.Starting,
+    IS_STACKED: false,
+    SHOW_LEGEND: true,
+  },
+  WAITING: {
+    NAME: 'Waiting',
+    LEGEND_DIV_NAME: 'waitingChartLegend',
+    METRIC_GETTER: results => results.Waiting,
     IS_STACKED: false,
     SHOW_LEGEND: true,
   },

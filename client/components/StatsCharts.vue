@@ -6,7 +6,11 @@
         <individual-stats-chart :chartConfig="completedChartConfig" :stats="stats" :statshistory="statshistory"></individual-stats-chart>
     </template>
     <template v-if="showAppCharts">
+        <individual-stats-chart :chartConfig="startingChartConfig" :stats="stats" :statshistory="statshistory" :appid="appid" :fns="fns"></individual-stats-chart>
+        <individual-stats-chart :chartConfig="waitingChartConfig" :stats="stats" :statshistory="statshistory" :appid="appid" :fns="fns"></individual-stats-chart>
         <individual-stats-chart :chartConfig="busyChartConfig" :stats="stats" :statshistory="statshistory" :appid="appid" :fns="fns"></individual-stats-chart>
+        <individual-stats-chart :chartConfig="idlingChartConfig" :stats="stats" :statshistory="statshistory" :appid="appid" :fns="fns"></individual-stats-chart>
+        <individual-stats-chart :chartConfig="pausedChartConfig" :stats="stats" :statshistory="statshistory" :appid="appid" :fns="fns"></individual-stats-chart>
     </template>
   </div>
 </template>
@@ -34,7 +38,12 @@
         queuedChartConfig: chartConfig.QUEUED,
         runningChartConfig: chartConfig.RUNNING,
         completedChartConfig: chartConfig.COMPLETED,
+
+        startingChartConfig: chartConfig.STARTING,
+        waitingChartConfig: chartConfig.WAITING,
         busyChartConfig: chartConfig.BUSY,
+        idlingChartConfig: chartConfig.IDLING,
+        pausedChartConfig: chartConfig.PAUSED,
       }
     }
   }
