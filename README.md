@@ -32,7 +32,7 @@ All functions in an app:
 
 ```sh
 npm install
-sudo npm install -g webpack
+sudo npm install -g webpack@^1.14.0
 ```
 
 ### 2) Start Functions API (see [Fn on GitHub](http://github.com/fnproject/fn))

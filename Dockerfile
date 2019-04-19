@@ -6,7 +6,7 @@ WORKDIR /app
 
 # Install app dependencies
 ENV NPM_CONFIG_LOGLEVEL warn
-RUN npm install webpack -g
+RUN npm install -g webpack@^1.14.0
 COPY package.json /app
 RUN npm install
 
