@@ -97,6 +97,14 @@ exports.requestCB = function (successcb, errorcb, error, response, body) {
     } catch (e) {
       console.warn("Can not parse json:", body, e);
     };
+
+    // A 204 status code indicates a success but there won't be any data. E.g.
+    // on the deletion of an app. This will throw an error down the line so
+    // initialise parsed.
+    if (!parsed && response.statusCode == 204) {
+      parsed = {};
+    }
+
     if (parsed){
       successcb(parsed);
     } else {

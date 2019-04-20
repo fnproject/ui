@@ -185,7 +185,7 @@ export default {
       eventBus.$emit('AppOpened', this.app);
     },
     appSwitched: function(){
-      this.loadApp(this.$route.params.appname, () => { this.appLoaded(); });
+      this.loadApp(this.$route.params.appid, () => { this.appLoaded(); });
     }
   },
   watch: {
@@ -195,10 +195,10 @@ export default {
     // access to component instance via `vm`
     next(vm => {
       if (vm.apps){
-        vm.app = _.find(vm.apps, (app) => {return app.name == to.params.appname});
+        vm.app = _.find(vm.apps, (app) => {return app.id == to.params.appid});
         vm.appLoaded();
       } else {
-        vm.loadApp(to.params.appname, () => { vm.appLoaded(); });
+        vm.loadApp(to.params.appid, () => { vm.appLoaded(); });
       }
     })
   },

@@ -23,7 +23,7 @@ const numXValues = 50;
 const router = new VueRouter({
   routes: [
     { path: '/', component: IndexPage },
-    { path: '/app/:appname', component: AppPage }
+    { path: '/app/:appid', component: AppPage }
   ]
 });
 

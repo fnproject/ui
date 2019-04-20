@@ -18,10 +18,10 @@
 </div>
 
     <ul class="nav nav-sidebar" v-if="app">
-      <li :class="{active: app && app.name == a.name}"  v-for="a in apps">
-        <router-link :to="'/app/' + encodeURIComponent(a.name)">
+      <li :class="{active: app && app.id == a.id}"  v-for="a in apps">
+        <router-link :to="'/app/' + encodeURIComponent(a.id)">
           {{a.name}}
-          <span class="sr-only" v-if="app && app.name == a.name">(current)</span>
+          <span class="sr-only" v-if="app && app.id== a.id">(current)</span>
         </router-link>
       </li>
     </ul>
