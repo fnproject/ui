@@ -94,10 +94,17 @@ function processAppMetrics(chart, metricGetter, isStacked, app) {
   for (var fnId in app.Functions) {
     var thisFn = app.Functions[fnId];
 
+    // Handle the cases where the fn server doesn't return fnIds in its
+    // metrics API or if the server doesn't know the name of the function
+    var fnName = fnsCache[fnId];
+    if (!fnName) {
+      fnName = 'Unknown Function';
+    }
+
     var appDetails = {
       'appId' : chart.appid,
       'fnId' : fnId,
-      'fnName' : fnsCache[fnId],
+      'fnName' : fnName,
     };
 
     totalCount += displayAppMetric(chart, metricGetter, isStacked, appDetails);

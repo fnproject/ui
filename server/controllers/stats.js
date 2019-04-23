@@ -44,6 +44,39 @@ class StatsParser {
 }
 
 /**
+ * This class is used to parse Javascript literal object data e.g.
+ * {appId="01FDACB01",fnID="01FDACC02",image="fnproject/hello"}
+ */
+class LabelParser extends StatsParser {
+  constructor() {
+    super();
+
+    this._regex = RegExp(this._labelRE + ',?', 'gm');
+
+    this._WHOLE_MATCH = 0;
+    this._LABEL_KEY = 1;
+    this._LABEL_VALUE = 2;
+  }
+
+  parse(data) {
+    // Remove the start and end curly braces as they're not part of the data
+    data = data.replace(/^{|}$/g, '');
+
+    var jsonData = {};
+
+    var labelData;
+    while((labelData = this._regex.exec(data)) !== null) {
+        var labelKey = labelData[this._LABEL_KEY];
+        var labelValue = labelData[this._LABEL_VALUE];
+
+        jsonData[labelKey] = labelValue;
+    }
+
+    return jsonData;
+  }
+}
+
+/**
  * This parser is used to parse the fn_queue, fn_running and fn_complete data
  * from the Fn server's metrics API. This data isn't app specific, but is for
  * the whole system.
@@ -123,21 +156,23 @@ class AppStatsParser extends StatsParser {
 
     var metricNameRE = '(' + Object.keys(this._metricNames).join('|') + ')';
 
+    // Match fn container info e.g. {app_id="01D8JQSKDENG8G00GZJ000000B"}
+    var fnDataRE = '{' + '[^}]+' + '}';
+
     // unfortunately we cannot use ((?:, labelRE)+) as it won't capture the
     // middle key-value pair
-    var metricsRE = '^' + metricNameRE + '{' + this._labelRE + ',' + this._labelRE + ',' + this._labelRE + '}' + this._spacesRE + this._valueRE;
+    var metricsRE = '^' + metricNameRE + '(' + fnDataRE + ')' + this._spacesRE + this._valueRE;
 
     this._regex = RegExp(metricsRE, 'gm');
 
     //regexMatch[0] = the whole match
     //regexMatch[1] = metric name (e.g. fn_container_busy_total)
-    //regexMatch[2-7] = keys and values for fn data (e.g. app_id, $app_id, fn_id, $fn_id, image_name, $image_name)
-    //regexMatch[8] = metric value (integer)
+    //regexMatch[2] = fn data in javascript object notation (e.g. {app_id="01D7"})
+    //regexMatch[3] = metric value (integer)
     this._WHOLE_MATCH = 0;
     this._METRIC_NAME = 1;
-    this._FN_DATA_START = 2;
-    this._FN_DATA_END = 8;
-    this._METRIC_VALUE = this._FN_DATA_END;
+    this._FN_DATA = 2;
+    this._METRIC_VALUE = 3;
   }
 
   /*
@@ -168,6 +203,7 @@ class AppStatsParser extends StatsParser {
   parse(data) {
     var jsonData = {};
 
+    var labelParser = new LabelParser();
     var metricData;
     while((metricData = this._regex.exec(data)) !== null) {
       logger.debug("Processing App Stat: " + metricData[0]);
@@ -176,17 +212,8 @@ class AppStatsParser extends StatsParser {
       var metricsHumanName = this._metricNames[metricsName];
       var metricsValue = parseInt(metricData[this._METRIC_VALUE]);
 
-      // The FN data is parsed as a list with the key in the first index and
-      // the value in the next e.g. [key1, value1, key2, value2...].
-      // Iterate over this list extracting the key-value pairs and put them
-      // into a better data structure.
-      var fnDataList = metricData.slice(this._FN_DATA_START, this._FN_DATA_END);
-      var fnData = {};
-      for(var i = 1; i < fnDataList.length; i += 2) {
-        var key = fnDataList[i-1];
-        var value = fnDataList[i];
-        fnData[key] = value;
-      }
+      var rawFnData = metricData[this._FN_DATA];
+      var fnData = labelParser.parse(rawFnData);
 
       jsonData = this._addData(jsonData, fnData.app_id, fnData.fn_id,
         metricsHumanName, metricsValue
@@ -194,9 +221,6 @@ class AppStatsParser extends StatsParser {
     }
 
     return jsonData;
-  }
-
-  _fnData(fnDataList) {
   }
 
   /**
