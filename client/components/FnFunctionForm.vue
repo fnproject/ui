@@ -39,15 +39,17 @@
         <label class="col-sm-3 control-label">Config</label>
         <div class="col-sm-9">
           <div class="row" v-for="(line, index) in fnConfig">
-            <div class="col-sm-5 cfg-key">
-              <input type="text" class="form-control" placeholder="Key" v-model="line.key" @keydown.enter.prevent="">
-            </div>
-            <div class="col-sm-5 cfg-val">
-              <input type="text" class="form-control" placeholder="Value" v-model="line.value" @keydown.enter.prevent="">
-            </div>
-            <div class="col-sm-1 toolbar">
-              <button class="btn btn-default" @click.prevent="removeConfigLine(index)"><i class="fa fa-times"></i></button>
-            </div>
+            <template v-if="!line.delete">
+              <div class="col-sm-5 cfg-key">
+                <input type="text" class="form-control" placeholder="Key" v-model="line.key" @keydown.enter.prevent="">
+              </div>
+              <div class="col-sm-5 cfg-val">
+                <input type="text" class="form-control" placeholder="Value" v-model="line.value" @keydown.enter.prevent="">
+              </div>
+              <div class="col-sm-1 toolbar">
+                <button class="btn btn-default" @click.prevent="removeConfigLine(index)"><i class="fa fa-times"></i></button>
+              </div>
+            </template>
           </div>
           <div>
             <a href="#" class="" @click.prevent="addConfigLine">
@@ -104,10 +106,13 @@ export default {
       this.show = false;
     },
     addConfigLine: function(){
-      this.fnConfig.push({key: "", value: ""});
+      this.fnConfig.push({key: "", value: "", delete: false});
     },
     removeConfigLine: function(index){
-      this.fnConfig.splice(index, 1)
+      // The entry needs to exist to distinguish between deletion and not
+      // updating it. Therefore, set the value to empty and hide it
+      this.fnConfig[index].value = "";
+      this.fnConfig[index].delete = true;
     },
     ok: function(){
       var t = this;
