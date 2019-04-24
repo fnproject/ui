@@ -1,10 +1,10 @@
 <template>
   <div>
 
-    <a class="navbar-brand" href="#">
+    <router-link class="navbar-brand" to="/">
         <!-- See also banner for small devices in index.html -->
         <img class="navbar-brand" src="/images/icons/fn_transparent.png">
-    </a>
+    </router-link>
     <div>
     <div v-if="!loggedIn">
         <button type="button" class="btn btn-default" @click='login' :disabled="loggingin">
