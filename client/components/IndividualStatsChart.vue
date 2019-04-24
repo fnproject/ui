@@ -1,15 +1,15 @@
 <template >
   <div class="singleChart">
-    <h4 class="chart-title">Queued: {{this.total}}</h4>
-    <div id="queuedGraphLegend"></div>
-    <line-chart 
+      <h4 class="chart-title">{{chartConfig.NAME}}: {{this.total}}</h4>
+      <div :id="chartConfig.LEGEND_DIV_NAME"></div>
+    <line-chart
       :chart-data="datacollection"
       :options="{
-        responsive: true, 
+        responsive: true,
         maintainAspectRatio: true,
         title: {
           display: false,
-          text: 'Queued'
+          text: '{{chartConfig.NAME}}'
         },
         legend: {
           display: false,
@@ -19,12 +19,12 @@
         },
         scales: {
           yAxes: [{
-            stacked: false, // QueuedGraph is not stacked
+            stacked: '{{chartConfig.isStacked}}',
             ticks: {
               suggestedMax: 10
             }
           }]
-        }     
+        }
       }"
       >
     </line-chart>
@@ -32,20 +32,21 @@
 </template>
 
 <script>
-  
+
  import LineChart from './LineChart.js';
  import { eventBus } from '../client';
- import { updateChart, graphType} from './graphUtilities'; 
+ import { updateChart } from './graphUtilities';
 
   export default {
     components: {
       LineChart,
     },
     props: [
-      'routes',
       'stats',
       'statshistory',
-      'appname' // this will be unset if this graph is for all apps
+      'chartConfig',
+      'appid', // this will be unset if this chart is for all apps
+      'fns', // this will be unset if this chart is for all apps
     ],
     data () {
       return {
@@ -60,9 +61,8 @@
     created: function(){
       // handle "stats have been refreshed"
       eventBus.$on('statsRefreshed', (app) => {
-        var isStacked = false;
-        updateChart(this,graphType.QUEUED,isStacked);
-      });    
+        updateChart(this);
+      });
     }
   }
 

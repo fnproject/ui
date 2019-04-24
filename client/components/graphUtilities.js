@@ -1,137 +1,281 @@
-// Utility functions used by the graph components QueuedGraph, RunningGraph, CompletedGraph and FailedGraph
+// Utility functions used by the graph components
 
 // Update the graph and legend for the specified chart using the data in chart.stats and chart.statshistory 
-export function updateChart (chart,graphTypeArg,isStacked) {
+export function updateChart (chart) {
 
-  // work out the name of the div that contains the legend: this must exist in the corresponding *Graph.vue file
   // work out the function to extract the required metric from a stats object from JSON
-  var graphLegendDivName
-  var metricGetter;
-  switch(graphTypeArg){
-    case graphType.QUEUED:
-      graphLegendDivName="queuedGraphLegend";
-      metricGetter=aRoute => aRoute.Queue;
-      break;
-    case graphType.RUNNING:
-      graphLegendDivName="runningGraphLegend";
-      metricGetter=aRoute => aRoute.Running;
-      break;
-    case graphType.COMPLETED:
-      graphLegendDivName="completedGraphLegend";
-      metricGetter=aRoute => aRoute.Complete;
-      break;
-    case graphType.FAILED:
-      graphLegendDivName="failedGraphLegend";
-      metricGetter=aRoute => aRoute.Failed;
-      break;
-  }
+  var metricGetter = chart.chartConfig.METRIC_GETTER;
 
-  // update the chart to display data for the routes in "routes", or for all routes if "routes" is not set 
+  var chartLegendDivName = chart.chartConfig.LEGEND_DIV_NAME;
+  var isStacked = chart.chartConfig.isStacked;
+
   if (chart.statshistory && chart.stats){
     chart.datacollection = {};
     chart.datacollection["labels"]= chart.statshistory.map(eachStatistic => "" );
     chart.datacollection["datasets"]=[];
 
-    // update the graph 
-    // and also calculate and display the total count
-    var totalCount = 0; 
-    if (chart.appname==null){
-      // display all routes for all apps
-      for (var thisAppName in chart.stats.Apps){
-        var thisApp = chart.stats.Apps[thisAppName];
-        for (var thisPath in thisApp.Routes){
-          totalCount += displayRoute(chart,thisAppName,thisPath,metricGetter,isStacked);
-        }
-      }
+    var totalCount = 0;
+
+    if (chart.appid == null) {
+      totalCount = displayGeneralMetric(chart, metricGetter, isStacked);
     } else {
-      // display routes for a specific app
-      var thisApp = chart.stats.Apps[chart.appname];
-      if (thisApp!=null){
-        for (var thisPath in thisApp.Routes){
-          totalCount += displayRoute(chart,chart.appname,thisPath,metricGetter,isStacked);
-        }      
-      } else {
-        // we're displaying an app, but there's no data about it in the stats returned by Fn server
-        // this means that no route in this app was called since the server was started
-        // since these graphs currently follow the convention that they only display lines for routes that have been actually used,
-        // we display nothing here. https://github.com/fnproject/ui/issues/18  proposes this be changed, but that's a wider issue.
-      }
+      // display metrics for a specific app
+
+      var thisApp = chart.stats.Apps[chart.appid];
+      totalCount = processAppMetrics(chart, metricGetter, isStacked, thisApp);
     }
+
     chart.total = totalCount;
-    
-    // now examine the data that the graph is displaying and use it to construct the legend  
-    var legs = document.getElementById(graphLegendDivName);
-    var text = [];
-    text.push('<ul class=\'' + 'chartLegend\'>');
-    var chartDataDatasets = chart.datacollection["datasets"];
-    var chartDataDatasetsLength = chartDataDatasets.length;
-    for (var i = 0; i < chartDataDatasets.length; i++) {
-      text.push('<li><span class=\'chartLabelEmblem\' style=\'' +
-        'background-color:' + chartDataDatasets[i].backgroundColor + '; ' +
-        'border-color:' + chartDataDatasets[i].borderColor + ';' +
-        '\'></span>');
-      if (chartDataDatasets[i].label) {
-        text.push('<span class=\'chartLabelText\'>'+chartDataDatasets[i].label+'</span>');
-      }
-      text.push('</li>');
-    }
-    text.push('</ul>');
-    if (legs!=null){
-      legs.innerHTML  = text.join(''); 
+
+    if(chart.chartConfig.SHOW_LEGEND) {
+      updateLegend(chart, chartLegendDivName);
     }
   }
 }
 
-// for the specified appName and path, display a single line on the specified chart, showing historical values of the metric 
-// in addition, return the current value of the metric 
-function displayRoute(chart,appName,path,metricGetter,isStacked) {
-  var thisApp = chart.stats.Apps[appName];
-  var value = getMetricFor(chart.stats,appName,path,metricGetter)
-  // assemble an array containing historical values of the metric that this graph is displaying
-  var routeHistory = [];  
-  for (var i = 0; i < chart.statshistory.length; i++) {
-    routeHistory.push(getMetricFor(chart.statshistory[i],appName,path,metricGetter));
+// now examine the data that the graph is displaying and use it to construct the legend
+function updateLegend(chart, chartLegendDivName) {
+  var legendElement = document.getElementById(chartLegendDivName);
+
+  var html = [];
+  html.push("<ul class='chartLegend'>");
+
+  var chartDataDatasets = chart.datacollection["datasets"];
+  var chartDataDatasetsLength = chartDataDatasets.length;
+
+  for (var i = 0; i < chartDataDatasets.length; i++) {
+    var bgColor = chartDataDatasets[i].backgroundColor;
+    var borderColor = chartDataDatasets[i].borderColor;
+
+    html.push(`
+      <li>
+        <span
+          class='chartLabelEmblem'
+          style='background-color:${bgColor};border-color:${borderColor};'
+        ></span>`
+    );
+
+    if (chartDataDatasets[i].label) {
+      var currentValue = chartDataDatasets[i].data.slice(-1);
+      html.push(`
+        <span class='chartLabelText'>
+          ${chartDataDatasets[i].label}: ${currentValue}
+        </span>`
+      );
+    }
+
+    html.push('</li>');
   }
-  var dataSetForPath = {
-    label: path + ": "+ value,
-    fill: isStacked, // Use fill for stacked charts to distingush them from non-stacked charts
-    backgroundColor: isStacked ? getBackgroundColorFor(path) : 'white', // Use a fill color for stacked charts
-    borderColor: getBorderColorFor(path),
-    borderWidth: lineWidthInPixels,
-    radius:pointRadiusInPixels,
-    data: routeHistory
-  };
-  chart.datacollection["datasets"].push(dataSetForPath);
+
+  html.push('</ul>');
+
+  if (legendElement != null){
+    legendElement.innerHTML = html.join('');
+  }
+}
+
+// extract app and fn details and display metrics for them accordingly
+function processAppMetrics(chart, metricGetter, isStacked, app) {
+  if (app === undefined) {
+    // There are no stats for this app e.g. if none of the functions
+    // have been run since the server started
+    return 0;
+  }
+
+  var totalCount = 0;
+
+  // Create a cache mapping of fnId to fnName so we don't need to keep
+  // iterating over the array trying to find the correct name for an id
+  var fnsCache = {};
+  chart.fns.forEach(function(fn) {
+    fnsCache[fn.id] = fn.name;
+  });
+
+  for (var fnId in app.Functions) {
+    var thisFn = app.Functions[fnId];
+
+    // Handle the cases where the fn server doesn't return fnIds in its
+    // metrics API or if the server doesn't know the name of the function
+    var fnName = fnsCache[fnId];
+    if (!fnName) {
+      fnName = 'Unknown Function';
+    }
+
+    var appDetails = {
+      'appId' : chart.appid,
+      'fnId' : fnId,
+      'fnName' : fnName,
+    };
+
+    totalCount += displayAppMetric(chart, metricGetter, isStacked, appDetails);
+  }
+
+  return totalCount;
+}
+
+// display a single line on the specified chart, showing historical values of
+// the metric in addition, return the current value of the metric
+function displayGeneralMetric(chart, metricGetter, isStacked) {
+  var value = getMetricFor(chart.stats, metricGetter);
+
+  // assemble an array containing historical values of the metric that this chart is displaying
+  var plotHistory = [];
+  for (var i = 0; i < chart.statshistory.length; i++) {
+    plotHistory.push(getMetricFor(chart.statshistory[i],metricGetter));
+  }
+
+  // The identifier is just used to map what colour this series should be
+  // listed as. As general metrics only have one series we don't need to
+  // use a unique identifier
+  var identifier = 'generalMetric';
+
+  var dataSet = generateDataSet(
+    'Amount',
+    isStacked,
+    getBackgroundColorFor(identifier),
+    getBorderColorFor(identifier),
+    plotHistory
+  );
+
+  chart.datacollection["datasets"].push(dataSet);
+
   return value;
 }
 
-// return the metric value from the specified stats object for the specified appName and path
-// if either the appName or path are not found then zero is returned
-function getMetricFor(aStats,appName,path,metricGetter){
-  var app = aStats.Apps[appName];
-  if (app==null){
+// display a single line on a chart detailing app metrics. In addition, return
+// the current value of the metric
+function displayAppMetric(chart, metricGetter, isStacked, appDetails) {
+  var appStats = getFnStatsFromApp(chart.stats, appDetails);
+  var value = getMetricFor(appStats, metricGetter);
+
+  var plotHistory = [];
+  for (var i = 0; i < chart.statshistory.length; i++) {
+    var historicStat = getFnStatsFromApp(chart.statshistory[i], appDetails);
+    var statsHistory = getMetricFor(historicStat, metricGetter);
+
+    plotHistory.push(statsHistory);
+  }
+
+  // Create a unique identifier for this metric
+  var identifier = Object.values(appDetails).join('-');
+
+  var dataSet = generateDataSet(
+    appDetails.fnName,
+    isStacked,
+    getBackgroundColorFor(identifier),
+    getBorderColorFor(identifier),
+    plotHistory
+  );
+
+  chart.datacollection["datasets"].push(dataSet);
+
+  return value;
+}
+
+// get stats object for Fn using the passed in appDetails
+function getFnStatsFromApp(stats, appDetails) {
+  try {
+    return stats.Apps[appDetails.appId].Functions[appDetails.fnId];
+  } catch (e) {
+    // The keys in the stats history won't exist to start with so just return
+    // null rather than crashing in this case
+    if(e instanceof TypeError) {
+      return null;
+    } else {
+      throw e;
+    }
+  }
+}
+
+// generate the Dataset that the Vue chart will use
+function generateDataSet(valueName, isStacked, backgroundColor, borderColor, statHistory) {
+  return {
+    label: valueName,
+    // Use a fill color to distingusih stacked and non-stacked charts
+    fill: isStacked,
+    // Use a fill color for stacked charts
+    backgroundColor: isStacked ? backgroundColor : 'white',
+    borderColor: borderColor,
+    borderWidth: lineWidthInPixels,
+    radius:pointRadiusInPixels,
+    data: statHistory
+  };
+}
+
+// return the metric value from the specified stats object. If the stats
+// object doesn't exist then zero is returned
+function getMetricFor(stats, metricGetter){
+  if (stats == null){
     // we didn't have any information about this app at the time this historical stat was added
     // either we have a partially-initialised statshistory or the app has not been created yet
     return 0;
   } else {
-    var route = app.Routes[path];
-    if (route==null){
-      // although we had information about this app at the time this historical stat was added
-      // we didn't have any information about the routre
-      // this means the route has not been created yet
-      return 0;
-    } else {
-      return metricGetter(route);
-    }
+    return metricGetter(stats);
   }
 }
 
-export var graphType = {
-  QUEUED: 0,
-  RUNNING: 1,
-  COMPLETED: 2,
-  FAILED: 3,
-};
+export var chartConfig = {
+
+  // General charts
+  QUEUED: {
+    NAME: 'Queued',
+    LEGEND_DIV_NAME: 'queuedChartLegend',
+    METRIC_GETTER: results => results.Queue || 0,
+    IS_STACKED: false,
+    SHOW_LEGEND: false,
+  },
+  RUNNING: {
+    NAME: 'Running',
+    LEGEND_DIV_NAME: 'runningChartLegend',
+    METRIC_GETTER: results => results.Running || 0,
+    IS_STACKED: false,
+    SHOW_LEGEND: false,
+  },
+  COMPLETED: {
+    NAME: 'Completed',
+    LEGEND_DIV_NAME: 'completedChartLegend',
+    METRIC_GETTER: results => results.Complete || 0,
+    IS_STACKED: true,
+    SHOW_LEGEND: false,
+  },
+
+  // Charts for app data
+  BUSY: {
+    NAME: 'Busy',
+    LEGEND_DIV_NAME: 'busyChartLegend',
+    METRIC_GETTER: results => results.Busy || 0,
+    IS_STACKED: false,
+    SHOW_LEGEND: true,
+  },
+  IDLING: {
+    NAME: 'Idling',
+    LEGEND_DIV_NAME: 'idlingChartLegend',
+    METRIC_GETTER: results => results.Idling || 0,
+    IS_STACKED: false,
+    SHOW_LEGEND: true,
+  },
+  PAUSED: {
+    NAME: 'Paused',
+    LEGEND_DIV_NAME: 'pausedChartLegend',
+    METRIC_GETTER: results => results.Paused || 0,
+    IS_STACKED: false,
+    SHOW_LEGEND: true,
+  },
+  STARTING: {
+    NAME: 'Starting',
+    LEGEND_DIV_NAME: 'startingChartLegend',
+    METRIC_GETTER: results => results.Starting || 0,
+    IS_STACKED: false,
+    SHOW_LEGEND: true,
+  },
+  WAITING: {
+    NAME: 'Waiting',
+    LEGEND_DIV_NAME: 'waitingChartLegend',
+    METRIC_GETTER: results => results.Waiting || 0,
+    IS_STACKED: false,
+    SHOW_LEGEND: true,
+  },
+}
 
 // factory for background colors; simply iterate round these arrays of colors
 const backgroundColors = ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(255, 206, 86, 0.2)', 'rgba(75, 192, 192, 0.2)', 'rgba(153, 102, 255, 0.2)', 'rgba(255, 159, 64, 0.2)' ];
