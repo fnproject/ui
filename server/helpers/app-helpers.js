@@ -118,8 +118,12 @@ exports.requestCB = function (successcb, errorcb, error, response, body) {
       } else {
         parsed = body;
       }
-      if (parsed && parsed.error && parsed.error.message){
-        message = parsed.error.message;
+      if (parsed) {
+        if(parsed.error && parsed.error.message){
+          message = parsed.error.message;
+        } else if(parsed.message){
+          message = parsed.message;
+        }
       }
     } catch (e) {
       message = "Can not parse api response";
