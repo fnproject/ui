@@ -34,30 +34,7 @@
       </div>
 
       <hr>
-
-      <div class="form-group">
-        <label class="col-sm-3 control-label">Config</label>
-        <div class="col-sm-9">
-          <div class="row" v-for="(line, index) in fnConfig">
-            <template v-if="!line.delete">
-              <div class="col-sm-5 cfg-key">
-                <input type="text" class="form-control" placeholder="Key" v-model="line.key" @keydown.enter.prevent="">
-              </div>
-              <div class="col-sm-5 cfg-val">
-                <input type="text" class="form-control" placeholder="Value" v-model="line.value" @keydown.enter.prevent="">
-              </div>
-              <div class="col-sm-1 toolbar">
-                <button class="btn btn-default" @click.prevent="removeConfigLine(index)"><i class="fa fa-times"></i></button>
-              </div>
-            </template>
-          </div>
-          <div>
-            <a href="#" class="" @click.prevent="addConfigLine">
-              <i class="fa fa-plus"></i> Add line
-            </a>
-          </div>
-        </div>
-      </div>
+      <fn-config-form :config="fnConfig"></fn-config-form>
 
     </form>
 
@@ -69,6 +46,7 @@
 
 <script>
 import Modal from '../lib/VueBootstrapModal.vue';
+import FnConfigForm from '../components/FnConfigForm';
 import { eventBus } from '../client';
 import { defaultErrorHandler, configToLines, linesToConfig, headersToLines, linesToHeaders, getAuthToken } from '../lib/helpers';
 
@@ -84,7 +62,8 @@ var defaultFn = function(app){
 export default {
   props: ['app'],
   components: {
-    Modal
+    Modal,
+    FnConfigForm,
   },
   data: function(){
     return {
@@ -104,15 +83,6 @@ export default {
     },
     closed: function(){
       this.show = false;
-    },
-    addConfigLine: function(){
-      this.fnConfig.push({key: "", value: "", delete: false});
-    },
-    removeConfigLine: function(index){
-      // The entry needs to exist to distinguish between deletion and not
-      // updating it. Therefore, set the value to empty and hide it
-      this.fnConfig[index].value = "";
-      this.fnConfig[index].delete = true;
     },
     ok: function(){
       var t = this;
@@ -165,14 +135,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.cfg-key {
-  padding: 0 5px 5px 15px;
-}
-.cfg-val {
-  padding: 0 5px 5px 5px;
-  margin-right: -20px;
-  width: 50%;
-}
-</style>
