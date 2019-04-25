@@ -1,7 +1,10 @@
 <template >
   <div class="singleChart">
-      <h4 class="chart-title">{{chartConfig.NAME}}: {{this.total}}</h4>
-      <div :id="chartConfig.LEGEND_DIV_NAME"></div>
+    <h4 class="chart-title">{{chartConfig.NAME}}: {{this.total}}</h4>
+    <stats-chart-legend
+      :chartConfig="chartConfig"
+      :datacollection="datacollection">
+    </stats-chart-legend>
     <line-chart
       :chart-data="datacollection"
       :options="{
@@ -33,13 +36,15 @@
 
 <script>
 
- import LineChart from './LineChart.js';
- import { eventBus } from '../client';
- import { updateChart } from './graphUtilities';
+  import LineChart from './LineChart.js';
+  import StatsChartLegend from '../components/StatsChartLegend';
+  import { eventBus } from '../client';
+  import { updateChart } from './graphUtilities';
 
   export default {
     components: {
       LineChart,
+      StatsChartLegend,
     },
     props: [
       'stats',
@@ -50,7 +55,7 @@
     ],
     data () {
       return {
-        datacollection: null,
+        datacollection: {},
         total: 0
       }
     },
@@ -67,26 +72,3 @@
   }
 
 </script>
-
-<style>
-.chartLabelEmblem {
-  float:left;
-  width:40px;
-  height:14px;
-  line-height:20px;
-  margin-top:3px;
-  margin-left:10px;
-  margin-right:6px;
-  border:1px solid;
-  font-size:8px;
-}
-.chartLabelText {
-  font-size:14px;
-}
-
-ul.chartLegend{
-  margin-right:10px;
-  list-style-type: none;
-  padding-left:0px;
-}
-</style>
