@@ -9,28 +9,7 @@
       </div>
 
       <hr>
-
-      <div class="form-group">
-        <label class="col-sm-3 control-label">Config</label>
-        <div class="col-sm-9">
-          <div class="row" v-for="(line, index) in appConfig">
-            <div class="col-sm-5 cfg-key">
-              <input type="text" class="form-control" placeholder="Key" v-model="line.key" @keydown.enter.prevent="">
-            </div>
-            <div class="col-sm-5 cfg-val">
-              <input type="text" class="form-control" placeholder="Value" v-model="line.value" @keydown.enter.prevent="">
-            </div>
-            <div class="col-sm-1 toolbar">
-              <button class="btn btn-default" @click.prevent="removeConfigLine(index)"><i class="fa fa-times"></i></button>
-            </div>
-          </div>
-          <div>
-            <a href="#" class="" @click.prevent="addConfigLine">
-              <i class="fa fa-plus"></i> Add line
-            </a>
-          </div>
-        </div>
-      </div>
+      <fn-config-form :config="appConfig"></fn-config-form>
 
     </form>
 
@@ -42,13 +21,15 @@
 
 <script>
 import Modal from '../lib/VueBootstrapModal.vue';
+import FnConfigForm from '../components/FnConfigForm';
 import { eventBus } from '../client';
 import { defaultErrorHandler, configToLines, linesToConfig, getAuthToken } from '../lib/helpers';
 
 export default {
   props: [],
   components: {
-    Modal
+    Modal,
+    FnConfigForm,
   },
   data: function(){
     return {
@@ -119,14 +100,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.cfg-key {
-  padding: 0 5px 5px 15px;
-}
-.cfg-val {
-  padding: 0 5px 5px 5px;
-  margin-right: -20px;
-  width: 50%;
-}
-</style>

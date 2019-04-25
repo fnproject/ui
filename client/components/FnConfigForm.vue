@@ -1,0 +1,53 @@
+<template>
+  <div class="form-group">
+    <label class="col-sm-3 control-label">Config</label>
+    <div class="col-sm-9">
+      <div class="row" v-for="(line, index) in config">
+        <template v-if="!line.delete">
+          <div class="col-sm-5 cfg-key">
+            <input type="text" class="form-control" placeholder="Key" v-model="line.key" @keydown.enter.prevent="">
+          </div>
+          <div class="col-sm-5 cfg-val">
+            <input type="text" class="form-control" placeholder="Value" v-model="line.value" @keydown.enter.prevent="">
+          </div>
+          <div class="col-sm-1 toolbar">
+            <button class="btn btn-default" @click.prevent="removeConfigLine(index)"><i class="fa fa-times"></i></button>
+          </div>
+        </template>
+      </div>
+      <div>
+        <a href="#" class="" @click.prevent="addConfigLine">
+          <i class="fa fa-plus"></i> Add line
+        </a>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  props: ['config'],
+  methods: {
+    addConfigLine: function(){
+      this.config.push({key: "", value: "", delete: false});
+    },
+    removeConfigLine: function(index){
+      // The entry needs to exist to distinguish between deletion and not
+      // updating it. Therefore, set the value to empty and hide it
+      this.config[index].value = "";
+      this.config[index].delete = true;
+    },
+  }
+}
+</script>
+
+<style scoped>
+.cfg-key {
+  padding: 0 5px 5px 15px;
+}
+.cfg-val {
+  padding: 0 5px 5px 5px;
+  margin-right: -20px;
+  width: 50%;
+}
+</style>
