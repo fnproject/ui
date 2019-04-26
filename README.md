@@ -31,11 +31,8 @@ All functions in an app:
 ```sh
 npm install
 
-# option 1: global webpack
+# if you want webpack globally
 sudo npm install -g webpack@^1.14.0
-
-# option 2: local webpack
-npm install
 ```
 
 ### 2) Start Functions API (see [Fn on GitHub](http://github.com/fnproject/fn))
@@ -47,10 +44,10 @@ fn start
 ### 4) Compile assets
 
 ```sh
-# option 1: global webpack
+# option 1: if global webpack
 webpack
 
-# option 2: local webpack
+# option 2: if local webpack
 npx webpack
 ```
 
