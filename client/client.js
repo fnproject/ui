@@ -49,16 +49,16 @@ new Vue({
         dataType: 'json',
         success: (apps) => t.apps = apps,
         error: defaultErrorHandler
-      })
+      });
     },
     initialiseStatshistory: function(){
       if (this.statshistory==null){
         this.statshistory = [];
         for (var i = 0; i < numXValues; i++) {
-          this.statshistory.push({})
-        } 
+          this.statshistory.push({});
+        }
       }
-    },     
+    },
     loadStats: function(){
       if (this.autorefresh) {
         $.ajax({
@@ -66,7 +66,7 @@ new Vue({
           dataType: 'json',
           success: this.handleStats,
           error: defaultErrorHandler
-        })
+        });
       } else {
         // refresh the graphs using the cached data
         eventBus.$emit('statsRefreshed');
@@ -81,8 +81,8 @@ new Vue({
         if (this.statshistory.length > numXValues){
           this.statshistory.shift();
         }
-      }        
-      // we have new stats: notify any graphs to update themselves 
+      }
+      // we have new stats: notify any graphs to update themselves
       eventBus.$emit('statsRefreshed');
     }
   },
@@ -91,16 +91,16 @@ new Vue({
     this.autorefresh=true;
     this.initialiseStatshistory();
     this.loadApps();
-    this.loadStats(); 
+    this.loadStats();
     eventBus.$on('startAutoRefreshStats', (app) => {
       this.autorefresh=true;
       // we leave the timer running for ever
       if (timer==null){
         timer = setInterval(function () {
             this.loadStats();
-          }.bind(this), 1000); 
+          }.bind(this), 1000);
       }
-    });  
+    });
     eventBus.$on('stopAutoRefreshStats', (app) => {
       this.autorefresh=false;
       // leave the timer running as this is the best way to ensure that the graphs keep displaying the cached data when we switch between apps and the index page
@@ -109,7 +109,7 @@ new Vue({
       //   clearInterval(timer);
       //   timer = null;
       // }
-    });      
+    });
     eventBus.$on('AppAdded', (app) => {
       this.loadApps();
       this.loadStats();
@@ -123,7 +123,7 @@ new Vue({
       this.loadStats();
     });
     eventBus.$on('LoggedIn', () => {
-      this.loadApps()
-    }); 
+      this.loadApps();
+    });
   }
-}).$mount('#app')
+}).$mount('#app');
