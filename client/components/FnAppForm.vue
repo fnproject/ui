@@ -15,7 +15,7 @@
       </div>
 
       <hr>
-      <fn-config-form :config="appConfig"></fn-config-form>
+      <fn-config-form :config="appConfig" :isEdit="edit"></fn-config-form>
 
     </form>
 
@@ -29,7 +29,10 @@
 import Modal from '../lib/VueBootstrapModal.vue';
 import FnConfigForm from '../components/FnConfigForm';
 import { eventBus } from '../client';
-import { defaultErrorHandler, configToLines, linesToConfig, getAuthToken } from '../lib/helpers';
+import {
+  defaultErrorHandler, configToLines, linesToConfig, newConfig,
+  getAuthToken
+} from '../lib/helpers';
 
 export default {
   props: [],
@@ -42,7 +45,7 @@ export default {
       show: false,
       edit: false,
       app: {},
-      appConfig: [{key: "", value: ""}]
+      appConfig: [newConfig()]
     }
   },
   methods: {
@@ -56,7 +59,7 @@ export default {
       this.show = false;
     },
     addConfigLine: function(){
-      this.appConfig.push({key: "", value: ""});
+      this.appConfig.push(newConfig());
     },
     removeConfigLine: function(index){
       this.appConfig.splice(index, 1)

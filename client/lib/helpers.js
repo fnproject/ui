@@ -22,7 +22,7 @@ export const configToLines = function(config){
   };
   // Always show at least one empty line
   if (lines.length == 0) {
-    lines.push({key: "", value: ""})
+    lines.push(newConfig())
   }
   return lines;
 }
@@ -36,6 +36,14 @@ export const linesToConfig = function(lines){
     }
   }
   return config;
+}
+
+// Initialises and returns an empty config object
+export const newConfig = function() {
+  // 'delete' indicates when this config should be deleted from the server.
+  // 'new' indicates that this config value has just been added and means the
+  // key should be editable on the UI.
+  return {key: "", value: "", delete: false, new: true};
 }
 
 export const headersToLines = function(headers){
