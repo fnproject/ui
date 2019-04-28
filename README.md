@@ -1,5 +1,3 @@
-# WARNING: this repo has gone stale and the UI is currently broken. It is not intended to be left for dead forever, feel free to fix it up, this has become a lower priority item at the moment however for the fn team. 
-
 # UI for [Fn](https://github.com/fnproject/fn) [![CircleCI](https://circleci.com/gh/fnproject/ui.svg?style=svg)](https://circleci.com/gh/fnproject/ui)
 
 ## Usage
@@ -32,6 +30,8 @@ All functions in an app:
 
 ```sh
 npm install
+
+# if you want webpack globally
 sudo npm install -g webpack@^1.14.0
 ```
 
@@ -44,7 +44,11 @@ fn start
 ### 4) Compile assets
 
 ```sh
+# option 1: if global webpack
 webpack
+
+# option 2: if local webpack
+npx webpack
 ```
 
 ### 3) Start web server
