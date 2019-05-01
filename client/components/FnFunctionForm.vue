@@ -34,7 +34,7 @@
       </div>
 
       <hr>
-      <fn-config-form :config="fnConfig"></fn-config-form>
+      <fn-config-form :config="fnConfig" :isEdit="edit"></fn-config-form>
 
     </form>
 
@@ -48,7 +48,10 @@
 import Modal from '../lib/VueBootstrapModal.vue';
 import FnConfigForm from '../components/FnConfigForm';
 import { eventBus } from '../client';
-import { defaultErrorHandler, configToLines, linesToConfig, headersToLines, linesToHeaders, getAuthToken } from '../lib/helpers';
+import {
+  defaultErrorHandler, configToLines, linesToConfig, newConfig,
+  headersToLines, linesToHeaders, getAuthToken
+} from '../lib/helpers';
 
 var defaultFn = function(app){
   return jQuery.extend(true, {}, {
@@ -128,7 +131,7 @@ export default {
     });
     eventBus.$on('openAddFn', () => {
       this.fn = defaultFn(this.app);
-      this.fnConfig = [{key: "", value: ""}];
+      this.fnConfig = [newConfig()];
       this.edit = false;
       this.show = true;
     });

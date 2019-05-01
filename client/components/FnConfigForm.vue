@@ -5,7 +5,8 @@
       <div class="row" v-for="(line, index) in config">
         <template v-if="!line.delete">
           <div class="col-sm-5 cfg-key">
-            <input type="text" class="form-control" placeholder="Key" v-model="line.key" @keydown.enter.prevent="">
+            <!-- Don't allow the key to be edited if the form is being edited (providing it hasn't just been added (see issue #66)) -->
+            <input type="text" class="form-control" placeholder="Key" v-model="line.key" :readonly="isEdit && !line.new" @keydown.enter.prevent="">
           </div>
           <div class="col-sm-5 cfg-val">
             <input type="text" class="form-control" placeholder="Value" v-model="line.value" @keydown.enter.prevent="">
@@ -25,11 +26,13 @@
 </template>
 
 <script>
+import { newConfig } from '../lib/helpers';
+
 export default {
-  props: ['config'],
+  props: ['config', 'isEdit'],
   methods: {
     addConfigLine: function(){
-      this.config.push({key: "", value: "", delete: false});
+      this.config.push(newConfig());
     },
     removeConfigLine: function(index){
       // The entry needs to exist to distinguish between deletion and not
