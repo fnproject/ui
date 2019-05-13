@@ -114,7 +114,7 @@ exports.requestCB = function (successcb, errorcb, error, response, body) {
         parsed = body;
       }
     } catch (e) {
-      console.warn("Can not parse json:", body, e);
+      logger.error("Can not parse json:", body, e);
     }
 
     // A 204 status code indicates a success but there won't be any data. E.g.
@@ -149,7 +149,7 @@ exports.requestCB = function (successcb, errorcb, error, response, body) {
     }
     message = message || "An error ocurred.";
     var status = response ? response.statusCode : error.code;
-    console.warn("[ERR] " + status + " | "  + message);
+    logger.error("[ERR] " + status + " | "  + message);
     errorcb(status, message);
   }
 };

@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var helpers = require('../helpers/app-helpers.js');
+var logger = require('config-logger');
 
 router.get('/', function(req, res) {
   var successcb = function(data){
@@ -57,7 +58,7 @@ router.post('/invoke/:fn', function(req, res) {
     res.json({output: data});
   };
   var errcb = function(status, err){
-    console.log("Error. Api responded with ", status, err);
+    logger.error("Error. Api responded with ", status, err);
     var text = "Something went terribly wrong (Status Code: " + status + ") ";
     if (err){
       try {
