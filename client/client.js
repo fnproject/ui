@@ -3,6 +3,7 @@ require("./css/app.css");
 require('expose?$!expose?jQuery!jquery');
 require("bootstrap/dist/js/bootstrap.min");
 
+// eslint-disable-next-line no-unused-vars
 import _ from 'lodash/core';
 
 import Vue from 'vue';
@@ -92,7 +93,7 @@ new Vue({
     this.initialiseStatshistory();
     this.loadApps();
     this.loadStats();
-    eventBus.$on('startAutoRefreshStats', (app) => {
+    eventBus.$on('startAutoRefreshStats', () => {
       this.autorefresh=true;
       // we leave the timer running for ever
       if (timer==null){
@@ -101,7 +102,7 @@ new Vue({
           }.bind(this), 1000);
       }
     });
-    eventBus.$on('stopAutoRefreshStats', (app) => {
+    eventBus.$on('stopAutoRefreshStats', () => {
       this.autorefresh=false;
       // leave the timer running as this is the best way to ensure that the graphs keep displaying the cached data when we switch between apps and the index page
       // loadStats() will check the autorefresh flag and simply refresh the graphs
@@ -110,15 +111,15 @@ new Vue({
       //   timer = null;
       // }
     });
-    eventBus.$on('AppAdded', (app) => {
+    eventBus.$on('AppAdded', () => {
       this.loadApps();
       this.loadStats();
     });
-    eventBus.$on('AppUpdated', (app) => {
+    eventBus.$on('AppUpdated', () => {
       this.loadApps();
       this.loadStats();
     });
-    eventBus.$on('AppDeleted', (app) => {
+    eventBus.$on('AppDeleted', () => {
       this.loadApps();
       this.loadStats();
     });

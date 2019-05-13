@@ -10,7 +10,7 @@ export function updateChart (chart) {
 
   if (chart.statshistory && chart.stats){
     chart.datacollection = {};
-    chart.datacollection["labels"]= chart.statshistory.map(eachStatistic => "" );
+    chart.datacollection["labels"]= chart.statshistory.map(()  => "" );
     chart.datacollection["datasets"]=[];
 
     var totalCount = 0;
