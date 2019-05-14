@@ -8,7 +8,7 @@ jobs:
       - run:
           name: "Lint the code"
           command: |
-            npm install --only dev
+            npm install --loglevel error --only dev
             ./node_modules/.bin/eslint .
 
       - run:
