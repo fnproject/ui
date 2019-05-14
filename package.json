@@ -1,7 +1,7 @@
 {
   "name": "FunctionsUI",
   "description": "Functions UI",
-  "version": "0.0.35",
+  "version": "0.0.36",
   "private": true,
   "scripts": {
     "start": "node server"
