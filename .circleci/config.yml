@@ -2,12 +2,6 @@ version: 2
 jobs:
   build:
     machine: true
-    working_directory: ~/go/src/github.com/fnproject/ui
-    environment: # apparently expansion doesn't work here yet: https://discuss.circleci.com/t/environment-variable-expansion-in-working-directory/11322
-      - GOPATH=/home/circleci/go
-      - GOVERSION=1.8.3
-      - OS=linux
-      - ARCH=amd64
     steps:
       - checkout
       # update Docker
@@ -16,7 +10,6 @@ jobs:
           sudo service docker stop
           curl -fsSL https://get.docker.com/ | sudo sh
       - run: docker version
-      # - run: ./test.sh
       - deploy:
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
