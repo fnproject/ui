@@ -14,9 +14,12 @@ jobs:
       - run:
           name: "Update Docker"
           command: |
-            docker version
-            sudo service docker stop
-            curl -fsSL https://get.docker.com/ | sudo sh
+            # There's need to update docker if we aren't deploying
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              docker version
+              sudo service docker stop
+              curl -fsSL https://get.docker.com/ | sudo sh
+            fi
       - run: docker version
 
       # Clean up after linting and testing e.g. remove node_modules/
