@@ -4,6 +4,8 @@ MAINTAINER fnservice.io
 RUN mkdir /app
 WORKDIR /app
 
+ENV NODE_ENV production
+
 # Install app dependencies
 ENV NPM_CONFIG_LOGLEVEL warn
 RUN npm install -g webpack@^1.14.0
@@ -16,7 +18,6 @@ COPY . /app
 # Build assets
 RUN webpack
 
-ENV NODE_ENV production
 ENV PORT 4000
 EXPOSE 4000
 
