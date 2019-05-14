@@ -1,4 +1,3 @@
-var http = require('http');
 var url = require('url');
 var request = require('request');
 var logger = require('config-logger');
@@ -11,41 +10,51 @@ exports.extend = function(target) {
         }
     });
     return target;
-}
+};
 
 exports.apiFullUrl = function(req, path) {
   var apiUrl = req.app.get('api-url');
   var httpurl = url.format(apiUrl) + path.replace(/^\//, "");
   return httpurl;
-}
+};
 
 exports.getApiEndpoint = function(req, path, params, successcb, errorcb) {
   var url = exports.apiFullUrl(req, path);
 
   logger.debug("GET " + url + ", params: ", params);
 
-  options = {url: url, qs: params}
+  var options = {url: url, qs: params};
 
-  options = exports.addAuth(options, req)
+  options = exports.addAuth(options, req);
 
-  request(options, function(error, response, body){exports.requestCB(successcb, errorcb, error, response, body)});
-}
+  request(
+    options,
+    function(error, response, body){
+      exports.requestCB(successcb, errorcb, error, response, body);
+    }
+  );
+};
 
 exports.getApiEndpointRaw = function(req, path, params, successcb, errorcb) {
   var url = exports.apiFullUrl(req, path);
 
   logger.debug("GET " + url + ", params: ", params);
 
-  options = {url: url, qs: params}
+  var options = {url: url, qs: params};
 
-  options = exports.addAuth(options, req)
+  options = exports.addAuth(options, req);
 
-  request(options, function(error, response, body){exports.requestCBRaw(successcb, errorcb, error, response, body)});
-}
+  request(
+    options,
+    function(error, response, body){
+      exports.requestCBRaw(successcb, errorcb, error, response, body);
+    }
+  );
+};
 
 exports.postApiEndpoint = function(req, path, params, postfields, successcb, errorcb) {
   exports.execApiEndpoint('POST', req, path, params, postfields, successcb, errorcb);
-}
+};
 
 exports.execApiEndpoint = function(method, req, path, params, postfields, successcb, errorcb) {
   var options = {
@@ -56,10 +65,15 @@ exports.execApiEndpoint = function(method, req, path, params, postfields, succes
 
   logger.debug(options.method + " " + options.uri + ", params: ", options.body);
 
-  options = exports.addAuth(options, req)
+  options = exports.addAuth(options, req);
 
-  request(options, function(error, response, body){exports.requestCB(successcb, errorcb, error, response, body)});
-}
+  request(
+    options,
+    function(error, response, body){
+      exports.requestCB(successcb, errorcb, error, response, body);
+    }
+  );
+};
 
 exports.execApiEndpointRaw = function(method, req, path, params, postfields, successcb, errorcb) {
   var options = {
@@ -70,19 +84,24 @@ exports.execApiEndpointRaw = function(method, req, path, params, postfields, suc
 
   logger.debug(options.method + " " + options.uri + ", params: ", options.body);
 
-  options = exports.addAuth(options, req)
+  options = exports.addAuth(options, req);
 
-  request(options, function(error, response, body){exports.requestCBRaw(successcb, errorcb, error, response, body)});
-}
+  request(
+    options,
+    function(error, response, body){
+      exports.requestCBRaw(successcb, errorcb, error, response, body);
+    }
+  );
+};
 
 exports.addAuth = function(options, req) {
   if (req.get('Authorization') !== undefined) {
       options.headers = {
         'Authorization': req.get('Authorization')
-      }
+      };
   }
-  return options
-}
+  return options;
+};
 
 // expects response as json
 exports.requestCB = function (successcb, errorcb, error, response, body) {
@@ -95,8 +114,8 @@ exports.requestCB = function (successcb, errorcb, error, response, body) {
         parsed = body;
       }
     } catch (e) {
-      console.warn("Can not parse json:", body, e);
-    };
+      logger.error("Can not parse json:", body, e);
+    }
 
     // A 204 status code indicates a success but there won't be any data. E.g.
     // on the deletion of an app. This will throw an error down the line so
@@ -109,7 +128,7 @@ exports.requestCB = function (successcb, errorcb, error, response, body) {
       successcb(parsed);
     } else {
       errorcb(response.statusCode, "Can not parse api response");
-    };
+    }
   } else {
     var message;
     try {
@@ -128,12 +147,12 @@ exports.requestCB = function (successcb, errorcb, error, response, body) {
     } catch (e) {
       message = "Can not parse api response";
     }
-    message = message || "An error ocurred."
+    message = message || "An error ocurred.";
     var status = response ? response.statusCode : error.code;
-    console.warn("[ERR] " + status + " | "  + message);
+    logger.error("[ERR] " + status + " | "  + message);
     errorcb(status, message);
   }
-}
+};
 
 // expects response as plain text
 exports.requestCBRaw = function (successcb, errorcb, error, response, body) {
@@ -143,7 +162,7 @@ exports.requestCBRaw = function (successcb, errorcb, error, response, body) {
     var status = response ? response.statusCode : error.code;
     errorcb(status, body);
   }
-}
+};
 
 exports.standardErrorcb = function(res){
   return function(status, err){
@@ -153,5 +172,5 @@ exports.standardErrorcb = function(res){
       text = "Error: " + err;
     }
     res.status(400).json({msg: text});
-  }
-}
+  };
+};

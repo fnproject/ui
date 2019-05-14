@@ -3,12 +3,14 @@ import { eventBus } from '../client';
 
 
 export const defaultErrorHandler = function(jqXHR){
-  var text = "Something went terribly wrong (Status Code: " + jqXHR.status + ")"
+  var text = "Something went terribly wrong (Status Code: " + jqXHR.status + ")";
   try {
-    text = jqXHR.responseJSON.msg
-  } catch (_err) {}
+    text = jqXHR.responseJSON.msg;
+  } catch (_err) {
+    // continue regardless of error
+  }
   eventBus.$emit('NotificationError', text);
-}
+};
 
 
 // lines is array in format [{key: "", value: ""}]
@@ -18,14 +20,14 @@ export const configToLines = function(config){
   var lines = [];
   var k;
   for (k in config) {
-    lines.push({key: k, value: config[k]})
-  };
+    lines.push({key: k, value: config[k]});
+  }
   // Always show at least one empty line
   if (lines.length == 0) {
-    lines.push(newConfig())
+    lines.push(newConfig());
   }
   return lines;
-}
+};
 
 export const linesToConfig = function(lines){
   var config = {};
@@ -36,7 +38,7 @@ export const linesToConfig = function(lines){
     }
   }
   return config;
-}
+};
 
 // Initialises and returns an empty config object
 export const newConfig = function() {
@@ -44,21 +46,21 @@ export const newConfig = function() {
   // 'new' indicates that this config value has just been added and means the
   // key should be editable on the UI.
   return {key: "", value: "", delete: false, new: true};
-}
+};
 
 export const headersToLines = function(headers){
   headers = headers || {};
   var lines = [];
   var k;
   for (k in headers) {
-    lines.push({key: k, value: headers[k][0]})
-  };
+    lines.push({key: k, value: headers[k][0]});
+  }
   // Always show at least one empty line
   if (lines.length == 0) {
-    lines.push({key: "", value: ""})
+    lines.push({key: "", value: ""});
   }
   return lines;
-}
+};
 
 export const linesToHeaders = function(lines){
   var headers = {};
@@ -69,10 +71,10 @@ export const linesToHeaders = function(lines){
     }
   }
   return headers;
-}
+};
 
 export const getApiUrl = function(cb, errCb){
-  var errCb = errCb || null;
+  errCb = errCb || null;
   $.ajax({
 		headers: {'Authorization': getAuthToken()},
     url: '/api/info/api-url',
@@ -80,14 +82,16 @@ export const getApiUrl = function(cb, errCb){
     contentType: "application/json",
     dataType: 'json',
     success: (res) => {
-      cb(res.url)
+      cb(res.url);
     },
     error: function(jqXHR, textStatus, errorThrown){
-      if (errCb){errCb(jqXHR, textStatus, errorThrown)}
+      if (errCb){
+        errCb(jqXHR, textStatus, errorThrown);
+      }
     }
-  })
-}
+  });
+};
 
 export const getAuthToken = function(){
-    return window.localStorage['FN_TOKEN']
-}
+    return window.localStorage['FN_TOKEN'];
+};

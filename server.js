@@ -5,11 +5,8 @@ var path = require('path');
 var url = require('url');
 var bodyParser = require('body-parser');
 
-var helpers = require('./server/helpers/app-helpers.js');
-
 var app = express();
 
-var isProduction = process.env.NODE_ENV === 'production';
 var apiUrl = url.parse(process.env.FN_API_URL);
 if (!apiUrl || !apiUrl.hostname) {
   logger.error("API URL not set. Please specify Functions API URL via environment variable, e.g. FN_API_URL=http://localhost:8080 npm start");

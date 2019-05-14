@@ -3,25 +3,25 @@ var router = express.Router();
 var helpers = require('../helpers/app-helpers.js');
 
 router.get('/', function(req, res) {
-  successcb = function(data){
+  var successcb = function(data){
     res.json(data.items);
-  }
-  helpers.getApiEndpoint(req, "/v2/apps", {}, successcb, helpers.standardErrorcb(res))
+  };
+  helpers.getApiEndpoint(req, "/v2/apps", {}, successcb, helpers.standardErrorcb(res));
 });
 
 router.get('/:app', function(req, res) {
-  successcb = function(data){
+  var successcb = function(data){
     res.json(data);
-  }
+  };
 
-  helpers.getApiEndpoint(req, "/v2/apps/" + encodeURIComponent(req.params.app), {}, successcb, helpers.standardErrorcb(res))
+  helpers.getApiEndpoint(req, "/v2/apps/" + encodeURIComponent(req.params.app), {}, successcb, helpers.standardErrorcb(res));
 });
 
 // Create New App
 router.post('/', function(req, res) {
-  successcb = function(data){
+  var successcb = function(data){
     res.json(data);
-  }
+  };
   var data = req.body;
 
   helpers.postApiEndpoint(req, "/v2/apps", {}, data, successcb, helpers.standardErrorcb(res));
@@ -29,9 +29,9 @@ router.post('/', function(req, res) {
 
 // Update App
 router.put('/:app', function(req, res) {
-  successcb = function(data){
+  var successcb = function(data){
     res.json(data);
-  }
+  };
 
   var data = req.body;
   delete data.id;
@@ -44,9 +44,9 @@ router.put('/:app', function(req, res) {
 
 // Delete App
 router.delete('/:app', function(req, res) {
-  successcb = function(data){
+  var successcb = function(data){
     res.json(data);
-  }
+  };
 
   helpers.execApiEndpoint('DELETE', req,  "/v2/apps/" + encodeURIComponent(req.params.app) , {}, {}, successcb, helpers.standardErrorcb(res));
 });

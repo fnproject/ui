@@ -1,4 +1,3 @@
-const webpack = require('webpack');
 const path = require('path');
 const fs = require('fs');
 const extractTextPlugin = require("extract-text-webpack-plugin");
@@ -7,7 +6,6 @@ const extractTextPlugin = require("extract-text-webpack-plugin");
 const postcssImport         = require('postcss-import');
 const postcssURL            = require('postcss-url');
 const cssnext               = require('postcss-cssnext');
-const cssnano               = require('cssnano');
 const fontMagician          = require('postcss-font-magician');
 
 

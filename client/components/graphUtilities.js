@@ -1,17 +1,16 @@
 // Utility functions used by the graph components
 
-// Update the graph and legend for the specified chart using the data in chart.stats and chart.statshistory 
+// Update the graph and legend for the specified chart using the data in chart.stats and chart.statshistory
 export function updateChart (chart) {
 
   // work out the function to extract the required metric from a stats object from JSON
   var metricGetter = chart.chartConfig.METRIC_GETTER;
 
-  var chartLegendDivName = chart.chartConfig.LEGEND_DIV_NAME;
   var isStacked = chart.chartConfig.isStacked;
 
   if (chart.statshistory && chart.stats){
     chart.datacollection = {};
-    chart.datacollection["labels"]= chart.statshistory.map(eachStatistic => "" );
+    chart.datacollection["labels"]= chart.statshistory.map(()  => "" );
     chart.datacollection["datasets"]=[];
 
     var totalCount = 0;
@@ -47,7 +46,6 @@ function processAppMetrics(chart, metricGetter, isStacked, app) {
   });
 
   for (var fnId in app.Functions) {
-    var thisFn = app.Functions[fnId];
 
     // Handle the cases where the fn server doesn't return fnIds in its
     // metrics API or if the server doesn't know the name of the function
@@ -230,7 +228,7 @@ export var chartConfig = {
     IS_STACKED: false,
     SHOW_LEGEND: true,
   },
-}
+};
 
 // factory for background colors; simply iterate round these arrays of colors
 const backgroundColors = ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(255, 206, 86, 0.2)', 'rgba(75, 192, 192, 0.2)', 'rgba(153, 102, 255, 0.2)', 'rgba(255, 159, 64, 0.2)' ];
@@ -238,8 +236,8 @@ const borderColors = ['rgba(255,99,132,1)', 'rgba(54, 162, 235, 1)',  'rgba(255,
 
 export const lineWidthInPixels = 1;
 export const pointRadiusInPixels = 0.5;
-    
-var backgroundColorMap = {}
+
+var backgroundColorMap = {};
 export function getBackgroundColorFor(path){
   if (!backgroundColorMap[path]){
     backgroundColorMap[path]=backgroundColors[(Object.keys(backgroundColorMap).length) % (backgroundColors.length)];
@@ -247,7 +245,7 @@ export function getBackgroundColorFor(path){
     return backgroundColorMap[path];
 }
 
-var borderColorMap = {}
+var borderColorMap = {};
 export function getBorderColorFor(path){
   if (!borderColorMap[path]){
     borderColorMap[path]=borderColors[(Object.keys(borderColorMap).length) % (borderColors.length)];

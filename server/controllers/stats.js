@@ -4,7 +4,7 @@ var helpers = require('../helpers/app-helpers.js');
 var logger = require('config-logger');
 
 router.get('/', function(req, res) {
-  successcb = function(data){
+  var successcb = function(data){
     // convert the raw Prometheus data to JSON in a form usable by the client
 
     var generalStatsParser = new GeneralStatsParser();
@@ -16,10 +16,10 @@ router.get('/', function(req, res) {
     jsonData['Apps'] = appData;
 
     res.json(jsonData);
-  }
+  };
 
   // get the raw Prometheus data
-  helpers.getApiEndpointRaw(req, "/metrics", {}, successcb, helpers.standardErrorcb(res))
+  helpers.getApiEndpointRaw(req, "/metrics", {}, successcb, helpers.standardErrorcb(res));
 
 });
 
@@ -33,7 +33,7 @@ class StatsParser {
       var labelNameRE = '([^=]+)';
 
       // Captures the value in a Javascript Object Literal (i.e. anything between the double quotes)
-      var labelValueRE = '\"([^\"]*)\"';
+      var labelValueRE = '"([^"]*)"';
 
       // Matches the key/value pair in a Javascript Object Literal
       this._labelRE = labelNameRE + '=' + labelValueRE;

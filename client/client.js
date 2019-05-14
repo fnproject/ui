@@ -3,6 +3,7 @@ require("./css/app.css");
 require('expose?$!expose?jQuery!jquery');
 require("bootstrap/dist/js/bootstrap.min");
 
+// eslint-disable-next-line no-unused-vars
 import _ from 'lodash/core';
 
 import Vue from 'vue';
@@ -49,16 +50,16 @@ new Vue({
         dataType: 'json',
         success: (apps) => t.apps = apps,
         error: defaultErrorHandler
-      })
+      });
     },
     initialiseStatshistory: function(){
       if (this.statshistory==null){
         this.statshistory = [];
         for (var i = 0; i < numXValues; i++) {
-          this.statshistory.push({})
-        } 
+          this.statshistory.push({});
+        }
       }
-    },     
+    },
     loadStats: function(){
       if (this.autorefresh) {
         $.ajax({
@@ -66,7 +67,7 @@ new Vue({
           dataType: 'json',
           success: this.handleStats,
           error: defaultErrorHandler
-        })
+        });
       } else {
         // refresh the graphs using the cached data
         eventBus.$emit('statsRefreshed');
@@ -81,8 +82,8 @@ new Vue({
         if (this.statshistory.length > numXValues){
           this.statshistory.shift();
         }
-      }        
-      // we have new stats: notify any graphs to update themselves 
+      }
+      // we have new stats: notify any graphs to update themselves
       eventBus.$emit('statsRefreshed');
     }
   },
@@ -91,17 +92,17 @@ new Vue({
     this.autorefresh=true;
     this.initialiseStatshistory();
     this.loadApps();
-    this.loadStats(); 
-    eventBus.$on('startAutoRefreshStats', (app) => {
+    this.loadStats();
+    eventBus.$on('startAutoRefreshStats', () => {
       this.autorefresh=true;
       // we leave the timer running for ever
       if (timer==null){
         timer = setInterval(function () {
             this.loadStats();
-          }.bind(this), 1000); 
+          }.bind(this), 1000);
       }
-    });  
-    eventBus.$on('stopAutoRefreshStats', (app) => {
+    });
+    eventBus.$on('stopAutoRefreshStats', () => {
       this.autorefresh=false;
       // leave the timer running as this is the best way to ensure that the graphs keep displaying the cached data when we switch between apps and the index page
       // loadStats() will check the autorefresh flag and simply refresh the graphs
@@ -109,21 +110,21 @@ new Vue({
       //   clearInterval(timer);
       //   timer = null;
       // }
-    });      
-    eventBus.$on('AppAdded', (app) => {
+    });
+    eventBus.$on('AppAdded', () => {
       this.loadApps();
       this.loadStats();
     });
-    eventBus.$on('AppUpdated', (app) => {
+    eventBus.$on('AppUpdated', () => {
       this.loadApps();
       this.loadStats();
     });
-    eventBus.$on('AppDeleted', (app) => {
+    eventBus.$on('AppDeleted', () => {
       this.loadApps();
       this.loadStats();
     });
     eventBus.$on('LoggedIn', () => {
-      this.loadApps()
-    }); 
+      this.loadApps();
+    });
   }
-}).$mount('#app')
+}).$mount('#app');
