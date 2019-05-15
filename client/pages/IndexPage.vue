@@ -9,7 +9,7 @@
       Dashboard
    
       <div class="pull-right">
-        <button class="btn btn-default" @click="openAddApp">
+        <button id="openCreateApp" class="btn btn-default" @click="openAddApp">
           <i class="fa fa-plus"></i>&nbsp;
           Create App
         </button>
@@ -22,13 +22,13 @@
       <div class="col-md-12 col-lg-10">
         <!-- <div class="table-responsive"> -->
         <div>
-          <table class="table table-striped">
+          <table id="appsTable" class="table table-striped">
             <thead v-bind:class="{ transparent: !apps || apps.length == 0 }">
               <th>Name</th>
               <th width="120">Actions</th>
             </thead>
             <tbody>
-              <tr v-for="app in apps">
+              <tr :name="app.name" v-for="app in apps">
                 <td>
                   <router-link :to="'/app/' + encodeURIComponent(app.id)">{{app.name}}</router-link>
                 </td>
@@ -36,14 +36,14 @@
                   <div class="toolbar">
 
                     <div class="btn-group">
-                      <button class="btn btn-default btn-sm" @click.prevent="openEditApp(app)" title="Edit App"><i class="fa fa-gear"></i> Edit</button>
-                      <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <button name="openEditApp" class="btn btn-default btn-sm" @click.prevent="openEditApp(app)" title="Edit App"><i class="fa fa-gear"></i> Edit</button>
+                      <button name="openMoreOptions" type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <span class="caret"></span>
                         <span class="sr-only">Toggle Dropdown</span>
                       </button>
                       <ul class="dropdown-menu dropdown-menu-right">
                         <li>
-                          <a href="#" @click.prevent="deleteApp(app)" class="text-danger"  title="Delete App">
+                          <a name="deleteApp" href="#" @click.prevent="deleteApp(app)" class="text-danger"  title="Delete App">
                             <i class="fa fa-times"></i> Delete App
                           </a>
                         </li>
