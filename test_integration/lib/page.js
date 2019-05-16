@@ -11,6 +11,10 @@ module.exports = class Page {
     return await this.driver.get(url);
   }
 
+  async getCurrentUrl() {
+    return await this.driver.getCurrentUrl();
+  }
+
   async quit() {
     return await this.driver.quit();
   }

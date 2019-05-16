@@ -1,26 +1,11 @@
 const {until} = require('selenium-webdriver');
 
-const Page = require('./page.js');
+const FnPage = require('./fn_page.js');
 
-module.exports = class HomePage extends Page {
+module.exports = class HomePage extends FnPage {
 
   _appTableRowSelector(appName) {
     return `#appsTable tr[name="${appName}"]`;
-  }
-
-  async _fillAppAttributes(appAttributes) {
-    let promiseArray = [];
-    for (let i = 0; i < appAttributes.length; i++) {
-      let fillField = this.findById(appAttributes[i].elementId)
-        .then(async function(field) {
-          await field.clear();
-          field.sendKeys(appAttributes[i].value);
-        }
-      );
-
-      promiseArray.push(fillField);
-    }
-    await Promise.all(promiseArray);
   }
 
   async loadedCorrectly() {
@@ -43,7 +28,7 @@ module.exports = class HomePage extends Page {
 
   async createApp(appDetails) {
     await this.openCreateApp();
-    await this._fillAppAttributes(appDetails.getAttributes());
+    await this._fillFormDetails(appDetails.getAttributes());
     await this.submitApp();
     await this.getAppTableRow(appDetails.name);
   }
@@ -55,7 +40,7 @@ module.exports = class HomePage extends Page {
 
   async editApp(appDetails) {
     await this.openEditApp(appDetails.name);
-    await this._fillAppAttributes(appDetails.getEditableAttributes());
+    await this._fillFormDetails(appDetails.getEditableAttributes());
     await this.submitApp();
   }
 
@@ -72,11 +57,6 @@ module.exports = class HomePage extends Page {
     return await syslogUrlInput.getAttribute('value');
   }
 
-  async getError() {
-    let flashMessageAlert = await this.findById('flash-messages');
-    return await flashMessageAlert.getText();
-  }
-
   async openAppOptions(appName) {
     let moreOptionsBtn = await this.findByCss(this._appTableRowSelector(appName) + ' button[name="openMoreOptions"]');
     await moreOptionsBtn.click();
@@ -90,5 +70,10 @@ module.exports = class HomePage extends Page {
 
     let deleteConfirmation = await this.driver.wait(until.alertIsPresent(), 10000, 'Waiting for alert');
     await deleteConfirmation.accept();
+  }
+
+  async visitApp(appName) {
+    let appLink = await this.findByCss(this._appTableRowSelector(appName) + ' [name="appLink"]');
+    await appLink.click();
   }
 };
