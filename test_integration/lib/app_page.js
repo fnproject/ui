@@ -9,6 +9,14 @@ module.exports = class AppPage extends FnPage {
     return `#fnTable tr[name="${fnName}"]`;
   }
 
+  async _getFnAttribute(fnName, elementDetails) {
+    await this.openEditFn(fnName);
+
+    let inputField =
+      await this.findByElementDetails(elementDetails);
+    return await inputField.getAttribute('value');
+  }
+
   async loadedCorrectly() {
     let fnTable = await this.getFnTable();
     let fnTableText = await fnTable.getText();
@@ -55,15 +63,6 @@ module.exports = class AppPage extends FnPage {
     await submitFnBtn.click();
   }
 
-  //TODO think of a way to generalise this for each app parameter
-  async getFnImage(fnName) {
-    await this.openEditFn(fnName);
-
-    let fnImageInput =
-      await this.findByElementDetails(AppPageSelector.fnImageInput());
-    return await fnImageInput.getAttribute('value');
-  }
-
   async openFnOptions(fnName) {
     let moreOptionsBtn =
       await this.findByElementDetails(AppPageSelector.openMoreOptionsBtn(fnName));
@@ -80,5 +79,23 @@ module.exports = class AppPage extends FnPage {
     let deleteConfirmation = await this.driver.wait(
       until.alertIsPresent(), 10000, 'Waiting for alert');
     await deleteConfirmation.accept();
+  }
+
+  async getFnImage(fnName) {
+    return await this._getFnAttribute(fnName, AppPageSelector.fnImageInput());
+  }
+
+  async getFnMemory(fnName) {
+    return await this._getFnAttribute(fnName, AppPageSelector.fnMemoryInput());
+  }
+
+  async getFnTimeout(fnName) {
+    return await this._getFnAttribute(fnName, AppPageSelector.fnTimeoutInput());
+  }
+
+  async getFnIdleTimeout(fnName) {
+    return await this._getFnAttribute(
+      fnName, AppPageSelector.fnIdleTimeoutInput()
+    );
   }
 };

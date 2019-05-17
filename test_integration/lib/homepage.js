@@ -9,6 +9,13 @@ module.exports = class HomePage extends FnPage {
     return `#appsTable tr[name="${appName}"]`;
   }
 
+  async _getAppAttribute(appName, elementDetails) {
+    await this.openEditApp(appName);
+
+    let inputField = await this.findByElementDetails(elementDetails);
+    return await inputField.getAttribute('value');
+  }
+
   async loadedCorrectly() {
     await this.getAppTable();
     return true;
@@ -50,14 +57,6 @@ module.exports = class HomePage extends FnPage {
     await submitAppBtn.click();
   }
 
-  //TODO think of a way to generalise this for each app parameter
-  async getAppSyslogUrl(appName) {
-    await this.openEditApp(appName);
-
-    let syslogUrlInput = await this.findByElementDetails(HomePageSelector.appSyslogUrlInput(appName));
-    return await syslogUrlInput.getAttribute('value');
-  }
-
   async openAppOptions(appName) {
     let moreOptionsBtn = await this.findByElementDetails(HomePageSelector.openMoreOptionsBtn(appName));
     await moreOptionsBtn.click();
@@ -76,5 +75,11 @@ module.exports = class HomePage extends FnPage {
   async visitApp(appName) {
     let appLink = await this.findByElementDetails(HomePageSelector.appLink(appName));
     await appLink.click();
+  }
+
+  async getAppSyslogUrl(appName) {
+    return await this._getAppAttribute(
+      appName, HomePageSelector.appSyslogUrlInput()
+    );
   }
 };
