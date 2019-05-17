@@ -1,6 +1,7 @@
 const {until} = require('selenium-webdriver');
 
 const FnPage = require('./fn_page.js');
+const HomePageSelector = require('./homepage_selector.js');
 
 module.exports = class HomePage extends FnPage {
 
@@ -14,16 +15,16 @@ module.exports = class HomePage extends FnPage {
   }
 
   async openCreateApp() {
-    let openCreateAppBtn = await this.findById('openCreateApp');
+    let openCreateAppBtn = await this.findByElementDetails(HomePageSelector.openCreateAppBtn());
     await openCreateAppBtn.click();
   }
 
   async getAppTable() {
-    return await this.findById('appsTable');
+    return await this.findByElementDetails(HomePageSelector.appTable());
   }
 
   async getAppTableRow(appName) {
-    return await this.findByCss(this._appTableRowSelector(appName));
+    return await this.findByElementDetails(HomePageSelector.appTableRow(appName));
   }
 
   async createApp(appDetails) {
@@ -34,7 +35,7 @@ module.exports = class HomePage extends FnPage {
   }
 
   async openEditApp(appName) {
-    let openEditAppBtn = await this.findByCss(this._appTableRowSelector(appName) + ' button[name="openEditApp"]');
+    let openEditAppBtn = await this.findByElementDetails(HomePageSelector.openEditAppBtn(appName));
     await openEditAppBtn.click();
   }
 
@@ -45,7 +46,7 @@ module.exports = class HomePage extends FnPage {
   }
 
   async submitApp() {
-    let submitAppBtn = await this.findById('submitApp');
+    let submitAppBtn = await this.findByElementDetails(HomePageSelector.submitAppBtn());
     await submitAppBtn.click();
   }
 
@@ -53,19 +54,19 @@ module.exports = class HomePage extends FnPage {
   async getAppSyslogUrl(appName) {
     await this.openEditApp(appName);
 
-    let syslogUrlInput = await this.findById('appSyslogUrl');
+    let syslogUrlInput = await this.findByElementDetails(HomePageSelector.appSyslogUrlInput(appName));
     return await syslogUrlInput.getAttribute('value');
   }
 
   async openAppOptions(appName) {
-    let moreOptionsBtn = await this.findByCss(this._appTableRowSelector(appName) + ' button[name="openMoreOptions"]');
+    let moreOptionsBtn = await this.findByElementDetails(HomePageSelector.openMoreOptionsBtn(appName));
     await moreOptionsBtn.click();
   }
 
   async deleteApp(appName) {
     await this.openAppOptions(appName);
 
-    let deleteBtn = await this.findByCss(this._appTableRowSelector(appName) + ' [name="deleteApp"]');
+    let deleteBtn = await this.findByElementDetails(HomePageSelector.deleteAppBtn(appName));
     await deleteBtn.click();
 
     let deleteConfirmation = await this.driver.wait(until.alertIsPresent(), 10000, 'Waiting for alert');
@@ -73,7 +74,7 @@ module.exports = class HomePage extends FnPage {
   }
 
   async visitApp(appName) {
-    let appLink = await this.findByCss(this._appTableRowSelector(appName) + ' [name="appLink"]');
+    let appLink = await this.findByElementDetails(HomePageSelector.appLink(appName));
     await appLink.click();
   }
 };
