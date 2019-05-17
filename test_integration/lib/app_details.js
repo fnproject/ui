@@ -1,32 +1,11 @@
-module.exports = class AppDetails {
+const FormAttribute = require('./form_attribute.js');
+const FormDetails = require('./form_details.js');
+
+module.exports = class AppDetails extends FormDetails {
   constructor(name, syslogUrl=null) {
-    this.attributes = {
-      name: new AppAttribute(name, 'appName', false),
-      image: new AppAttribute(syslogUrl, 'appSyslogUrl'),
-    };
-  }
-
-  get name() {
-    return this.attributes.name.value;
-  }
-
-  getAttributes() {
-    return Object.values(this.attributes).filter( (attribute) => {
-      return attribute.value !== null;
-    });
-  }
-
-  getEditableAttributes() {
-    return this.getAttributes().filter( (attribute) => {
-      return attribute.isEditable;
+    super({
+      name: new FormAttribute(name, 'appName', false),
+      image: new FormAttribute(syslogUrl, 'appSyslogUrl'),
     });
   }
 };
-
-class AppAttribute {
-  constructor(value, elementId, isEditable=true) {
-    this.value = value;
-    this.elementId = elementId;
-    this.isEditable = isEditable;
-  }
-}

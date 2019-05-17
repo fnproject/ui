@@ -1,35 +1,14 @@
-module.exports = class FnDetails {
+const FormAttribute = require('./form_attribute.js');
+const FormDetails = require('./form_details.js');
+
+module.exports = class FnDetails extends FormDetails {
   constructor(name, image, memory=null, timeout=null, idle_timeout=null) {
-    this.attributes = {
-      name: new FunctionAttribute(name, 'fnName', false),
-      image: new FunctionAttribute(image, 'fnImage'),
-      memory: new FunctionAttribute(memory, 'fnMemory'),
-      timeout: new FunctionAttribute(timeout, 'fnTimeout'),
-      idle_timeout: new FunctionAttribute(idle_timeout, 'fnIdleTimeout'),
-    };
-  }
-
-  get name() {
-    return this.attributes.name.value;
-  }
-
-  getAttributes() {
-    return Object.values(this.attributes).filter( (attribute) => {
-      return attribute.value !== null;
-    });
-  }
-
-  getEditableAttributes() {
-    return this.getAttributes().filter( (attribute) => {
-      return attribute.isEditable;
+    super({
+      name: new FormAttribute(name, 'fnName', false),
+      image: new FormAttribute(image, 'fnImage'),
+      memory: new FormAttribute(memory, 'fnMemory'),
+      timeout: new FormAttribute(timeout, 'fnTimeout'),
+      idle_timeout: new FormAttribute(idle_timeout, 'fnIdleTimeout'),
     });
   }
 };
-
-class FunctionAttribute {
-  constructor(value, elementId, isEditable=true) {
-    this.value = value;
-    this.elementId = elementId;
-    this.isEditable = isEditable;
-  }
-}
