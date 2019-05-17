@@ -65,6 +65,14 @@ const HomePage = require('./lib/homepage.js');
         assert.equal(await appPage.getFnImage(fnDetails.name), newFnImage);
       });
 
+      it('should disallow large memory allocation', async () => {
+        let fnDetails = new FnDetails(fnName, null, Number.MAX_SAFE_INTEGER);
+        await appPage.editFn(fnDetails);
+
+        let errorText = await appPage.getError();
+        assert.ok(errorText.includes('out of range'));
+      });
+
       it('can delete a function', async () => {
         await appPage.deleteFn(fnName);
       });
