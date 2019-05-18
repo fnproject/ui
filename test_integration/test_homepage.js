@@ -2,6 +2,7 @@ const assert = require('assert');
 const randomstring = require('randomstring');
 
 const AppDetails = require('./lib/app_details.js');
+const Config = require('./lib/config.js');
 const HomePage = require('./lib/homepage.js');
 
 (async function test_homepage() {
@@ -16,7 +17,9 @@ const HomePage = require('./lib/homepage.js');
       let page;
       beforeEach(async () => {
         page = new HomePage();
-        await page.visit('http://localhost:4000/');
+        let config = new Config();
+        let fn_url = config.get('fn_url');
+        await page.visit(fn_url);
       });
 
       afterEach (async () => {

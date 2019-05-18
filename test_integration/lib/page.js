@@ -1,8 +1,21 @@
 const {Builder, By, until} = require('selenium-webdriver');
 
+const chrome = require('selenium-webdriver/chrome');
+
+const Config = require('./config.js');
+
 module.exports = class Page {
   constructor() {
+    let config = new Config();
+
+    let chromeOptions = new chrome.Options();
+
+    if(config.get('headless')) {
+      chromeOptions.addArguments('headless');
+    }
+
     this.driver = new Builder()
+      .setChromeOptions(chromeOptions)
       .forBrowser('chrome')
       .build();
   }

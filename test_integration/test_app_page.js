@@ -3,10 +3,14 @@ const randomstring = require('randomstring');
 
 const AppDetails = require('./lib/app_details.js');
 const AppPage = require('./lib/app_page.js');
+const Config = require('./lib/config.js');
 const FnDetails = require('./lib/fn_details.js');
 const HomePage = require('./lib/homepage.js');
 
 (async function test_app_page() {
+  let config = new Config();
+  let fn_url = config.get('fn_url');
+
   let appName = randomstring.generate({
     length: 30,
     charset: 'alphabetic'
@@ -24,7 +28,7 @@ const HomePage = require('./lib/homepage.js');
       let appUrl;
       before(async () => {
         let homepage = new HomePage();
-        await homepage.visit('http://localhost:4000/');
+        await homepage.visit(fn_url);
         await homepage.createApp(appDetails);
         await homepage.visitApp(appName);
 
@@ -34,7 +38,7 @@ const HomePage = require('./lib/homepage.js');
 
       after(async () => {
         let homepage = new HomePage();
-        await homepage.visit('http://localhost:4000/');
+        await homepage.visit(fn_url);
         await homepage.deleteApp(appName);
         await homepage.quit();
       });

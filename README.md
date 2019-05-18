@@ -95,7 +95,10 @@ npm install [--only dev]
 ##### 3) Run the Fn interface
 See the instructions above for how to start the Node webserver.
 
-##### 4) Run the tests
+##### 4) Configure your tests
+Edit [test_integration/etc/config.yaml](test_integration/etc/config.yaml) accordingly e.g. point `fn_url` to your Fn UI if you're not running it at its default location.
+
+##### 5) Run the tests
 ```
 npm run test-integration
 ```

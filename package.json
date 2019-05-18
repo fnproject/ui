@@ -53,6 +53,7 @@
     "eslint-plugin-vue": "^5.2.2",
     "mocha": "^6.1.4",
     "randomstring": "^1.1.5",
-    "selenium-webdriver": "^4.0.0-alpha.1"
+    "selenium-webdriver": "^4.0.0-alpha.1",
+    "yaml": "^1.5.1"
   }
 }
