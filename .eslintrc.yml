@@ -14,6 +14,12 @@ parserOptions:
   ecmaVersion: 2018
   sourceType: module
 plugins:
+  - mocha
   - vue
 rules:
   semi: ['warn', 'always']
+
+  # Mocha plugin rules
+  mocha/no-exclusive-tests: ['error']
+  mocha/no-identical-title: ['error']
+  mocha/no-skipped-tests: ['error']
