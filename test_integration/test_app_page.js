@@ -7,10 +7,16 @@ const Config = require('./lib/config.js');
 const FnDetails = require('./lib/fn_details.js');
 const HomePage = require('./lib/homepage.js');
 
+/*
+ * This test uses the Mocha testing framework with Selenium to test
+ * the functionality of the App Details page (/app/$appId)
+ */
 (async function test_app_page() {
   let config = new Config();
   let fn_url = config.get('fn_url');
 
+  // Use a random App name so it's less likely to conflict
+  // with an app that already exists on the Fn server
   let appName = randomstring.generate({
     length: 30,
     charset: 'alphabetic'
@@ -25,6 +31,7 @@ const HomePage = require('./lib/homepage.js');
     describe('Test Fn UI app page', async function() {
       this.timeout(50000);
 
+      // Before running the tests, create an app that we can test against
       let appUrl;
       before(async () => {
         let homepage = new HomePage();
@@ -36,6 +43,7 @@ const HomePage = require('./lib/homepage.js');
         await homepage.quit();
       });
 
+      // Clean up after the tests have completed
       after(async () => {
         let homepage = new HomePage();
         await homepage.visit(fn_url);

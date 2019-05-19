@@ -5,10 +5,17 @@ const AppDetails = require('./lib/app_details.js');
 const Config = require('./lib/config.js');
 const HomePage = require('./lib/homepage.js');
 
+/*
+ * This test uses the Mocha testing framewith with Selenium to test
+ * the functionality of the Fn UI's homepage
+ */
 (async function test_homepage() {
   try {
     describe('Test Fn UI homepage', async function() {
       this.timeout(50000);
+
+      // Use a random App name so it's less likely to conflict
+      // with an app that already exists on the Fn server
       let appName = randomstring.generate({
         length: 30,
         charset: 'alphabetic'
@@ -36,6 +43,7 @@ const HomePage = require('./lib/homepage.js');
       });
 
       it('can edit an app', async () => {
+        // Use the .invalid TLD so it doesn't link to an actual syslog server
         let syslogUrl = 'tcp://syslogserver.invalid';
         let appDetails = new AppDetails(appName, syslogUrl);
         await page.editApp(appDetails);
