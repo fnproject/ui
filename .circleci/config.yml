@@ -2,22 +2,36 @@ version: 2
 jobs:
   build:
     machine: true
-    working_directory: ~/go/src/github.com/fnproject/ui
-    environment: # apparently expansion doesn't work here yet: https://discuss.circleci.com/t/environment-variable-expansion-in-working-directory/11322
-      - GOPATH=/home/circleci/go
-      - GOVERSION=1.8.3
-      - OS=linux
-      - ARCH=amd64
     steps:
       - checkout
-      # update Docker
-      - run: |
-          docker version
-          sudo service docker stop
-          curl -fsSL https://get.docker.com/ | sudo sh
+
+      - run:
+          name: "Lint the code"
+          command: |
+            npm install --loglevel error --only dev
+            ./node_modules/.bin/eslint .
+
+      - run:
+          name: "Update Docker"
+          command: |
+            # There's need to update docker if we aren't deploying
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              docker version
+              sudo service docker stop
+              curl -fsSL https://get.docker.com/ | sudo sh
+            fi
       - run: docker version
-      # - run: ./test.sh
+
+      # Clean up after linting and testing e.g. remove node_modules/
+      # so test packages aren't included in any production images
       - deploy:
+          name: "Clean up linting and test files"
+          command: |
+            git clean -fxd
+            git reset --hard
+
+      - deploy:
+          name: "Build docker image and release"
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
               docker login -u $DOCKER_USER -p $DOCKER_PASS
