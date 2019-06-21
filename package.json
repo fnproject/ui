@@ -4,7 +4,8 @@
   "version": "0.0.37",
   "private": true,
   "scripts": {
-    "start": "node server"
+    "start": "node server",
+    "test-integration": "./node_modules/.bin/mocha test_integration/test_*.js"
   },
   "dependencies": {
     "babel-core": "^6.0.0",
@@ -46,7 +47,13 @@
     "webpack": "^1.14.0"
   },
   "devDependencies": {
+    "assert": "^2.0.0",
     "eslint": "^5.16.0",
-    "eslint-plugin-vue": "^5.2.2"
+    "eslint-plugin-mocha": "^5.3.0",
+    "eslint-plugin-vue": "^5.2.2",
+    "mocha": "^6.1.4",
+    "randomstring": "^1.1.5",
+    "selenium-webdriver": "^4.0.0-alpha.1",
+    "yaml": "^1.5.1"
   }
 }

@@ -26,7 +26,9 @@ All functions in an app:
 
 ## Development
 
-### 1) Install dependencies
+### Setup
+
+#### 1) Install dependencies
 
 ```sh
 npm install
@@ -35,13 +37,13 @@ npm install
 sudo npm install -g webpack@^1.14.0
 ```
 
-### 2) Start Functions API (see [Fn on GitHub](http://github.com/fnproject/fn))
+#### 2) Start Functions API (see [Fn on GitHub](http://github.com/fnproject/fn))
 
 ```sh
 fn start
 ```
 
-### 4) Compile assets
+#### 3) Compile assets
 
 ```sh
 # option 1: if global webpack
@@ -51,7 +53,7 @@ webpack
 npx webpack
 ```
 
-### 3) Start web server
+#### 4) Start web server
 
 ```sh
 PORT=4000 FN_API_URL=http://localhost:8080 npm start
@@ -60,15 +62,43 @@ PORT=4000 FN_API_URL=http://localhost:8080 npm start
 * `PORT` - port to run UI on. Optional, 4000 by default
 * `FN_API_URL` - Functions API URL. Required
 
-### 5) View in browser
+#### 5) View in browser
 
 [http://localhost:4000/](http://localhost:4000/)
 
-### Configuring log levels
+#### Configuring log levels
 
 UI uses [console-logging](https://www.npmjs.com/package/config-logger) for server-side logging. 
 This supports log levels of `debug`, `verbose`, `info`, `warn` and `error`. By default the log level is `info` (this is configured in `config/default.json`). To set a log level of `debug`, use
+
 ```
 NODE_CONFIG='{"logLevel":"debug"}' PORT=4000 FN_API_URL=http://localhost:8080 npm start
 
+```
+
+### Automated Testing
+#### Integration tests
+
+The Fn UI has some basic Selenium integration tests that can be used to automatically test the UI's core functionality. These tests use the `mocha` testing framework as the driver.
+
+To run the tests:
+
+##### 1) Install the Chrome Driver
+Download the ChromeDriver from [Google](https://sites.google.com/a/chromium.org/chromedriver/downloads) and put it in a place which is in your path e.g. `/usr/local/bin/chromedriver`.
+
+##### 2) Install the Node dev dependencies
+Ensure you have the Node dev dependencies installed with:
+```
+npm install [--only dev]
+```
+
+##### 3) Run the Fn interface
+See the instructions above for how to start the Node webserver.
+
+##### 4) Configure your tests
+Edit [test_integration/etc/config.yaml](test_integration/etc/config.yaml) accordingly e.g. point `fn_url` to your Fn UI if you're not running it at its default location.
+
+##### 5) Run the tests
+```
+npm run test-integration
 ```

@@ -1,16 +1,16 @@
 <template>
   <modal :title="title()" :show="show" @closed="closed" @ok="ok" @cancel="closed">
-    <form class="form-horizontal" v-on:submit.prevent="ok">
+    <form id="appForm" class="form-horizontal" v-on:submit.prevent="ok">
       <div class="form-group">
         <label class="col-sm-3 control-label">Name *</label>
         <div class="col-sm-9">
-          <input type="text" class="form-control" placeholder="e.g. my-app" v-model="app.name" required :disabled="edit" @keydown.enter.prevent="">
+          <input id="appName" type="text" class="form-control" placeholder="e.g. my-app" v-model="app.name" required :disabled="edit" @keydown.enter.prevent="">
         </div>
       </div>
       <div class="form-group">
         <label class="col-sm-3 control-label">Syslog URL</label>
         <div class="col-sm-9">
-          <input type="text" class="form-control" placeholder="e.g. tcp://syslogserver.local"  v-model="app.syslog_url" @keydown.enter.prevent="">
+          <input id="appSyslogUrl" type="text" class="form-control" placeholder="e.g. tcp://syslogserver.local"  v-model="app.syslog_url" @keydown.enter.prevent="">
         </div>
       </div>
 
@@ -20,7 +20,7 @@
     </form>
 
     <div slot="footer">
-      <button type="button" class="btn btn-primary" @click="ok">{{okBtnName()}}</button>
+      <button id="submitApp" type="button" class="btn btn-primary" @click="ok">{{okBtnName()}}</button>
     </div>
   </modal>
 </template>

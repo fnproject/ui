@@ -1,0 +1,8 @@
+# This config is used for the Fn UI's Selenium tests.
+
+fn_ui:
+  # The URL to the Fn UI that you want to test.
+  fn_url: 'http://localhost:4000/'
+
+  # Whether to run the tests in a headless browser
+  headless: true

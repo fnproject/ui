@@ -1,35 +1,35 @@
 <template>
   <modal :title="title()" :show="show" @closed="closed" @ok="ok" @cancel="closed">
-    <form class="form-horizontal" v-on:submit.prevent="ok">
+    <form id="fnForm" class="form-horizontal" v-on:submit.prevent="ok">
       <div class="form-group">
         <label class="col-sm-3 control-label">Name *</label>
         <div class="col-sm-9">
-          <input type="text" class="form-control" placeholder="e.g. hello" v-model="fn.name" :disabled="edit" @keydown.enter.prevent="">
+          <input id="fnName" type="text" class="form-control" placeholder="e.g. hello" v-model="fn.name" :disabled="edit" @keydown.enter.prevent="">
         </div>
       </div>
       <input type="hidden" class="form-control" v-model="fn.app_id">
       <div class="form-group">
         <label class="col-sm-3 control-label">Image *</label>
         <div class="col-sm-9">
-          <input type="text" class="form-control" placeholder="e.g. fnproject/hello"  v-model="fn.image" @keydown.enter.prevent="">
+          <input id="fnImage" type="text" class="form-control" placeholder="e.g. fnproject/hello"  v-model="fn.image" @keydown.enter.prevent="">
         </div>
       </div>
       <div class="form-group">
         <label class="col-sm-3 control-label">Memory, MB</label>
         <div class="col-sm-9">
-          <input type="number" class="form-control" placeholder="e.g. 128"  v-model.number="fn.memory" @keydown.enter.prevent="">
+          <input id="fnMemory" type="number" class="form-control" placeholder="e.g. 128"  v-model.number="fn.memory" @keydown.enter.prevent="">
         </div>
       </div>
       <div class="form-group">
         <label class="col-sm-3 control-label">Timeout, sec</label>
         <div class="col-sm-9">
-          <input type="number" class="form-control" placeholder="e.g. 60"  v-model.number="fn.timeout" @keydown.enter.prevent="">
+          <input id="fnTimeout" type="number" class="form-control" placeholder="e.g. 60"  v-model.number="fn.timeout" @keydown.enter.prevent="">
         </div>
       </div>
       <div class="form-group">
         <label class="col-sm-3 control-label">Idle Timeout, sec</label>
         <div class="col-sm-9">
-          <input type="number" class="form-control" placeholder="e.g. 60"  v-model.number="fn.idle_timeout" @keydown.enter.prevent="">
+          <input id="FnIdleTimeout" type="number" class="form-control" placeholder="e.g. 60"  v-model.number="fn.idle_timeout" @keydown.enter.prevent="">
         </div>
       </div>
 
@@ -39,7 +39,7 @@
     </form>
 
     <div slot="footer">
-      <button type="button" class="btn btn-primary" @click="ok" :disabled="submitting">{{okBtnName()}}</button>
+      <button id="submitFn" type="button" class="btn btn-primary" @click="ok" :disabled="submitting">{{okBtnName()}}</button>
     </div>
   </modal>
 </template>

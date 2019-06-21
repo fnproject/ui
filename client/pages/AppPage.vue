@@ -11,7 +11,7 @@
       {{app.name}}
 
       <div class="pull-right">
-        <button class="btn btn-default" @click="openAddFn()"><i class="fa fa-plus"></i> Add Function</button>
+        <button id="openCreateFn" class="btn btn-default" @click="openAddFn()"><i class="fa fa-plus"></i> Add Function</button>
       </div>
     </h1>
 
@@ -20,7 +20,7 @@
     <!-- <div class="table-responsive"> -->
     <div class="row">
       <div class="col-md-12 col-lg-10">
-        <table class="table table-striped">
+        <table id="fnTable" class="table table-striped">
           <thead v-bind:class="{ transparent: fns.length == 0 }">
             <th>Name</th>
             <th>Image</th>
@@ -30,27 +30,27 @@
             <th width="140">Actions</th>
           </thead>
           <tbody>
-            <tr v-for="fn in fns">
-              <td>{{fn.name}}</td>
-              <td>{{fn.image}}</td>
-              <td>{{fn.memory}} MB</td>
-              <td>{{fn.timeout}}</td>
-              <td>{{fn.idle_timeout}}</td>
+            <tr :name="fn.name" v-for="fn in fns">
+              <td name="name">{{fn.name}}</td>
+              <td name="image">{{fn.image}}</td>
+              <td name="memory">{{fn.memory}} MB</td>
+              <td name="timeout">{{fn.timeout}}</td>
+              <td name="idleTimeout">{{fn.idle_timeout}}</td>
               <td>
                 <div class="toolbar">
 
                   <div class="btn-group">
-                    <button class="btn btn-default btn-sm" @click.prevent="openRunFn(fn)" title="Run Function"><i class="fa fa-play"></i> Run Function</button>
-                    <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <button name="runFn" class="btn btn-default btn-sm" @click.prevent="openRunFn(fn)" title="Run Function"><i class="fa fa-play"></i> Run Function</button>
+                    <button name="openMoreOptions" type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                       <span class="caret"></span>
                       <span class="sr-only">Toggle Dropdown</span>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-right">
                       <li>
-                        <a href="#" @click.prevent="openEditFn(fn)" title="Edit Function">
+                        <a name="openEditFn" href="#" @click.prevent="openEditFn(fn)" title="Edit Function">
                           <i class="fa fa-gear"></i> Edit Function
                         </a>
-                        <a href="#" @click.prevent="deleteFn(fn)"
+                        <a name="deleteFn" href="#" @click.prevent="deleteFn(fn)"
                         class="text-danger" title="Delete Function">
                           <i class="fa fa-times"></i> Delete Function
                         </a>
