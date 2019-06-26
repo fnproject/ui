@@ -5,6 +5,7 @@
   "private": true,
   "scripts": {
     "start": "node server",
+    "lint": "./node_modules/.bin/eslint .",
     "test": "./node_modules/.bin/mocha test/test_*.js",
     "test-integration": "./node_modules/.bin/mocha test_integration/test_*.js"
   },

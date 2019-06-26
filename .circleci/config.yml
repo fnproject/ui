@@ -9,7 +9,7 @@ jobs:
           name: "Lint the code"
           command: |
             npm install --loglevel error --only dev
-            ./node_modules/.bin/eslint .
+            npm run lint
 
       - run:
           name: "Run the unit tests"
