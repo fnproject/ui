@@ -9,7 +9,13 @@ jobs:
           name: "Lint the code"
           command: |
             npm install --loglevel error --only dev
-            ./node_modules/.bin/eslint .
+            npm run lint
+
+      - run:
+          name: "Run the unit tests"
+          command: |
+            npm install --loglevel silent --no-save
+            npm test
 
       - run:
           name: "Update Docker"
