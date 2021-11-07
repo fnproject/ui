@@ -10,6 +10,7 @@
     "test-integration": "./node_modules/.bin/mocha test_integration/test_*.js"
   },
   "dependencies": {
+    "acorn": ">=6.4.1",
     "babel-core": "^6.0.0",
     "babel-loader": "^6.0.0",
     "babel-plugin-transform-runtime": "^6.0.0",
