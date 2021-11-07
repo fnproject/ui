@@ -37,6 +37,7 @@
     "postcss-loader": "^0.9.1",
     "postcss-url": "^5.1.2",
     "request": "^2.72.0",
+    "set-value": ">=4.0.1"
     "style-loader": "^0.13.0",
     "stylelint": "^7.1.0",
     "stylelint-loader": "^6.2.0",
