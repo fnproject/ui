@@ -17,7 +17,7 @@
     "babel-preset-stage-2": "^6.0.0",
     "babel-runtime": "^6.26.0",
     "body-parser": "^1.15.2",
-    "bootstrap": "^3.3.7",
+    "bootstrap": "^3.4.1",
     "chart.js": "^2.6.0",
     "config-logger": "0.0.4",
     "css-loader": "^0.23.1",
